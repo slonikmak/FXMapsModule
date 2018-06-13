@@ -1,0 +1,11 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+h1 {
+    background-color: blue;
+}
+#FirebugUI{
+    visibility: visible;
+    height: 100px;
+}
