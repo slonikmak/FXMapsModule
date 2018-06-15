@@ -1,7 +1,8 @@
 class MarkerController extends Controller{
 
     addMarker(lat, lng, options){
-        const marker = L.marker([lat, lng], options);
+        console.log(lat+" "+lng+" "+options);
+        const marker = L.marker([lat, lng], JSON.parse(options));
         this.mainGroup.addLayer(marker);
         const id = this.getLayerId(marker);
         this.registerEvents(id);
@@ -37,22 +38,22 @@ class MarkerController extends Controller{
 
         const events = {
             click: (e)=>{
-                const event = new MapEvent('click', id);
+                const event = new MapEvent('click', id, e.latlng);
                 event.eventClass = "Event";
                 eventController.fireEven(event)
             },
             move: (e)=>{
-                const event = new MapEvent('move', id);
+                const event = new MapEvent('move', id, e.latlng);
                 event.eventClass = "Event";
                 eventController.fireEven(event)
             },
             mouseover: (e)=>{
-                const event = new MapEvent('mouseover', id);
+                const event = new MapEvent('mouseover', id, e.latlng);
                 event.eventClass = "MouseEvent";
                 eventController.fireEven(event)
             },
             mouseout: (e)=>{
-                const event = new MapEvent('mouseout', id);
+                const event = new MapEvent('mouseout', id, e.latlng);
                 event.eventClass = "MouseEvent";
                 eventController.fireEven(event)
             },

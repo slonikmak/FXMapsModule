@@ -1,7 +1,19 @@
 package com.oceanos.FXMapModule;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mohamnag.fxwebview_debugger.DevToolsDebuggerServer;
 import com.oceanos.FXMapModule.JSControllers.EventController;
+import com.oceanos.FXMapModule.events.MapEvent;
+import com.oceanos.FXMapModule.events.MapEventListener;
+import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.events.MapMouseEvent;
+import com.oceanos.FXMapModule.layers.Layer;
+import com.oceanos.FXMapModule.layers.Marker;
+import com.oceanos.FXMapModule.layers.TileLayer;
+import com.oceanos.FXMapModule.repository.Repository;
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
@@ -10,21 +22,30 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import java.util.*;
+
 /**
  * @autor slonikmak on 13.06.2018.
  */
 public class MapView extends AnchorPane {
+    private long id;
+
     private WebView webView;
     private WebEngine webEngine;
     private EventController eventController;
     private JSObject window;
+    private Repository repository;
+    private Runnable onLoadHandler;
+    private Map<MapEventType, List<MapEventListener>> eventListeners;
+    private Gson gson;
 
 
     public MapView(){
         super();
-        eventController = new EventController();
-        initWebView();
-        this.getChildren().add(webView);
+        repository = new Repository();
+        eventController = new EventController(repository);
+        gson = new Gson();
+        eventListeners = new HashMap<>();
     }
 
     public void initWebView(){
@@ -49,16 +70,23 @@ public class MapView extends AnchorPane {
                 .stateProperty()
                 .addListener((ov, oldState, newState) -> {
                             if (newState == Worker.State.SUCCEEDED) {
-                                //webEngine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
-
-
                                 /*try {
                                     DevToolsDebuggerServer.startDebugServer(webEngine.impl_getDebugger(), 51742);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }*/
                                 window = (JSObject) webEngine.executeScript("window");
+
+                                int res = (int) window.call("getMapId");
+                                id = res;
+
                                 window.setMember("javaEventController", eventController);
+                                window.setMember("mapEventController", this);
+                                Marker.jsObject = (JSObject) webEngine.executeScript(Marker.jSController);
+                                TileLayer.jsObject = (JSObject) webEngine.executeScript(TileLayer.jSController);
+                                if (onLoadHandler != null){
+                                    onLoadHandler.run();
+                                }
                                 //JSObject jsToJava = (JSObject) webEngine.executeScript("fromJavaToJs");
                                 //id = javaToJsBridge.getMapId();
                                 //jsBridge.initJavaController();
@@ -79,11 +107,38 @@ public class MapView extends AnchorPane {
                         }
                 );
 
-
         /*try {
             DevToolsDebuggerServer.startDebugServer(webEngine.impl_getDebugger(), 51742);
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+        this.getChildren().add(webView);
+
+    }
+
+    public void addLayer(Layer layer){
+        layer.addToMap();
+        repository.addLayer(layer);
+    }
+
+    public void onLoad(Runnable handler){
+        this.onLoadHandler = handler;
+    }
+
+    public void addEventListener(MapEventType eventType, MapEventListener listener){
+        List<MapEventListener> listeners = eventListeners.entrySet().stream().filter(e->e.getKey().equals(eventType)).findFirst().map(Map.Entry::getValue).orElse(new ArrayList<>());
+        if (listeners.isEmpty()) eventListeners.put(eventType, listeners);
+        listeners.add(listener);
+    }
+
+    public void fireEvent(MapEvent event){
+        eventListeners.entrySet().stream()
+                .filter(e->e.getKey().equals(event.getType()))
+                .findFirst().map(Map.Entry::getValue)
+                .ifPresent((l)->l.forEach((listener)->listener.handle(event)));
+    }
+
+    public void fireEventFromJS(String event){
+        fireEvent(EventController.parseEventFromJs(event));
     }
 }
