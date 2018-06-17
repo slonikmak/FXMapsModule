@@ -1,8 +1,15 @@
-class MarkerController extends Controller{
+  class MarkerController extends Controller{
 
     addMarker(lat, lng, options){
-        console.log(lat+" "+lng+" "+options);
-        const marker = L.marker([lat, lng], JSON.parse(options));
+
+        var myIcon = L.icon({
+            iconUrl: 'file:/C:/Users/sloni/Downloads/icons8-48.png',
+            iconSize: [48, 48],
+        });
+        let optionsObj = JSON.parse(options);
+        //optionsObj.icon = myIcon;
+        console.log(lat+" "+lng+" "+optionsObj);
+        const marker = L.marker([lat, lng], optionsObj);
         this.mainGroup.addLayer(marker);
         const id = this.getLayerId(marker);
         this.registerEvents(id);

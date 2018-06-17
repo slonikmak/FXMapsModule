@@ -59,6 +59,12 @@ public class EventController {
                 double lng = object.get("latLng").getAsJsonObject().get("lng").getAsDouble();
                 mapEvent = new MapMouseEvent(type, target, lat, lng);
             }
+            case add:{
+                break;
+            }
+            case move: {
+                break;
+            }
         }
         return mapEvent;
     }

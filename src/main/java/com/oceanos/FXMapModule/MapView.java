@@ -63,9 +63,9 @@ public class MapView extends AnchorPane {
         AnchorPane.setLeftAnchor(this, 0d);*/
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
-        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
+        /*WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
             System.out.println(message + "[at " + lineNumber + "]");
-        });
+        });*/
         webEngine.getLoadWorker()
                 .stateProperty()
                 .addListener((ov, oldState, newState) -> {

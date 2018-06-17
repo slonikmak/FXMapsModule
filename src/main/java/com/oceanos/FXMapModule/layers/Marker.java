@@ -47,4 +47,6 @@ public class Marker extends Layer {
         int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), gson.toJson(options));
         id = value;
     }
+
+
 }
