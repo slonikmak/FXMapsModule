@@ -1,8 +1,10 @@
 package com.oceanos.FXMapModule.JSControllers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.oceanos.FXMapModule.events.LayerEvent;
 import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.MapMouseEvent;
@@ -21,10 +23,12 @@ public class EventController {
     private static Logger logger = Logger.getLogger(EventController.class.getName());
     private JsonParser jsonParser;
     private Repository repository;
+    private Gson gson;
 
     public EventController(Repository repository){
         jsonParser = new JsonParser();
         this.repository = repository;
+        this.gson = new Gson();
     }
 
     public void fireEvent(String event){
@@ -39,32 +43,18 @@ public class EventController {
     public static MapEvent parseEventFromJs(String event){
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(event).getAsJsonObject();
-        String typeString = object.get("type").getAsString();
-        MapEventType type = MapEventType.valueOf(typeString);
-        long target = object.get("target").getAsLong();
+        String eventClass = object.get("eventClass").getAsString();
         MapEvent mapEvent = null;
-        switch (type){
-            case click: {
-                double lat = object.get("latLng").getAsJsonObject().get("lat").getAsDouble();
-                double lng = object.get("latLng").getAsJsonObject().get("lng").getAsDouble();
-                mapEvent = new MapMouseEvent(type, target, lat, lng);
-            }
-            case mouseover: {
-                double lat = object.get("latLng").getAsJsonObject().get("lat").getAsDouble();
-                double lng = object.get("latLng").getAsJsonObject().get("lng").getAsDouble();
-                mapEvent = new MapMouseEvent(type, target, lat, lng);
-            }
-            case mouseout: {
-                double lat = object.get("latLng").getAsJsonObject().get("lat").getAsDouble();
-                double lng = object.get("latLng").getAsJsonObject().get("lng").getAsDouble();
-                mapEvent = new MapMouseEvent(type, target, lat, lng);
-            }
-            case add:{
+        switch (eventClass){
+            case "MouseEvent": {
+                mapEvent = new MapMouseEvent(object);
                 break;
             }
-            case move: {
+            case "LayerEvent": {
+                mapEvent = new LayerEvent(object);
                 break;
             }
+
         }
         return mapEvent;
     }

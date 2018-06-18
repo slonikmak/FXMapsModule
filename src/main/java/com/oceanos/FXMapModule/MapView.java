@@ -132,13 +132,18 @@ public class MapView extends AnchorPane {
     }
 
     public void fireEvent(MapEvent event){
+        System.out.println("Fire event from js");
         eventListeners.entrySet().stream()
                 .filter(e->e.getKey().equals(event.getType()))
                 .findFirst().map(Map.Entry::getValue)
                 .ifPresent((l)->l.forEach((listener)->listener.handle(event)));
+        System.out.println("end Fire event from js");
     }
 
     public void fireEventFromJS(String event){
-        fireEvent(EventController.parseEventFromJs(event));
+        System.out.println("get event from js");
+        MapEvent mapEvent = EventController.parseEventFromJs(event);
+        fireEvent(mapEvent);
+
     }
 }

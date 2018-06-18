@@ -15,9 +15,14 @@ public class Marker extends Layer {
     public static String jSController = "markerController";
     public static JSObject jsObject;
 
+    private String iconSrc;
     private Map<String,String> options;
     private DoubleProperty lat = new SimpleDoubleProperty();
     private DoubleProperty lng = new SimpleDoubleProperty();
+
+    public Marker(){
+        int value = (int) jsObject.call("startMarker");
+    }
 
     public Marker(double lat, double lng){
         this.lat.setValue(lat);
@@ -44,8 +49,12 @@ public class Marker extends Layer {
 
     public void addToMap() {
         Gson gson = new Gson();
-        int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), gson.toJson(options));
+        int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), gson.toJson(options), iconSrc);
         id = value;
+    }
+
+    public void setIcon(String src){
+        this.iconSrc = src;
     }
 
 

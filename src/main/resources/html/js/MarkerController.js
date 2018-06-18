@@ -1,18 +1,33 @@
   class MarkerController extends Controller{
 
-    addMarker(lat, lng, options){
+    addMarker(lat, lng, options, iconSrc){
 
+        console.log(iconSrc);
         var myIcon = L.icon({
-            iconUrl: 'file:/C:/Users/sloni/Downloads/icons8-48.png',
+            iconUrl: iconSrc,
             iconSize: [48, 48],
         });
         let optionsObj = JSON.parse(options);
-        //optionsObj.icon = myIcon;
+        if (iconSrc != null){
+            optionsObj.icon = myIcon;
+        }
         console.log(lat+" "+lng+" "+optionsObj);
         const marker = L.marker([lat, lng], optionsObj);
         this.mainGroup.addLayer(marker);
         const id = this.getLayerId(marker);
         this.registerEvents(id);
+        return id
+    }
+
+    startMarker(){
+        let marker = this.map.editTools.startMarker();
+        console.log(marker);
+        this.mainGroup.addLayer(marker);
+        const id = this.getLayerId(marker);
+        this.registerEvents(id);
+        marker.on("click", function () {
+
+        })
         return id
     }
 
@@ -45,13 +60,14 @@
 
         const events = {
             click: (e)=>{
+                console.log(e);
                 const event = new MapEvent('click', id, e.latlng);
-                event.eventClass = "Event";
+                event.eventClass = "MouseEvent";
                 eventController.fireEven(event)
             },
             move: (e)=>{
                 const event = new MapEvent('move', id, e.latlng);
-                event.eventClass = "Event";
+                event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
             },
             mouseover: (e)=>{
@@ -66,12 +82,12 @@
             },
             add: (e)=>{
                 const event = new MapEvent('add', id);
-                event.eventClass = "Event";
+                event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
             },
             remove: (e)=>{
                 const event = new MapEvent('remove', id);
-                event.eventClass = "Event";
+                event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
             }
         };

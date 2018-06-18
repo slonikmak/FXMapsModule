@@ -3,6 +3,7 @@ package com.oceanos.FXMapModule.layers;
 import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventListener;
 import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.events.MapMouseEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class EventedTest {
 
     @Test
     void getNotUsedEventListener(){
-        MapEvent e = new MapEvent(MapEventType.click);
+        MapEvent e = new MapMouseEvent(MapEventType.click);
         Assertions.assertEquals(Optional.empty(), evented.getEventListeners(e.getType()));
     }
 

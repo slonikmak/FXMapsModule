@@ -1,14 +1,22 @@
 package com.oceanos.FXMapModule.events;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 /**
  * @autor slonikmak on 14.06.2018.
  */
-public class MapEvent {
+public abstract class MapEvent {
     MapEventType type;
     long target;
 
     public MapEvent(MapEventType type){
         this.type = type;
+    }
+
+    public MapEvent(JsonObject object){
+        parseRawEvent(object);
     }
 
     public MapEventType getType() {
@@ -26,4 +34,6 @@ public class MapEvent {
     public void setTarget(long target) {
         this.target = target;
     }
+
+    public abstract void parseRawEvent(JsonObject object);
 }
