@@ -12,10 +12,13 @@ import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.MapMouseEvent;
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.Marker;
+import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.layers.TileLayer;
+import com.oceanos.FXMapModule.mapControllers.EditadleController;
 import com.oceanos.FXMapModule.repository.Repository;
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
@@ -23,6 +26,7 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @autor slonikmak on 13.06.2018.
@@ -82,8 +86,12 @@ public class MapView extends AnchorPane {
 
                                 window.setMember("javaEventController", eventController);
                                 window.setMember("mapEventController", this);
+                                //TODO: сделать универсальный способ инициализировать JS controller
                                 Marker.jsObject = (JSObject) webEngine.executeScript(Marker.jSController);
                                 TileLayer.jsObject = (JSObject) webEngine.executeScript(TileLayer.jSController);
+                                EditadleController.jsObject = (JSObject) webEngine.executeScript(EditadleController.jSController);
+                                EditadleController.mapView = this;
+                                PolyLine.jsObject = (JSObject) webEngine.executeScript(PolyLine.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();
                                 }
@@ -117,7 +125,7 @@ public class MapView extends AnchorPane {
     }
 
     public void addLayer(Layer layer){
-        layer.addToMap();
+        if (layer.getId() == 0) layer.addToMap();
         repository.addLayer(layer);
     }
 
@@ -140,10 +148,18 @@ public class MapView extends AnchorPane {
         System.out.println("end Fire event from js");
     }
 
+    public void removeEventListener(MapEventType eventType, MapEventListener listener){
+        eventListeners.get(eventType).remove(listener);
+    }
+
     public void fireEventFromJS(String event){
         System.out.println("get event from js");
         MapEvent mapEvent = EventController.parseEventFromJs(event);
         fireEvent(mapEvent);
 
+    }
+
+    public ObservableList<Layer> getLayers(){
+        return repository.getLayers();
     }
 }

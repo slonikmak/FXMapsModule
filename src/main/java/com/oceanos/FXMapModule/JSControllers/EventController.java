@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.oceanos.FXMapModule.events.LayerEvent;
-import com.oceanos.FXMapModule.events.MapEvent;
-import com.oceanos.FXMapModule.events.MapEventType;
-import com.oceanos.FXMapModule.events.MapMouseEvent;
+import com.oceanos.FXMapModule.events.*;
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.repository.Repository;
 
@@ -52,6 +49,10 @@ public class EventController {
             }
             case "LayerEvent": {
                 mapEvent = new LayerEvent(object);
+                break;
+            }
+            case "EditableEvent": {
+                mapEvent = new EditableEvent(object);
                 break;
             }
 

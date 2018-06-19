@@ -21,7 +21,7 @@ public class Marker extends Layer {
     private DoubleProperty lng = new SimpleDoubleProperty();
 
     public Marker(){
-        int value = (int) jsObject.call("startMarker");
+
     }
 
     public Marker(double lat, double lng){
@@ -32,14 +32,6 @@ public class Marker extends Layer {
     public Marker(double lat, double lng, Map<String, String> options){
        this(lat, lng);
         this.options = options;
-    }
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public void addOption(String key, String value) {
-        options.put(key, value);
     }
 
     @Override
@@ -57,5 +49,32 @@ public class Marker extends Layer {
         this.iconSrc = src;
     }
 
+    public double getLat() {
+        return lat.get();
+    }
 
+    public DoubleProperty latProperty() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat.set(lat);
+    }
+
+    public double getLng() {
+        return lng.get();
+    }
+
+    public DoubleProperty lngProperty() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng.set(lng);
+    }
+
+    //TODO как сделать метод private
+    public void setId(long id){
+        this.id = id;
+    }
 }

@@ -9,16 +9,16 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="500.0" style="-fx-background-color: ;" />
+            <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="500.0" />
          </center>
          <left>
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="50.0" prefWidth="50.0" BorderPane.alignment="CENTER">
                <children>
                   <VBox prefHeight="200.0" prefWidth="50.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#onAction" onContextMenuRequested="#contextMenuHandler" text="Marker" />
-                        <Button mnemonicParsing="false" text="Line" />
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" onMouseClicked="#createMarker" text="Marker" />
+                        <Button mnemonicParsing="false" onAction="#startDrawLine" text="Line" />
+                        <Button mnemonicParsing="false" onAction="#addCustomLine" text="Add line" />
                      </children>
                   </VBox>
                </children>

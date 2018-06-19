@@ -6,6 +6,8 @@ const map = L.map('map',{editable: true}).setView([51.505, -0.09], 13);
 
 const tileLayerController = new TileLayerController(map);
 const markerController = new MarkerController(map);
+const editableController = new EditableController(map);
+const polyLineController = new PolylineController(map);
 
 
 

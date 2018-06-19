@@ -27,6 +27,8 @@ public class Evented {
     }
 
     public void fireEvent(MapEvent event){
-        getEventListeners(event.getType()).ifPresent(mapEventListeners -> mapEventListeners.forEach(l->l.handle(event)));
+        getEventListeners(event.getType()).ifPresent(mapEventListeners -> {
+            mapEventListeners.forEach(l->l.handle(event));
+        });
     }
 }
