@@ -9,6 +9,9 @@ import com.google.gson.JsonParser;
  */
 public class LayerEvent extends MapEvent {
 
+    private double lat;
+    private double lng;
+
     public LayerEvent(MapEventType type) {
         super(type);
     }
@@ -24,5 +27,15 @@ public class LayerEvent extends MapEvent {
         long target = object.get("target").getAsLong();
         this.type = type;
         this.target = target;
+        this.lat = object.get("latLng").getAsJsonObject().get("lat").getAsDouble();
+        this.lng = object.get("latLng").getAsJsonObject().get("lng").getAsDouble();
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
     }
 }

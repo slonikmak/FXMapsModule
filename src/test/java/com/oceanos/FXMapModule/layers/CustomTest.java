@@ -12,10 +12,13 @@ import org.hildan.fxgson.FxGson;
  * @autor slonikmak on 19.06.2018.
  */
 public class CustomTest {
+    static ObservableMap<String, Object> people = FXCollections.observableHashMap();
+
     public static void main(String[] args) {
-        ObservableMap<String, ObjectProperty> people = FXCollections.observableHashMap();
-        people.put("Anton", new SimpleObjectProperty(3));
-        people.put("Anton3",new SimpleObjectProperty("aaaa"));
+
+       addProperty("1", 1);
+       addProperty("2","2");
+       addProperty("3", 3.0);
 
         //people.addAll(new Person("Anton", "Doe", 12), new Person("3Anton", "Do3e", 14));
         Gson gson = FxGson.create();
@@ -34,4 +37,16 @@ public class CustomTest {
             this.age.setValue(age);
         }
     }
+    static void addProperty(String key,Object o){
+       /* Property property = null;
+        if (o instanceof Integer){
+            property = new SimpleIntegerProperty((Integer) o);
+        } else if (o instanceof String){
+            property = new SimpleStringProperty((String) o);
+        } else if (o instanceof Double){
+            property = new SimpleDoubleProperty((Double) o);
+        }*/
+        people.put(key, o);
+    }
+
 }

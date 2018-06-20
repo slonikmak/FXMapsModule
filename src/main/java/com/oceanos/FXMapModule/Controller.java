@@ -1,26 +1,17 @@
 package com.oceanos.FXMapModule;
 
-import com.oceanos.FXMapModule.events.MapEvent;
-import com.oceanos.FXMapModule.events.MapEventListener;
-import com.oceanos.FXMapModule.events.MapEventType;
-import com.oceanos.FXMapModule.events.MapMouseEvent;
+import com.oceanos.FXMapModule.events.*;
 import com.oceanos.FXMapModule.layers.*;
-import com.oceanos.FXMapModule.mapControllers.EditadleController;
-import javafx.application.Platform;
+import com.oceanos.FXMapModule.mapControllers.EditableController;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Controller {
     private MapView mapView;
@@ -36,21 +27,23 @@ public class Controller {
         MapEventListener that = clickOnAddMarkerListener;
         MapMouseEvent event = (MapMouseEvent) e;
         Marker marker = new Marker(event.getLat(), event.getLng());
-        marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
+        //marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
         marker.getOptions().setOption("draggable", true);
         mapView.addLayer(marker);
         mapView.removeEventListener(MapEventType.click, clickOnAddMarkerListener);
     }
     @FXML
     void startDrawLine(){
-        EditadleController.startPolyLine();
+        EditableController.startPolyLine();
     }
 
     @FXML
     void addCustomLine(){
         //lat=51.50158353472559 lng=-0.11003494262695312 lat=51.5116270804117 lng=-0.07518768310546876
         PolyLine line = new PolyLine(Arrays.asList(new LatLng(51.50158353472559,-0.11003494262695312), new LatLng(51.5116270804117,-0.07518768310546876)));
+        line.getOptions().setOption("color", "red");
         mapView.addLayer(line);
+        line.addEventListener(MapEventType.click, (event -> System.out.println("click on line")));
     }
 
     @FXML
@@ -63,7 +56,17 @@ public class Controller {
 
         addOnMapByClick.setOnAction((e)->{
             //mapView.addEventListener(MapEventType.click, clickOnAddMarkerListener);
-            EditadleController.startMarker();
+            Marker marker = EditableController.startMarker();
+            marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
+            marker.addEventListener(MapEventType.editable_drawing_commit, event1 -> {
+                System.out.println("add circle!!!");
+                Circle circle = new Circle(new LatLng(((EditableEvent)event1).getLat(), ((EditableEvent)event1).getLng()), 50);
+                marker.latProperty().addListener((a,b,c)->{
+                    circle.setLatLng(marker.getLat(), marker.getLng());
+                });
+                mapView.addLayer(circle);
+            });
+
         });
     }
 

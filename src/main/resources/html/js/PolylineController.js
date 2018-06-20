@@ -3,10 +3,14 @@ class PolylineController extends PathController{
     addPolyline(latLngs, options){
         if (options === undefined){
             options = {}
+        } else {
+            options = JSON.parse(options);
         }
         options.bubblingMouseEvents = false;
+        latLngs = JSON.parse(latLngs);
         const polyline = L.polyline(latLngs, options);
-        this.mainGroup.addLayer(polyline);
+        console.log(options);
+        this.mapGroup.addLayer(polyline);
         const id = this.getLayerId(polyline);
         this.registerEvents(id);
         return id;
@@ -17,7 +21,7 @@ class PolylineController extends PathController{
     }
 
     getLatLngs(id){
-        return this.getLayerById(id).getLatLngs()
+        return JSON.stringify(this.getLayerById(id).getLatLngs());
     }
 
     setLatLngs(id, latLngs){
@@ -37,7 +41,8 @@ class PolylineController extends PathController{
 
         const events = {
             click: (e)=>{
-                const event = new MapEvent('click', layer, e.latlng);
+                const event = new MapEvent('click', id, e.latlng);
+                event.eventClass = 'MouseEvent';
                 eventController.fireEven(event)
             }
         };

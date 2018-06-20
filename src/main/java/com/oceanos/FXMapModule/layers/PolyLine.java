@@ -17,9 +17,16 @@ import java.util.List;
 public class PolyLine extends Path {
     public static String jSController = "polyLineController";
     public static JSObject jsObject;
+    public static Gson gson;
 
+    static {
+        gson = new Gson();
+    }
 
     private ObservableList<LatLng> latLngs = FXCollections.observableArrayList();
+
+    public PolyLine(){
+    }
 
     public PolyLine(List<LatLng> latLngs){
         this.latLngs.addAll(latLngs);
@@ -27,6 +34,11 @@ public class PolyLine extends Path {
 
     public void addLatLng(double lat, double lng){
         latLngs.add(new LatLng(lat, lng));
+    }
+
+    public void updateLatLng(){
+        String latLngString = (String) jsObject.call("getLatLngs", id);
+        List<LatLng> list = gson.fromJson(latLngString, List.class);
     }
 
     @Override
@@ -42,7 +54,8 @@ public class PolyLine extends Path {
     @Override
     public void addToMap() {
         Gson gson = new Gson();
-        int value = (int) jsObject.call("addPolyLine",gson.toJson(new ArrayList<>(this.latLngs)),getOptions().getJson());
-        id = value;
+        String latlngs = gson.toJson(new ArrayList<>(this.latLngs));
+        Object value = jsObject.call("addPolyline",latlngs,getOptions().getJson());
+        id = (int) value;
     }
 }

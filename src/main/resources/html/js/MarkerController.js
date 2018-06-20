@@ -13,7 +13,7 @@
         }
         console.log(lat+" "+lng+" "+optionsObj);
         const marker = L.marker([lat, lng], optionsObj);
-        this.mainGroup.addLayer(marker);
+        this.mapGroup.addLayer(marker);
         const id = this.getLayerId(marker);
         this.registerEvents(id);
         return id
@@ -22,7 +22,7 @@
     startMarker(){
         let marker = this.map.editTools.startMarker();
         console.log(marker);
-        this.mainGroup.addLayer(marker);
+        this.mapGroup.addLayer(marker);
         const id = this.getLayerId(marker);
         this.registerEvents(id);
         marker.on("click", function () {
@@ -47,12 +47,21 @@
         this.getLayerById(id).setLatLng(latLng)
     }
 
-    setIcon(id, icon){
-        this.getLayerById(id).setIcon(L.icon({iconUrl:icon}))
+    setIcon(id, options){
+        //console.log(JSON.parse(options));
+        const icon = L.icon(JSON.parse(options));
+        this.getLayerById(id).setIcon(icon)
     }
 
     setOpacity(id,opacity){
         this.getLayerById(id).setOpacity(opacity)
+    }
+
+    update(id, options){
+        options = JSON.parse(options);
+        console.log(options);
+        //this.setIcon(id, options);
+        this.setOpacity(id, options.opacity);
     }
 
     registerEvents(id){
@@ -60,12 +69,13 @@
 
         const events = {
             click: (e)=>{
-                console.log(e);
+                //console.log(e);
                 const event = new MapEvent('click', id, e.latlng);
                 event.eventClass = "MouseEvent";
                 eventController.fireEven(event)
             },
             move: (e)=>{
+                //console.log("move")
                 const event = new MapEvent('move', id, e.latlng);
                 event.eventClass = "LayerEvent";
                 eventController.fireEven(event)

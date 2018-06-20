@@ -5,6 +5,7 @@ import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.Evented;
 import com.oceanos.FXMapModule.layers.Marker;
+import com.oceanos.FXMapModule.layers.PolyLine;
 import netscape.javascript.JSObject;
 
 /**
@@ -12,17 +13,23 @@ import netscape.javascript.JSObject;
  * TODO: сделать отдельный интерфейс PlugIns
  *
  */
-public class EditadleController extends Evented {
+public class EditableController extends Evented {
     public static String jSController = "editableController";
     public static JSObject jsObject;
     public static MapView mapView;
 
-    public static long startPolyLine(){
+    public static PolyLine startPolyLine(){
+        PolyLine polyLine = new PolyLine();
+        polyLine.addEventListener(MapEventType.editable_drawing_commit,(e)->{
 
-        return (int) jsObject.call("startPolyline");
+        });
+        int id =  (int) jsObject.call("startPolyline");
+        polyLine.setId(id);
+        mapView.addLayer(polyLine);
+        return polyLine;
     }
 
-    public static long startMarker(){
+    public static Marker startMarker(){
         Marker marker = new Marker();
         marker.addEventListener(MapEventType.editable_drawing_commit, (e)->{
             marker.setLat(((EditableEvent) e).getLat());
@@ -31,6 +38,6 @@ public class EditadleController extends Evented {
         int id = (int) jsObject.call("startMarker");
         marker.setId(id);
         mapView.addLayer(marker);
-        return id;
+        return marker;
     }
 }

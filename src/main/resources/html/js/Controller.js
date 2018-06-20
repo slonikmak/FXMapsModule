@@ -1,16 +1,18 @@
 class Controller{
-    constructor(map){
-        this.mainGroup = L.layerGroup();
+    constructor(map, mapGroup){
+        //this.mainGroup = L.layerGroup();
         this.map = map;
-        this.mainGroup.addTo(this.map)
+        //this.mainGroup.addTo(this.map);
+        this.mapGroup = mapGroup;
+        //mapGroup.addLayer(this.mainGroup);
     }
 
     getLayerId(layer){
-        return this.mainGroup.getLayerId(layer)
+        return this.mapGroup.getLayerId(layer);
     }
 
     getLayerById(id){
-        return this.mainGroup.getLayer(id)
+        return this.mapGroup.getLayer(id);
     }
 
 

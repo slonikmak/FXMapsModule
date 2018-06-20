@@ -16,7 +16,7 @@ eventController.addEventListner = function(eventType, listner){
 };
 
 eventController.fireEven = function(event){
-    //console.log(javaEventController);
+    //console.log(event);
     javaEventController.fireEvent(JSON.stringify(event));
     const listeners = this.eventListeners.get(event.type);
     if (listeners !== undefined){
