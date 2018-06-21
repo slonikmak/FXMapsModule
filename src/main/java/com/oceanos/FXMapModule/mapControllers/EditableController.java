@@ -40,4 +40,8 @@ public class EditableController extends Evented {
         mapView.addLayer(marker);
         return marker;
     }
+
+    public static void createTooltip(){
+        jsObject.call("createTooltip");
+    }
 }

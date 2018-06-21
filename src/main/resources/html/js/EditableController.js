@@ -41,6 +41,48 @@ class EditableController extends Controller{
                eventController.fireEven(event)
            });
        }
+    }
+
+    createTooltip(){
+        console.log("create tooltip");
+        const tooltip = L.DomUtil.get('tooltip');
+        console.log(tooltip);
+
+        function addTooltip (e) {
+            if (e.layer instanceof L.Polyline){
+                L.DomEvent.on(document, 'mousemove', moveTooltip);
+                tooltip.innerHTML = 'Click on the map to start a line.';
+                tooltip.style.display = 'block';
+            }
+
+        }
+
+        function removeTooltip (e) {
+            tooltip.innerHTML = '';
+            tooltip.style.display = 'none';
+            L.DomEvent.off(document, 'mousemove', moveTooltip);
+        }
+
+        function moveTooltip (e) {
+            console.log("move tooltip")
+            tooltip.style.left = e.clientX + 20 + 'px';
+            tooltip.style.top = e.clientY - 10 + 'px';
+        }
+
+        function updateTooltip (e) {
+            if (e.layer instanceof L.Polyline){
+                if (e.layer.editor._drawnLatLngs.length < e.layer.editor.MIN_VERTEX) {
+                    tooltip.innerHTML = 'Click on the map to continue line.';
+                }
+                else {
+                    tooltip.innerHTML = 'Click on last point to finish line.';
+                }
+            }
+
+        }
+        this.map.on('editable:drawing:start', addTooltip);
+        this.map.on('editable:drawing:end', removeTooltip);
+        this.map.on('editable:drawing:click', updateTooltip);
 
 
     }
