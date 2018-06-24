@@ -93,6 +93,8 @@ public class Controller {
                 }));*/
             });
         });
+
+        //FIXME: слишком много инициализаторов
         mapView.initWebView();
         mainPane.getChildren().add(mapView);
         AnchorPane.setBottomAnchor(mapView, 0d);

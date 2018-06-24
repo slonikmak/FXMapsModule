@@ -154,4 +154,5 @@ public class MapView extends AnchorPane {
     public ObservableList<Layer> getLayers(){
         return repository.getLayers();
     }
+
 }
