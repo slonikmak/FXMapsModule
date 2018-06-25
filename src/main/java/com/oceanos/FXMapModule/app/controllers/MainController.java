@@ -8,6 +8,8 @@ import com.oceanos.FXMapModule.layers.TileLayer;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -115,6 +117,11 @@ public class MainController {
                 Layer layer = c.getAddedSubList().get(0);
                 layerTreeView.getRoot().getChildren().add(new TreeItem<>(layer));
             }
+        });
+
+        layerTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue.getValue());
+            mapView.flyTo(((Marker)newValue.getValue()).getLat(), ((Marker)newValue.getValue()).getLng());
         });
     }
 

@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 /**
  * @autor slonikmak on 25.06.2018.
@@ -32,7 +33,9 @@ public class LayerTreeCell extends TreeCell<Layer> {
         } else {
             String name = item.getName();
             setText(name + " marker");
-            hBox.getChildren().add(new MaterialIconView(MaterialIcon.LOCATION_ON));
+            MaterialIconView iconView = new MaterialIconView(MaterialIcon.LOCATION_ON);
+            iconView.setFill(Color.BLUE);
+            hBox.getChildren().add(iconView);
             //com.oceanos.FXMapModule.layers.Marker
             if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Marker")) {
                 //(name + " marker");

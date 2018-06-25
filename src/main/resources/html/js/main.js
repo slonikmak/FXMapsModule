@@ -30,3 +30,7 @@ function getMapId() {
     return map._leaflet_id;
 }
 
+function flyTo(lat, lng) {
+    map.flyTo([lat,lng]);
+}
+
