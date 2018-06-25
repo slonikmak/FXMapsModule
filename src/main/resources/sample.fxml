@@ -13,6 +13,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,7 +24,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@fxml-css/jMetro.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -70,7 +71,7 @@
           <children>
                   <VBox>
                      <children>
-                        <Button maxHeight="25.0" maxWidth="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
+                        <Button maxHeight="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="LIST" size="24">
                                  <font>
@@ -79,7 +80,7 @@
                               </MaterialIconView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addMarker" prefHeight="25.0" prefWidth="25.0">
+                        <Button mnemonicParsing="false" onAction="#addMarker" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="LOCATION_ON" size="24">
                                  <font>
@@ -88,7 +89,7 @@
                               </MaterialIconView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addMission" prefHeight="25.0" prefWidth="25.0">
+                        <Button mnemonicParsing="false" onAction="#addMission" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="TIMELINE" size="24">
                                  <font>
@@ -97,7 +98,7 @@
                               </MaterialIconView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#startPath" prefHeight="25.0" prefWidth="25.0">
+                        <Button mnemonicParsing="false" onAction="#startPath" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="GESTURE" size="24">
                                  <font>
@@ -106,7 +107,7 @@
                               </MaterialIconView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="25.0" prefWidth="25.0">
+                        <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="ADJUST" size="24">
                                  <font>
@@ -115,7 +116,7 @@
                               </MaterialIconView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addRectangle" prefHeight="25.0" prefWidth="25.0">
+                        <Button mnemonicParsing="false" onAction="#addRectangle" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
                            <graphic>
                               <MaterialIconView glyphName="CROP_5_4" size="24">
                                  <font>
@@ -128,20 +129,26 @@
                   </VBox>
           </children>
         </AnchorPane>
-            <AnchorPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane maxWidth="300.0" minWidth="200.0" prefHeight="200.0" prefWidth="300.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Слои" VBox.vgrow="NEVER">
+                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Слои">
                           <content>
-                            <AnchorPane fx:id="layersPane" minHeight="300.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane fx:id="layersPane">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <children>
+                                    <TreeView fx:id="layerTreeView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children></AnchorPane>
                           </content>
                         </TitledPane>
                         <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Настройки">
                           <content>
                             <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                                    <ScrollPane prefHeight="200.0" prefWidth="300.0">
                                       <content>
                                         <AnchorPane fx:id="preferencePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                                              <children>
@@ -182,7 +189,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: grey;">
                                  <children>
-                                    <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                                    <ScrollPane prefHeight="200.0" prefWidth="300.0">
                                       <content>
                                         <AnchorPane fx:id="stylesPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                                              <children>

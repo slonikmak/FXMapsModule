@@ -11,6 +11,7 @@ import netscape.javascript.JSObject;
 public abstract class Layer extends Evented {
     protected long id;
     private LayerOptions options;
+    private String name = "layer";
 
     public Layer(){
         subscribeToOptions();
@@ -29,6 +30,13 @@ public abstract class Layer extends Evented {
 
     public LayerOptions getOptions(){
         return this.options;
+    }
+
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
     }
     public abstract void addToMap();
     public abstract void remove();
