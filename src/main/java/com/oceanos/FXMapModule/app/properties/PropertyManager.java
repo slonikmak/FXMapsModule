@@ -36,5 +36,9 @@ public class PropertyManager {
         return properties.getProperty("project.resource.folder");
     }
 
+    public String getDefaultIcon(){
+        return properties.getProperty("icons.icon.default");
+    }
+
 
 }

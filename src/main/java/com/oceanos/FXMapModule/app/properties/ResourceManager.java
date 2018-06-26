@@ -27,28 +27,36 @@ public class ResourceManager {
                 PropertyManager.getInstance().getProjectResourceFolderName());
         if (!Files.exists(resourceFolder)){
             createResourceFolder();
+        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getDefaultIconsFolder()))){
             addIconsToResourceFolder();
         }
     }
 
-    public static ResourceManager getInstance() throws IOException {
+    public static ResourceManager getInstance() {
         if (instance == null){
-            instance = new ResourceManager();
+            try {
+                instance = new ResourceManager();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return instance;
     }
 
     private void addIconsToResourceFolder() throws IOException {
+        System.out.println("add icons");
         iconsFolder = resourceFolder.resolve("icons");
         Files.createDirectory(iconsFolder);
         copyIcons();
     }
 
     private void copyIcons() throws IOException {
+        System.out.println("copy icons");
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("icons").getFile());
         Path path = file.toPath();
         Files.list(path).forEach(f->{
+            System.out.println("copy");
             try {
                 Files.copy(f, iconsFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
@@ -58,12 +66,16 @@ public class ResourceManager {
     }
 
     private void createResourceFolder() throws IOException {
+        System.out.println("create resource folder");
         Files.createDirectory(resourceFolder);
     }
 
     public List<Path> getIconsList() throws IOException {
        return Files.list(iconsFolder).collect(Collectors.toList());
+    }
 
+    public String getDefaultIcon(){
+        return iconsFolder.resolve(PropertyManager.getInstance().getDefaultIcon()).toString();
     }
 
     private File[] getResourceFolderFiles (String folder) {

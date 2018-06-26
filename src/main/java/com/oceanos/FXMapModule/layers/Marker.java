@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import netscape.javascript.JSObject;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ public class Marker extends Layer {
             lat.setValue(((LayerEvent)event).getLat());
             lng.setValue(((LayerEvent)event).getLng());
         }));
+
     }
 
     public Marker(double lat, double lng){
@@ -63,6 +65,10 @@ public class Marker extends Layer {
         this.icon = new Icon(src);
         String json =  gson.toJson(icon);
         if (isOnMap()) jsObject.call("setIcon", id, json);
+    }
+
+    public Icon getIcon(){
+        return icon;
     }
 
     public double getLat() {
