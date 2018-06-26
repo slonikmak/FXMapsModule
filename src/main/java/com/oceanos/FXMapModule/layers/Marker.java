@@ -62,7 +62,7 @@ public class Marker extends Layer {
     public void setIcon(String src){
         this.icon = new Icon(src);
         String json =  gson.toJson(icon);
-        jsObject.call("setIcon", id, json);
+        if (isOnMap()) jsObject.call("setIcon", id, json);
     }
 
     public double getLat() {
@@ -93,5 +93,8 @@ public class Marker extends Layer {
         jsObject.call("update", id, getOptions().getJson());
     }
 
+    private boolean isOnMap(){
+        return id != 0;
+    }
 
 }

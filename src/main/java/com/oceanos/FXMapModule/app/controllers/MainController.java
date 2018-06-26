@@ -13,15 +13,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
+import java.io.IOException;
+
 public class MainController {
     private MapView mapView;
+
+    @FXML
+    private AnchorPane layerOptionsPane;
 
     @FXML
     private TreeView<Layer> layerTreeView;
@@ -86,6 +93,7 @@ public class MainController {
         mapView.onLoad(() -> {
             mapView.addLayer(tileLayer);
             Marker marker = new Marker(60.055142,30.3400618);
+            marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
             Marker marker1 = new Marker(60.0555,30.34007);
             marker.setName("marker 1");
             marker.setName("marker 2");
@@ -121,8 +129,26 @@ public class MainController {
 
         layerTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(newValue.getValue());
-            mapView.flyTo(((Marker)newValue.getValue()).getLat(), ((Marker)newValue.getValue()).getLng());
+            if (newValue.getValue() instanceof Marker){
+                mapView.flyTo(((Marker)newValue.getValue()).getLat(), ((Marker)newValue.getValue()).getLng());
+                fillOptionsPane(newValue.getValue());
+            }
         });
+    }
+
+    private void fillOptionsPane(Layer value) {
+        VBox elem = null;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/markerOptions.fxml"));
+        try {
+            elem = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MarkerOptionsController controller = loader.getController();
+        controller.setLayer(value);
+        layerOptionsPane.getChildren().clear();
+        layerOptionsPane.getChildren().add(elem);
     }
 
 }

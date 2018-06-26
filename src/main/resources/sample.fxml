@@ -26,7 +26,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@fxml-css/jMetro.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
+    <MenuBar styleClass="menu-item" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="Файл">
           <items>
@@ -133,7 +133,7 @@
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Слои">
+                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Слои">
                           <content>
                             <AnchorPane fx:id="layersPane">
                                  <opaqueInsets>
@@ -144,85 +144,93 @@
                                  </children></AnchorPane>
                           </content>
                         </TitledPane>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Настройки">
-                          <content>
-                            <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <AnchorPane fx:id="layerOptionsPane" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ScrollPane prefHeight="200.0" prefWidth="300.0">
+                                    <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Настройки">
                                       <content>
-                                        <AnchorPane fx:id="preferencePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                        <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="73.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0" prefWidth="127.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                   <children>
-                                                      <Label text="Latitude" />
-                                                      <Label text="Longtitude" GridPane.rowIndex="1" />
-                                                      <Label text="Name" GridPane.rowIndex="3" />
-                                                      <Label text="Altitude" GridPane.rowIndex="2" />
-                                                      <TextField GridPane.columnIndex="1" />
-                                                      <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                      <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                      <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                   </children>
-                                                </GridPane>
+                                                <ScrollPane prefHeight="200.0" prefWidth="300.0">
+                                                  <content>
+                                                    <AnchorPane fx:id="preferencePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                                         <children>
+                                                            <GridPane>
+                                                              <columnConstraints>
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="73.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0" prefWidth="127.0" />
+                                                              </columnConstraints>
+                                                              <rowConstraints>
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                              </rowConstraints>
+                                                               <children>
+                                                                  <Label text="Latitude" />
+                                                                  <Label text="Longtitude" GridPane.rowIndex="1" />
+                                                                  <Label text="Name" GridPane.rowIndex="3" />
+                                                                  <Label text="Altitude" GridPane.rowIndex="2" />
+                                                                  <TextField GridPane.columnIndex="1" />
+                                                                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                               </children>
+                                                            </GridPane>
+                                                         </children>
+                                                      </AnchorPane>
+                                                  </content>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </ScrollPane>
                                              </children>
                                           </AnchorPane>
                                       </content>
-                                       <padding>
-                                          <Insets left="5.0" />
-                                       </padding>
-                                    </ScrollPane>
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" style="-fx-background-color: yellow;" text="Стили">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: grey;">
-                                 <children>
-                                    <ScrollPane prefHeight="200.0" prefWidth="300.0">
+                                    </TitledPane>
+                                    <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" style="-fx-background-color: yellow;" text="Стили">
                                       <content>
-                                        <AnchorPane fx:id="stylesPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: grey;">
                                              <children>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="69.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="131.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                   <children>
-                                                      <Label text="Icon" />
-                                                      <Label text="Size" GridPane.rowIndex="1" />
-                                                      <Label text="Label" GridPane.rowIndex="2" />
-                                                      <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                      <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                      <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" />
-                                                   </children>
-                                                </GridPane>
+                                                <ScrollPane prefHeight="200.0" prefWidth="300.0">
+                                                  <content>
+                                                    <AnchorPane fx:id="stylesPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                                         <children>
+                                                            <GridPane>
+                                                              <columnConstraints>
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="69.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="131.0" />
+                                                              </columnConstraints>
+                                                              <rowConstraints>
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                              </rowConstraints>
+                                                               <children>
+                                                                  <Label text="Icon" />
+                                                                  <Label text="Size" GridPane.rowIndex="1" />
+                                                                  <Label text="Label" GridPane.rowIndex="2" />
+                                                                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" />
+                                                               </children>
+                                                            </GridPane>
+                                                         </children>
+                                                      </AnchorPane>
+                                                  </content>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </ScrollPane>
                                              </children>
                                           </AnchorPane>
                                       </content>
-                                       <padding>
-                                          <Insets left="5.0" />
-                                       </padding>
-                                    </ScrollPane>
+                                    </TitledPane>
                                  </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
                      </children>
                   </VBox>
                </children>

@@ -1,20 +1,13 @@
   class MarkerController extends Controller{
 
-    addMarker(lat, lng, options, iconSrc){
-
-        console.log(iconSrc);
-        var myIcon = L.icon({
-            iconUrl: iconSrc,
-            iconSize: [48, 48],
-        });
+    addMarker(lat, lng, options, iconOptions){
         let optionsObj = JSON.parse(options);
-        if (iconSrc != null){
-            optionsObj.icon = myIcon;
-        }
-        console.log(lat+" "+lng+" "+optionsObj);
-        const marker = L.marker([lat, lng], optionsObj);
+        const marker = L.marker([lat, lng]);
         this.mapGroup.addLayer(marker);
         const id = this.getLayerId(marker);
+        if (iconOptions != null && iconOptions !== undefined && iconOptions !== "null"){
+            this.setIcon(id, iconOptions);
+        }
         this.registerEvents(id);
         return id
     }
@@ -48,7 +41,7 @@
     }
 
     setIcon(id, options){
-        //console.log(JSON.parse(options));
+        //console.log(JSON.parse(properties));
         const icon = L.icon(JSON.parse(options));
         this.getLayerById(id).setIcon(icon)
     }
@@ -60,7 +53,7 @@
     update(id, options){
         options = JSON.parse(options);
         console.log(options);
-        //this.setIcon(id, options);
+        //this.setIcon(id, properties);
         this.setOpacity(id, options.opacity);
     }
 

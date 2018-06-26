@@ -46,7 +46,7 @@
     // Main edition handler. By default, it is attached to the map
     // as `map.editTools` property.
     // Leaflet.Editable is made to be fully extendable. You have three ways to customize
-    // the behaviour: using options, listening to events, or extending.
+    // the behaviour: using properties, listening to events, or extending.
     L.Editable = L.Evented.extend({
 
         statics: {
@@ -297,28 +297,28 @@
             return this.featuresLayer.addLayer(layer);
         },
 
-        // 🍂method startPolyline(latlng: L.LatLng, options: hash): L.Polyline
+        // 🍂method startPolyline(latlng: L.LatLng, properties: hash): L.Polyline
         // Start drawing a Polyline. If `latlng` is given, a first point will be added. In any case, continuing on user click.
-        // If `options` is given, it will be passed to the Polyline class constructor.
+        // If `properties` is given, it will be passed to the Polyline class constructor.
         startPolyline: function (latlng, options) {
             var line = this.createPolyline([], options);
             line.enableEdit(this.map).newShape(latlng);
             return line;
         },
 
-        // 🍂method startPolygon(latlng: L.LatLng, options: hash): L.Polygon
+        // 🍂method startPolygon(latlng: L.LatLng, properties: hash): L.Polygon
         // Start drawing a Polygon. If `latlng` is given, a first point will be added. In any case, continuing on user click.
-        // If `options` is given, it will be passed to the Polygon class constructor.
+        // If `properties` is given, it will be passed to the Polygon class constructor.
         startPolygon: function (latlng, options) {
             var polygon = this.createPolygon([], options);
             polygon.enableEdit(this.map).newShape(latlng);
             return polygon;
         },
 
-        // 🍂method startMarker(latlng: L.LatLng, options: hash): L.Marker
+        // 🍂method startMarker(latlng: L.LatLng, properties: hash): L.Marker
         // Start adding a Marker. If `latlng` is given, the Marker will be shown first at this point.
         // In any case, it will follow the user mouse, and will have a final `latlng` on next click (or touch).
-        // If `options` is given, it will be passed to the Marker class constructor.
+        // If `properties` is given, it will be passed to the Marker class constructor.
         startMarker: function (latlng, options) {
             latlng = latlng || this.map.getCenter().clone();
             var marker = this.createMarker(latlng, options);
@@ -326,9 +326,9 @@
             return marker;
         },
 
-        // 🍂method startRectangle(latlng: L.LatLng, options: hash): L.Rectangle
+        // 🍂method startRectangle(latlng: L.LatLng, properties: hash): L.Rectangle
         // Start drawing a Rectangle. If `latlng` is given, the Rectangle anchor will be added. In any case, continuing on user drag.
-        // If `options` is given, it will be passed to the Rectangle class constructor.
+        // If `properties` is given, it will be passed to the Rectangle class constructor.
         startRectangle: function(latlng, options) {
             var corner = latlng || L.latLng([0, 0]);
             var bounds = new L.LatLngBounds(corner, corner);
@@ -337,9 +337,9 @@
             return rectangle;
         },
 
-        // 🍂method startCircle(latlng: L.LatLng, options: hash): L.Circle
+        // 🍂method startCircle(latlng: L.LatLng, properties: hash): L.Circle
         // Start drawing a Circle. If `latlng` is given, the Circle anchor will be added. In any case, continuing on user drag.
-        // If `options` is given, it will be passed to the Circle class constructor.
+        // If `properties` is given, it will be passed to the Circle class constructor.
         startCircle: function (latlng, options) {
             latlng = latlng || this.map.getCenter().clone();
             var circle = this.createCircle(latlng, options);
@@ -394,7 +394,7 @@
     });
 
     // 🍂namespace Map; 🍂class Map
-    // Leaflet.Editable add options and events to the `L.Map` object.
+    // Leaflet.Editable add properties and events to the `L.Map` object.
     // See `Editable` events for the list of events fired on the Map.
     // 🍂example
     //
