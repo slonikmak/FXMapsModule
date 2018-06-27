@@ -50,10 +50,12 @@
         this.getLayerById(id).setOpacity(opacity)
     }
 
-    update(id, options){
+    update(id, lat, lng,  options){
+        //if (this.getLangLng(id) === undefined) return;
         options = JSON.parse(options);
         console.log(options);
         //this.setIcon(id, properties);
+        this.setLatLng(id, [lat, lng]);
         this.setOpacity(id, options.opacity);
     }
 

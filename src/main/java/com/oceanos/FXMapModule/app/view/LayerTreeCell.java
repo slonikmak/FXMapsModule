@@ -32,48 +32,19 @@ public class LayerTreeCell extends TreeCell<Layer> {
             setGraphic(null);
         } else {
             String name = item.getName();
-            setText(name + " marker");
-            MaterialIconView iconView = new MaterialIconView(MaterialIcon.LOCATION_ON);
-            iconView.setFill(Color.BLUE);
-            hBox.getChildren().add(iconView);
+            setText(name);
             //com.oceanos.FXMapModule.layers.Marker
             if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Marker")) {
-                //(name + " marker");
-                        /*deleteBtn.setOnAction(event -> {
-                            jsBridge.deletePoint(item.getId(), repository.getLines()
-                                    .filtered(trackLine -> trackLine.getPoints().stream()
-                                            .anyMatch(waypoint -> waypoint.getId() == item.getId()))
-                                    .get(0).getId());
-                        });*/
+                MaterialIconView iconView = new MaterialIconView(MaterialIcon.LOCATION_ON);
+                iconView.getStyleClass().add("tree-icon-view");
+                iconView.setFill(Color.BLUE);
+                hBox.getChildren().add(iconView);
                 //com.oceanos.FXMapModule.layers.PolyLine
             } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.PolyLine")) {
-                //setText(name + "polyline");
-                        /*((TrackLine) item).nameProperty().addListener((observable, oldValue, newValue) -> {
-                            treeViewProperty().getValue().refresh();
-                        });*/
-                ToggleButton delBtn = new ToggleButton("");
-                FontAwesomeIconView icon2 = new FontAwesomeIconView(FontAwesomeIcon.EYE);
-                delBtn.setGraphic(icon2);
-                hBox.getChildren().add(delBtn);
-                        /*deleteBtn.setOnAction(event -> {
-                            jsBridge.deleteLine(item.getId());
-                        });*/
-            } /*else if (item.getClass().getName().equals("models.Marker")) {
-                        setText(name);
-                        deleteBtn.setOnAction(event -> {
-                            jsBridge.deletMarker(item.getId());
-                        });
-                    } else if (item.getClass().getName().equals("models.DoneTrack")) {
-                        //System.out.println("name "+name);
-                        setText(name);
-                        if (((DoneTrack) item).getColor() != null) {
-                            hBox.setStyle("-fx-background-color: " + ((DoneTrack) item).getColor());
-                        }
-                        deleteBtn.setOnAction(event -> {
-                            if (item.getName().equals("Записанные треки")) return;
-                            jsBridge.deleteLine(item.getId());
-                        });
-                    }*/
+                MaterialIconView iconView = new MaterialIconView(MaterialIcon.GESTURE);
+                iconView.getStyleClass().add("tree-icon-view");
+                hBox.getChildren().addAll(iconView);
+            }
             setGraphic(hBox);
         }
     }

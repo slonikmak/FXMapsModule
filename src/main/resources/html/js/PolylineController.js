@@ -21,7 +21,12 @@ class PolylineController extends PathController{
     }
 
     getLatLngs(id){
-        return JSON.stringify(this.getLayerById(id).getLatLngs());
+        const latlngs = this.getLayerById(id).getLatLngs();
+        const result = [];
+        for (let i =0;i<latlngs.length;i++){
+            result[i] = [latlngs[i].lat, latlngs[i].lng]
+        }
+        return JSON.stringify(result);
     }
 
     setLatLngs(id, latLngs){
@@ -34,6 +39,46 @@ class PolylineController extends PathController{
 
     addLatLng(id, latLng){
         this.getLayerById(id).addLatLng(latLng)
+    }
+
+    getLength(id){
+        const layer = this.getLayerById(id);
+        const latlngs = layer.getLatLngs();
+        let result = 0;
+        for (let i=0;i<latlngs.length-1;i++){
+            result += latlngs[i].distanceTo(latlngs[i+1]);
+        }
+        return result;
+    }
+
+    getOptions(id){
+        const line = this.getLayerById(id);
+        const obj = {
+            opacity: line.options.opacity,
+            color: line.options.color,
+            weight: line.options.weight,
+            fill: line.options.fill,
+            fillColor: line.options.fillColor,
+            fillOpacity: line.options.fillOpacity,
+            bubblingMouseEvents: line.options.bubblingMouseEvents,
+            stroke: line.options.stroke,
+            editable: line.editEnabled()
+        };
+        //console.log(line.options);
+        return JSON.stringify(obj);
+    }
+
+    setEditable(id, value){
+        const line = this.getLayerById(id);
+        if (line !== undefined){
+            if (value) {
+                console.log("enabled");
+                line.enableEdit();
+            } else {
+                console.log(line);
+                line.disableEdit();
+            }
+        }
     }
 
     registerEvents(id){

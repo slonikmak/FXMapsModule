@@ -61,14 +61,7 @@
     -fx-text-fill: black;
     -fx-pref-width: 20px;
 }
-.map-btn {
-    -fx-padding: 5 5 5 5;
-}
 
-.tree-view-btn {
-    -fx-padding: 5 5 5 5;
-    -fx-background-color: transparent;
-}
 
 .button:hover{
     -fx-background-color: #d8d8d8;

@@ -29,7 +29,7 @@ public class EventController {
     }
 
     public void fireEvent(String event){
-        logger.info("Got event "+event);
+
         MapEvent mapEvent = parseEventFromJs(event);
         Optional<Layer> layer = repository.getLayerById(mapEvent.getTarget());
         layer.ifPresent((l)->{
@@ -38,6 +38,7 @@ public class EventController {
     }
 
     public static MapEvent parseEventFromJs(String event){
+        logger.info("Got event "+event);
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(event).getAsJsonObject();
         String eventClass = object.get("eventClass").getAsString();

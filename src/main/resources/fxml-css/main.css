@@ -1,0 +1,19 @@
+.root{
+    -icons-color: black;
+    -tree-icons-size:24px;
+}
+.tree-icon-view{
+    -fx-padding: 5 5 5 5;
+    -fx-background-color: transparent;
+    -glyph-size: -tree-icons-size;
+
+}
+
+.map-btn {
+    -fx-padding: 5 5 5 5;
+}
+
+.tree-view-btn {
+    -fx-padding: 5 5 5 5;
+    -fx-background-color: transparent;
+}

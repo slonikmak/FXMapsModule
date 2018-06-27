@@ -1,6 +1,8 @@
 package com.oceanos.FXMapModule.repository;
 
 import com.oceanos.FXMapModule.layers.Layer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,6 +14,8 @@ import java.util.Optional;
 public class Repository {
 
     private ObservableList<Layer> layers = FXCollections.observableArrayList();
+
+    private ObjectProperty<Layer> activeLayer = new SimpleObjectProperty<>();
 
     public ObservableList<Layer> getLayers() {
         return layers;
@@ -25,4 +29,15 @@ public class Repository {
         layers.add(layer);
     }
 
+    public Layer getActiveLayer() {
+        return activeLayer.get();
+    }
+
+    public ObjectProperty<Layer> activeLayerProperty() {
+        return activeLayer;
+    }
+
+    public void setActiveLayer(Layer activeLayer) {
+        this.activeLayer.set(activeLayer);
+    }
 }

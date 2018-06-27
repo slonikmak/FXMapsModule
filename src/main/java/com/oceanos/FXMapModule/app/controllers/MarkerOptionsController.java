@@ -1,6 +1,7 @@
 package com.oceanos.FXMapModule.app.controllers;
 
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
+import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.Marker;
 import javafx.beans.value.ChangeListener;
@@ -50,7 +51,7 @@ public class MarkerOptionsController implements LayerOptionsController {
     private TextField labelField;
 
     @FXML
-    private ComboBox<Path> iconBox;
+    private ComboBox<String> iconBox;
 
     @Override
     public void setLayer(Layer layer) {
@@ -60,7 +61,13 @@ public class MarkerOptionsController implements LayerOptionsController {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        fillOptions();
+    }
 
+    private void fillOptions() {
+        lngField.textProperty().bindBidirectional(layer.lngProperty(), new MyStringConverter());
+        latField.textProperty().bindBidirectional(layer.latProperty(), new MyStringConverter());
+        nameField.textProperty().bindBidirectional(layer.nameProperty());
     }
 
     public void initialize(){
@@ -71,27 +78,22 @@ public class MarkerOptionsController implements LayerOptionsController {
 
         iconBox.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Path> call(ListView<Path> param) {
-                final ListCell<Path> cell = new ListCell<Path>() {
+            public ListCell<String> call(ListView<String> param) {
+                final ListCell<String> cell = new ListCell<String>() {
                     {
                         //super.setPrefWidth(100);
                     }
 
                     @Override
-                    public void updateItem(Path item,
+                    public void updateItem(String item,
                                            boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            setText(item.getFileName().toString());
-                            try {
-                                String localUrl = item.toFile().toURI().toURL().toString();
-                                ImageView imageView = new ImageView();
-                                setIconView(localUrl, imageView);
-                                setGraphic(imageView);
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-
+                            setText(item);
+                            String localUrl = FilesUtills.normalizePath(item);
+                            ImageView imageView = new ImageView();
+                            setIconView(localUrl, imageView);
+                            setGraphic(imageView);
                         } else {
                             setText(null);
                         }
@@ -100,44 +102,36 @@ public class MarkerOptionsController implements LayerOptionsController {
                 return cell;
             }
         });
-        iconBox.setConverter(new StringConverter<Path>() {
+        iconBox.setConverter(new StringConverter<String>() {
             @Override
-            public String toString(Path object) {
+            public String toString(String object) {
                 if (object!=null){
-                    return object.getFileName().toString();
+                    return new File(object).getName();
                 } else return "";
 
             }
 
             @Override
-            public Path fromString(String string) {
+            public String fromString(String string) {
                 return null;
             }
         });
-        try {
-            iconBox.getItems().addAll(ResourceManager.getInstance().getIconsList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        iconBox.getItems().addAll(ResourceManager.getInstance().getIconsList());
     }
 
     private void setIconSelection() throws MalformedURLException {
         if (this.layer.getIcon()!=null){
-            iconBox.getSelectionModel().select(new File(this.layer.getIcon().getIconSrc()).toPath());
-                setIconView(new File(this.layer.getIcon().getIconSrc()).toURI().toURL().toString(), iconPreview);
+            iconBox.getSelectionModel().select(FilesUtills.normalizePath(this.layer.getIcon().getIconSrc()));
+                setIconView(FilesUtills.normalizePath(this.layer.getIcon().getIconSrc()), iconPreview);
 
         } else {
-            iconBox.getSelectionModel().select(Paths.get(ResourceManager.getInstance().getDefaultIcon()));
-            setIconView(new File(ResourceManager.getInstance().getDefaultIcon()).toURI().toURL().toString(), iconPreview);
+            iconBox.getSelectionModel().select(ResourceManager.getInstance().getDefaultIcon());
+            setIconView(FilesUtills.normalizePath(ResourceManager.getInstance().getDefaultIcon()), iconPreview);
         }
 
         iconBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                layer.setIcon(newValue.toUri().toURL().toString());
-                setIconView(newValue.toUri().toURL().toString(), iconPreview);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            layer.setIcon(FilesUtills.normalizePath(newValue));
+            setIconView(FilesUtills.normalizePath(newValue), iconPreview);
         });
     }
 
@@ -148,5 +142,18 @@ public class MarkerOptionsController implements LayerOptionsController {
         double size = 32.0 / image.getHeight();
         imageView.setFitWidth(image.getWidth() * size);
         imageView.setFitHeight(image.getHeight() * size);
+    }
+
+    private class MyStringConverter extends StringConverter<Number>{
+
+        @Override
+        public String toString(Number object) {
+            return String.valueOf(object);
+        }
+
+        @Override
+        public Double fromString(String string) {
+            return Double.valueOf(string);
+        }
     }
 }

@@ -4,9 +4,12 @@ class EditableController extends Controller{
         super(map, mapGroup);
 
     }
-    startPolyline(){
-        const line = this.map.editTools.startPolyline();
+    startPolyline(options){
+        options  = JSON.parse(options);
+        //console.log(options);
+        const line = this.map.editTools.startPolyline(null, options);
         this.mapGroup.addLayer(line);
+        this.registerEvents(this.getLayerId(line));
         return line._leaflet_id;
     }
 
@@ -22,7 +25,7 @@ class EditableController extends Controller{
     registerEvents(id){
         const layer = this.getLayerById(id);
 
-        const events = ["editable:drawing:commit","editable:disable"];
+        const events = ["editable:drawing:commit"];
 
        /* const events = {
             "editable:drawing:commit": (e)=>{
@@ -35,8 +38,9 @@ class EditableController extends Controller{
 
        for (let i=0;i<events.length;i++){
            layer.on(events[i], (e)=>{
-               //console.log(e);
-               const event = new MapEvent(events[i], id, e.latlng);
+               //console.log("Event");
+               const latlng = L.latLng(e.latlng.lat, e.latlng.lng);
+               const event = new MapEvent(events[i], id, latlng);
                event.eventClass = "EditableEvent";
                eventController.fireEven(event)
            });

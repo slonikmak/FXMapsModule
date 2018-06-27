@@ -2,6 +2,8 @@ package com.oceanos.FXMapModule.layers;
 
 import com.oceanos.FXMapModule.options.LayerOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import netscape.javascript.JSObject;
 
 
@@ -11,7 +13,7 @@ import netscape.javascript.JSObject;
 public abstract class Layer extends Evented {
     protected long id;
     private LayerOptions options;
-    private String name = "layer";
+    private StringProperty name = new SimpleStringProperty("layer");
 
     public Layer(){
         subscribeToOptions();
@@ -33,10 +35,13 @@ public abstract class Layer extends Evented {
     }
 
     public String getName(){
-        return name;
+        return name.getValue();
     }
     public void setName(String name){
-        this.name = name;
+        this.name.setValue(name);
+    }
+    public StringProperty nameProperty(){
+        return name;
     }
     public abstract void addToMap();
     public abstract void remove();

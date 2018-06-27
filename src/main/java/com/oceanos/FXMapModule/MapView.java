@@ -8,6 +8,7 @@ import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import com.oceanos.FXMapModule.repository.Repository;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.AnchorPane;
@@ -148,7 +149,6 @@ public class MapView extends AnchorPane {
         System.out.println("get event from js");
         MapEvent mapEvent = EventController.parseEventFromJs(event);
         fireEvent(mapEvent);
-
     }
 
     public void flyTo(double lat, double lng){
@@ -157,6 +157,14 @@ public class MapView extends AnchorPane {
 
     public ObservableList<Layer> getLayers(){
         return repository.getLayers();
+    }
+
+    public ObjectProperty<Layer> activeLayerProperty(){
+        return repository.activeLayerProperty();
+    }
+
+    public void setActivLayer(Layer layer){
+        repository.setActiveLayer(layer);
     }
 
 }

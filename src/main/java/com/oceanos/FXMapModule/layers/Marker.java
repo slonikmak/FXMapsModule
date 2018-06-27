@@ -33,13 +33,7 @@ public class Marker extends Layer {
 
     public Marker(){
         this.setOptions(new MarkerOptions());
-        getOptions().setChangeListener((c)->{
-            update();
-        });
-        addEventListener(MapEventType.move, (event -> {
-            lat.setValue(((LayerEvent)event).getLat());
-            lng.setValue(((LayerEvent)event).getLng());
-        }));
+
 
     }
 
@@ -59,6 +53,20 @@ public class Marker extends Layer {
         Gson gson = new Gson();
         int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), getOptions().getJson(), gson.toJson(icon));
         id = value;
+        initHandlers();
+    }
+
+    private void initHandlers(){
+        getOptions().setChangeListener((c)->{
+            update();
+        });
+        addEventListener(MapEventType.move, (event -> {
+            lat.setValue(((LayerEvent)event).getLat());
+            lng.setValue(((LayerEvent)event).getLng());
+        }));
+
+        latProperty().addListener((observable, oldValue, newValue) -> update());
+        lngProperty().addListener(observable -> update());
     }
 
     public void setIcon(String src){
@@ -96,7 +104,8 @@ public class Marker extends Layer {
     }
 
     private void update(){
-        jsObject.call("update", id, getOptions().getJson());
+        //if (!isOnMap()) return;
+        jsObject.call("update", id, lat.get(), lng. get(), getOptions().getJson());
     }
 
     private boolean isOnMap(){

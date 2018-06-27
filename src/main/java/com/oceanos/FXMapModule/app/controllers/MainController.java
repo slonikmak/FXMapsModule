@@ -1,9 +1,12 @@
 package com.oceanos.FXMapModule.app.controllers;
 
 import com.oceanos.FXMapModule.MapView;
+import com.oceanos.FXMapModule.app.properties.ResourceManager;
+import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.app.view.LayerTreeCell;
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.Marker;
+import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.layers.TileLayer;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -23,6 +26,7 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class MainController {
     private MapView mapView;
@@ -73,7 +77,7 @@ public class MainController {
 
     @FXML
     void startPath(ActionEvent event) {
-
+        EditableController.startPolyLine();
     }
 
     public void addMarkerByClick() {
@@ -93,10 +97,9 @@ public class MainController {
         mapView.onLoad(() -> {
             mapView.addLayer(tileLayer);
             Marker marker = new Marker(60.055142,30.3400618);
-            marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
+            marker.setIcon(FilesUtills.normalizePath(ResourceManager.getInstance().getIconsList().get(0)));
             Marker marker1 = new Marker(60.0555,30.34007);
             marker.setName("marker 1");
-            marker.setName("marker 2");
 
             mapView.addLayer(marker);
             mapView.addLayer(marker1);
@@ -107,6 +110,8 @@ public class MainController {
         AnchorPane.setTopAnchor(mapView, 0d);
         AnchorPane.setRightAnchor(mapView, 0d);
         AnchorPane.setLeftAnchor(mapView, 40.0);
+
+        initHandlers();
 
 
     }
@@ -128,27 +133,48 @@ public class MainController {
         });
 
         layerTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue.getValue());
-            if (newValue.getValue() instanceof Marker){
-                mapView.flyTo(((Marker)newValue.getValue()).getLat(), ((Marker)newValue.getValue()).getLng());
-                fillOptionsPane(newValue.getValue());
+            mapView.setActivLayer(newValue.getValue());
+        });
+    }
+
+    private void initHandlers(){
+        mapView.activeLayerProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+            if (newValue instanceof Marker){
+                mapView.flyTo(((Marker)newValue).getLat(), ((Marker)newValue).getLng());
             }
+            fillOptionsPane(newValue);
         });
     }
 
     private void fillOptionsPane(Layer value) {
-        VBox elem = null;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/markerOptions.fxml"));
-        try {
-            elem = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (value instanceof Marker){
+            VBox elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/markerOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        MarkerOptionsController controller = loader.getController();
-        controller.setLayer(value);
-        layerOptionsPane.getChildren().clear();
-        layerOptionsPane.getChildren().add(elem);
+            MarkerOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        } else if (value instanceof PolyLine){
+            VBox elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/polyLineOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            PolylineOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        }
     }
 
 }

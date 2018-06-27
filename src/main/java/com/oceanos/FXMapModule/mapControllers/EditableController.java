@@ -6,6 +6,7 @@ import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.Evented;
 import com.oceanos.FXMapModule.layers.Marker;
 import com.oceanos.FXMapModule.layers.PolyLine;
+import com.oceanos.FXMapModule.options.OptionsManager;
 import netscape.javascript.JSObject;
 
 /**
@@ -21,9 +22,10 @@ public class EditableController extends Evented {
     public static PolyLine startPolyLine(){
         PolyLine polyLine = new PolyLine();
         polyLine.addEventListener(MapEventType.editable_drawing_commit,(e)->{
-
+            polyLine.updateOptions();
         });
-        int id =  (int) jsObject.call("startPolyline");
+        polyLine.setEditable(true);
+        int id =  (int) jsObject.call("startPolyline", OptionsManager.getOptionsJson(polyLine));
         polyLine.setId(id);
         mapView.addLayer(polyLine);
         return polyLine;
