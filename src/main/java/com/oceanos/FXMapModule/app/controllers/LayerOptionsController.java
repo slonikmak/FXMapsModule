@@ -7,4 +7,5 @@ import com.oceanos.FXMapModule.layers.Layer;
  */
 public interface LayerOptionsController {
     void setLayer(Layer layer);
+    void fillOptions();
 }

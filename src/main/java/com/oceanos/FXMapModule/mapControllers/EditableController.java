@@ -3,6 +3,7 @@ package com.oceanos.FXMapModule.mapControllers;
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.layers.Circle;
 import com.oceanos.FXMapModule.layers.Evented;
 import com.oceanos.FXMapModule.layers.Marker;
 import com.oceanos.FXMapModule.layers.PolyLine;
@@ -41,6 +42,18 @@ public class EditableController extends Evented {
         marker.setId(id);
         mapView.addLayer(marker);
         return marker;
+    }
+
+    public static Circle startCircle(){
+        Circle circle = new Circle();
+        circle.addEventListener(MapEventType.editable_drawing_commit, (e)->{
+            circle.setLatLng(((EditableEvent) e).getLat(),((EditableEvent) e).getLng());
+        });
+        circle.setEditable(true);
+        int id = (int) jsObject.call("startCircle", OptionsManager.getOptionsJson(circle));
+        circle.setId(id);
+        mapView.addLayer(circle);
+        return circle;
     }
 
     public static void createTooltip(){

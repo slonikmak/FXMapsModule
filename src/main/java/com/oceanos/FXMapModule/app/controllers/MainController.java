@@ -4,10 +4,7 @@ import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.app.view.LayerTreeCell;
-import com.oceanos.FXMapModule.layers.Layer;
-import com.oceanos.FXMapModule.layers.Marker;
-import com.oceanos.FXMapModule.layers.PolyLine;
-import com.oceanos.FXMapModule.layers.TileLayer;
+import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -57,7 +54,7 @@ public class MainController {
 
     @FXML
     void addCircle(ActionEvent event) {
-
+        EditableController.startCircle();
     }
 
     @FXML
@@ -144,6 +141,8 @@ public class MainController {
             System.out.println(newValue);
             if (newValue instanceof Marker){
                 mapView.flyTo(((Marker)newValue).getLat(), ((Marker)newValue).getLng());
+            } else if (newValue instanceof Circle){
+                mapView.flyTo(((Circle)newValue).getLat(), ((Circle)newValue).getLng());
             }
             fillOptionsPane(newValue);
         });
@@ -173,6 +172,19 @@ public class MainController {
             }
 
             PolylineOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        } else if (value instanceof Circle){
+            VBox elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/circleOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            CircleOptionsController controller = loader.getController();
             controller.setLayer(value);
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);

@@ -7,6 +7,6 @@ public class CircleOptions extends PathOptions {
     @Override
     void init() {
         super.init();
-        setOption("radius", 15);
+        setOption("radius", 15.0);
     }
 }

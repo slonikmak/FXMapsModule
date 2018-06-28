@@ -31,6 +31,6 @@ function getMapId() {
 }
 
 function flyTo(lat, lng) {
-    map.flyTo([lat,lng]);
+    map.flyTo([lat,lng], 18);
 }
 

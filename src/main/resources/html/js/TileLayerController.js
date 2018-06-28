@@ -13,7 +13,7 @@ class TileLayerController extends Controller{
             attribution: "Weather data © 2012 IEM Nexrad"
         });*/
 
-        this.mapGroup.addLayer(nexrad);
+        this.mapGroup.addLayer(tileLayer);
 
         return id;
     }

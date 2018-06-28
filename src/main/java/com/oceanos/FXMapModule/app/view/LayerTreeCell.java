@@ -1,5 +1,6 @@
 package com.oceanos.FXMapModule.app.view;
 
+import com.oceanos.FXMapModule.layers.Circle;
 import com.oceanos.FXMapModule.layers.Layer;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -42,6 +43,10 @@ public class LayerTreeCell extends TreeCell<Layer> {
                 //com.oceanos.FXMapModule.layers.PolyLine
             } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.PolyLine")) {
                 MaterialIconView iconView = new MaterialIconView(MaterialIcon.GESTURE);
+                iconView.getStyleClass().add("tree-icon-view");
+                hBox.getChildren().addAll(iconView);
+            } else if (item instanceof Circle){
+                MaterialIconView iconView = new MaterialIconView(MaterialIcon.ADJUST);
                 iconView.getStyleClass().add("tree-icon-view");
                 hBox.getChildren().addAll(iconView);
             }
