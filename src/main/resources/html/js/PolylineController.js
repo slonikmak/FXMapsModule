@@ -81,6 +81,15 @@ class PolylineController extends PathController{
         }
     }
 
+    redraw(id, options){
+        const line = this.getLayerById(id);
+        options = JSON.parse(options);
+        for (let key in options){
+            line.options[key] = options[key]
+        }
+        line.redraw();
+    }
+
     registerEvents(id){
         const layer = this.getLayerById(id);
 

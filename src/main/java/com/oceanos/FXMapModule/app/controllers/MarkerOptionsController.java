@@ -79,11 +79,7 @@ public class MarkerOptionsController implements LayerOptionsController {
         iconBox.setCellFactory(new Callback<>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
-                final ListCell<String> cell = new ListCell<String>() {
-                    {
-                        //super.setPrefWidth(100);
-                    }
-
+                return new ListCell<>() {
                     @Override
                     public void updateItem(String item,
                                            boolean empty) {
@@ -99,7 +95,6 @@ public class MarkerOptionsController implements LayerOptionsController {
                         }
                     }
                 };
-                return cell;
             }
         });
         iconBox.setConverter(new StringConverter<String>() {

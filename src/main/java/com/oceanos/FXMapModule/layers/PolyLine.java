@@ -47,8 +47,12 @@ public class PolyLine extends Path {
     private void initHandlers() {
         editableProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue!=newValue){
-                System.out.println("editable");
                 jsObject.call("setEditable", getId(), newValue);
+            }
+        });
+        colorProperty().addListener((observable, oldValue, newValue)->{
+            if (!newValue.equals(oldValue)){
+                redraw();
             }
         });
     }
