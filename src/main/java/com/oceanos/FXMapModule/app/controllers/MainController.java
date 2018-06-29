@@ -134,17 +134,24 @@ public class MainController {
         layerTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             mapView.setActivLayer(newValue.getValue());
         });
+
+
     }
 
     private void initHandlers(){
         mapView.activeLayerProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
+            //System.out.println(newValue);
             if (newValue instanceof Marker){
                 mapView.flyTo(((Marker)newValue).getLat(), ((Marker)newValue).getLng());
             } else if (newValue instanceof Circle){
                 mapView.flyTo(((Circle)newValue).getLat(), ((Circle)newValue).getLng());
             }
             fillOptionsPane(newValue);
+
+            int index = mapView.getLayers().indexOf(newValue);
+
+            layerTreeView.getSelectionModel().select(index);
+            /*layerTreeView.getSelectionModel().select*/
         });
     }
 

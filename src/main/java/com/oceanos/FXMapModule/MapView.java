@@ -121,6 +121,13 @@ public class MapView extends AnchorPane {
             layer.addToMap();
         }
         repository.addLayer(layer);
+        registerHandlers(layer);
+    }
+
+    private void registerHandlers(Layer layer) {
+        layer.addEventListener(MapEventType.click, (e)->{
+            repository.setActiveLayer(layer);
+        });
     }
 
     public void onLoad(Runnable handler){

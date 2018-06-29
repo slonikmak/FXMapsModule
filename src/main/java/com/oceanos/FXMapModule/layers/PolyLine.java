@@ -31,6 +31,7 @@ public class PolyLine extends Path {
         gson = new Gson();
         OptionsManager.fillOptions(this);
         initHandlers();
+        setName("polyline");
     }
 
 
@@ -96,7 +97,6 @@ public class PolyLine extends Path {
 
     @Override
     void redraw() {
-        System.out.println("redraw");
         jsObject.call("redraw", getId(), OptionsManager.getOptionsJson(this));
     }
 

@@ -4,7 +4,7 @@ class CircleController extends PathController{
         console.log("add circle");
         const circle = L.circle(JSON.parse(latLng), JSON.parse(options));
         this.mapGroup.addLayer(circle);
-        this.registerEvents(circle._leaflet_id);
+        this.registerEvents(circle);
         return this.getLayerId(circle);
     }
 
@@ -51,8 +51,19 @@ class CircleController extends PathController{
         }
     }
 
-    registerEvents(id){
-
+    registerEventsById(id){
+        this.registerEvents(this.getLayerById(id));
+    }
+    registerEvents(layer){
+        const id = layer._leaflet_id;
+        const mouseEvents = ["click"];
+        for (let i = 0;i<mouseEvents.length;i++){
+            layer.on(mouseEvents[i], (e)=>{
+                const event = new MapEvent(mouseEvents[i], id, e.latlng);
+                event.eventClass = 'MouseEvent';
+                eventController.fireEven(event);
+            })
+        }
     }
 }
 

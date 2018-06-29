@@ -45,7 +45,7 @@ class EditableController extends Controller{
         this.registerEvents(circle);
         circle.on("editable:drawing:commit", (e)=>{
             this.mapGroup.addLayer(circle);
-            circleController.registerEvents(circle._leaflet_id);
+            circleController.registerEvents(circle);
         });
         //
         return circle._leaflet_id;

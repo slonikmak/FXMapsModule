@@ -33,8 +33,7 @@ public class Marker extends Layer {
 
     public Marker(){
         this.setOptions(new MarkerOptions());
-
-
+        setName("marker");
     }
 
     public Marker(double lat, double lng){

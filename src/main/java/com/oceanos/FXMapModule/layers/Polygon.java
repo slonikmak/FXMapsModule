@@ -11,6 +11,11 @@ public class Polygon extends PolyLine {
     public static String jSController = "polygonController";
     public static JSObject jsObject;
 
+    public Polygon(){
+        super();
+        setName("polygon");
+    }
+
     @Override
     public void addToMap(){
         String latlngs = gson.toJson(new ArrayList<>(getLatLngs()));

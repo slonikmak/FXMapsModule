@@ -34,21 +34,24 @@ public class LayerTreeCell extends TreeCell<Layer> {
         } else {
             String name = item.getName();
             setText(name);
+            MaterialIconView iconView = null;
             //com.oceanos.FXMapModule.layers.Marker
             if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Marker")) {
-                MaterialIconView iconView = new MaterialIconView(MaterialIcon.LOCATION_ON);
-                iconView.getStyleClass().add("tree-icon-view");
+                iconView = new MaterialIconView(MaterialIcon.LOCATION_ON);
                 iconView.setFill(Color.BLUE);
-                hBox.getChildren().add(iconView);
                 //com.oceanos.FXMapModule.layers.PolyLine
             } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.PolyLine")) {
-                MaterialIconView iconView = new MaterialIconView(MaterialIcon.GESTURE);
-                iconView.getStyleClass().add("tree-icon-view");
-                hBox.getChildren().addAll(iconView);
+               iconView = new MaterialIconView(MaterialIcon.GESTURE);
+
             } else if (item instanceof Circle){
-                MaterialIconView iconView = new MaterialIconView(MaterialIcon.ADJUST);
+               iconView = new MaterialIconView(MaterialIcon.ADJUST);
+
+            } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Polygon")){
+                iconView = new MaterialIconView(MaterialIcon.CROP_5_4);
+            }
+            if (iconView != null){
                 iconView.getStyleClass().add("tree-icon-view");
-                hBox.getChildren().addAll(iconView);
+                hBox.getChildren().add(iconView);
             }
             setGraphic(hBox);
         }

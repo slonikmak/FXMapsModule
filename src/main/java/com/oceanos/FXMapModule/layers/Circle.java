@@ -38,6 +38,7 @@ public class Circle extends Path {
         super();
         OptionsManager.fillOptions(this);
         initHandlers();
+        setName("circle");
         //this.setOptions(new CircleOptions());
     }
 
