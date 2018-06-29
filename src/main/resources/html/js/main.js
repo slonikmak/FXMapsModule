@@ -1,5 +1,16 @@
 
 const map = L.map('map',{editable: true, preferCanvas: true}).setView([51.505, -0.09], 13);
+
+L.Map.include({
+    findLayer: function (id) {
+        for (let i in this._layers) {
+            if (this._layers[i]._leaflet_id === id) {
+                return this._layers[i];
+            }
+        }
+    }
+});
+
 const mapGroup = L.layerGroup();
 mapGroup.addTo(map);
 

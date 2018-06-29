@@ -10,7 +10,7 @@ class EditableController extends Controller{
         const line = this.map.editTools.startPolyline(null, options);
         this.mapGroup.addLayer(line);
         this.registerEvents(line);
-        polyLineController.registerEvents(line._leaflet_id)
+        polyLineController.registerEvents(line);
         return line._leaflet_id;
     }
 
@@ -18,9 +18,12 @@ class EditableController extends Controller{
         options  = JSON.parse(options);
         //console.log(options);
         const polygon = this.map.editTools.startPolygon(null, options);
-        //this.mapGroup.addLayer(polygon);
         this.registerEvents(polygon);
-        //polygonController.registerEvents(polygon._leaflet_id);
+        polygonController.registerEvents(polygon);
+        polygon.on("editable:drawing:commit", (e)=>{
+            //FIXME регистрировать стандартные события при добавлении слоя
+            this.mapGroup.addLayer(polygon);
+        });
         return polygon._leaflet_id;
     }
 
@@ -54,7 +57,7 @@ class EditableController extends Controller{
     }
 
     registerEvents(layer){
-        console.log(layer);
+        //console.log(layer);
         const drawingEvents = ["editable:drawing:commit"];
         const vertexEvent = ["editable:vertex:dragend"];
 

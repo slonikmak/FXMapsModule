@@ -34,7 +34,7 @@ public class EditableController extends Evented {
         polygon.addEventListener(MapEventType.editable_drawing_commit, (e)->{
             polygon.updateOptions();
         });
-        polygon.setEditable(false);
+        polygon.setEditable(true);
         int id = (int) jsObject.call("startPolygon", OptionsManager.getOptionsJson(polygon));
         polygon.setId(id);
         mapView.addLayer(polygon);

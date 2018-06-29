@@ -1,0 +1,73 @@
+{
+    "name": "Mission primorsk free run",
+    "id": 678,
+    "waypoints": [
+        {
+            "lat": 60.721665597178486,
+            "lon": 29.951863288879398,
+            "azimuth": 123.0,
+            "distance": 269.33584073371134,
+            "taget_depth": 15.0, // Заданная глубина (метр)
+            "target_altitude": 2.0, // Заданная высота (метр)
+            "depth": 0.0,
+            "capture_radius": 15.0,
+            "index": 0,
+            "id": 681,
+            "fix_gps": true,
+            "tasks": []
+        },
+        {
+            "lat": 60.72392171323134,
+            "lon": 29.95006084442139,
+            "azimuth": 123.0,
+            "distance": 172.4551100325847,
+            "taget_depth": 10.0, // Заданная глубина (метр)
+            "target_altitude": 5.0,// Заданная высота (метр)
+            "depth": 0.0,
+            "capture_radius": 15.0,
+            "index": 1,
+            "id": 701,
+            "fix_gps": true,
+            "tasks": []
+        }
+    ],
+    "description": "Свободное плавание в приморске",
+    "behaviors": [
+        {
+            "name": "dive",
+            "vbe_bow": 100,
+            "ballast_pitch": 45,
+            "ballast_roll": 0,
+            "vbe_aft": 100,
+            "time_out": 300
+        },
+        {
+            "name": "waypoint",
+            
+            "rudder_range": 25,
+            "lock_rudder": true,
+           
+            "time_out": 1200
+        },
+        {
+            "name": "gps_fix",
+            "fix_rate": 3, // GPS фикс после завершения указанного количества фаз. Если 0, то фикс никогда не врубиться. Кроме на точках маршрута, если там есть флаг фикса
+            "finish_on_gps_fix": 0, // Завершение на указанный GPS фикс. Если 0, то миссия завершится пока не достигнем всех точек
+            "time_out": 300
+        },
+        {
+            "name": "surface", 
+            "vbe_bow": 0,
+            "ballast_pitch": 35,
+            "ballast_roll": 0,
+            "vbe_aft": 100,
+            "time_out": 500
+        },
+        {
+            "name": "obstacle_detection", 
+            "enabled": false, // Флаг включения
+            "time_period": 30, // Период времени за который идет учет пройденного расстояния по вертикали (секунды)
+            "distance_lenght": 5 // Если АНПАП за отведеный ему отрезок времени не прошел указанную дистанцию (метр), то считаем что он во что-то уперся
+        }
+    ]
+}

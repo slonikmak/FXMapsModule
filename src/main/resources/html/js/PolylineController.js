@@ -12,7 +12,7 @@ class PolylineController extends MultilineController{
         console.log(options);
         this.mapGroup.addLayer(polyline);
         const id = this.getLayerId(polyline);
-        this.registerEvents(id);
+        this.registerEvents(polyline);
         return id;
     }
 
@@ -44,7 +44,5 @@ class PolylineController extends MultilineController{
         //console.log(line.options);
         return JSON.stringify(obj);
     }
-
-
 
 }
