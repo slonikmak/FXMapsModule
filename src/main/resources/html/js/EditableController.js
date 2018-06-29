@@ -9,32 +9,52 @@ class EditableController extends Controller{
         //console.log(options);
         const line = this.map.editTools.startPolyline(null, options);
         this.mapGroup.addLayer(line);
-        this.registerEvents(this.getLayerId(line));
+        this.registerEvents(line);
+        polyLineController.registerEvents(line._leaflet_id)
         return line._leaflet_id;
+    }
+
+    startPolygon(options){
+        options  = JSON.parse(options);
+        //console.log(options);
+        const polygon = this.map.editTools.startPolygon(null, options);
+        //this.mapGroup.addLayer(polygon);
+        this.registerEvents(polygon);
+        //polygonController.registerEvents(polygon._leaflet_id);
+        return polygon._leaflet_id;
     }
 
     startMarker(){
         const marker = this.map.editTools.startMarker();
-        this.mapGroup.addLayer(marker);
-        this.registerEvents(marker._leaflet_id);
-        markerController.mapGroup.addLayer(marker);
-        markerController.registerEvents(marker._leaflet_id);
+        this.registerEvents(marker);
+        marker.on("editable:drawing:commit", (e)=>{
+            this.mapGroup.addLayer(marker);
+            markerController.registerEvents(marker._leaflet_id);
+        });
         return marker._leaflet_id;
     }
 
     startCircle(options){
         options = JSON.parse(options);
         const circle = this.map.editTools.startCircle(null, options);
-        this.mapGroup.addLayer(circle);
-        this.registerEvents(circle._leaflet_id);
-        circleController.mapGroup.addLayer(circle);
-        circleController.registerEvents(circle._leaflet_id);
+
+        //circleController.mapGroup.addLayer(circle);
+        this.registerEvents(circle);
+        circle.on("editable:drawing:commit", (e)=>{
+            this.mapGroup.addLayer(circle);
+            circleController.registerEvents(circle._leaflet_id);
+        });
+        //
         return circle._leaflet_id;
     }
 
-    registerEvents(id){
+    registerEventsById(id){
         const layer = this.getLayerById(id);
+        this.registerEvents(layer);
+    }
 
+    registerEvents(layer){
+        console.log(layer);
         const drawingEvents = ["editable:drawing:commit"];
         const vertexEvent = ["editable:vertex:dragend"];
 
@@ -49,9 +69,8 @@ class EditableController extends Controller{
 
        for (let i=0;i<drawingEvents.length;i++){
            layer.on(drawingEvents[i], (e)=>{
-               console.log("Event");
                const latlng = L.latLng(e.latlng.lat, e.latlng.lng);
-               const event = new MapEvent(drawingEvents[i], id, latlng);
+               const event = new MapEvent(drawingEvents[i], layer._leaflet_id, latlng);
                event.eventClass = "EditableEvent";
                eventController.fireEven(event)
            });
@@ -60,7 +79,7 @@ class EditableController extends Controller{
             layer.on(vertexEvent[i], (e)=>{
                 const latlng = e.vertex.latlng;
                 //FIXME: сделать разные события
-                const event = new MapEvent(vertexEvent[i], id, L.latLng(latlng.lat, latlng.lng));
+                const event = new MapEvent(vertexEvent[i], layer._leaflet_id, L.latLng(latlng.lat, latlng.lng));
                 event.eventClass = "EditableEvent";
                 eventController.fireEven(event)
             });

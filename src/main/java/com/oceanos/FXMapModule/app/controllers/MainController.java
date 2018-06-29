@@ -69,7 +69,7 @@ public class MainController {
 
     @FXML
     void addRectangle(ActionEvent event) {
-
+        EditableController.startPolygon();
     }
 
     @FXML

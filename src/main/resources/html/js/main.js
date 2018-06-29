@@ -12,6 +12,7 @@ const markerController = new MarkerController(map, mapGroup);
 const editableController = new EditableController(map, mapGroup);
 const polyLineController = new PolylineController(map, mapGroup);
 const circleController = new CircleController(map, mapGroup);
+const polygonController = new PolygonController(map, mapGroup);
 
 
 

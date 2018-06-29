@@ -16,20 +16,27 @@ import java.util.List;
 public class PolyLine extends Path {
     public static String jSController = "polyLineController";
     public static JSObject jsObject;
-    public static Gson gson;
 
+    public Gson gson;
     private ObservableList<LatLng> latLngs = FXCollections.observableArrayList();
     private DoubleProperty length = new SimpleDoubleProperty();
     private LongProperty points = new SimpleLongProperty();
 
     static {
-        gson = new Gson();
+
     }
 
     public PolyLine(){
         super();
+        gson = new Gson();
         OptionsManager.fillOptions(this);
         initHandlers();
+    }
+
+
+    public PolyLine(List<LatLng> latLngs){
+        this();
+        this.latLngs.addAll(latLngs);
     }
 
     private void initHandlers() {
@@ -46,20 +53,20 @@ public class PolyLine extends Path {
         fillOpacityProperty().addListener(listener);
     }
 
-    public PolyLine(List<LatLng> latLngs){
-        this();
-        this.latLngs.addAll(latLngs);
-    }
 
 
     public void addLatLng(double lat, double lng){
         latLngs.add(new LatLng(lat, lng));
     }
 
-    public void updateLatLng(){
+    public ObservableList<LatLng> getLatLngs(){
+        return this.latLngs;
+    }
+
+    /*public void updateLatLng(){
         String latLngString = (String) jsObject.call("getLatLngs", id);
         List<LatLng> list = gson.fromJson(latLngString, List.class);
-    }
+    }*/
 
 
     public double getLength() {

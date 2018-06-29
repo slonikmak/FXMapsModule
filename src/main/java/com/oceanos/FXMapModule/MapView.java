@@ -83,6 +83,7 @@ public class MapView extends AnchorPane {
                                 EditableController.mapView = this;
                                 PolyLine.jsObject = (JSObject) webEngine.executeScript(PolyLine.jSController);
                                 Circle.jsObject = (JSObject) webEngine.executeScript(Circle.jSController);
+                                Polygon.jsObject = (JSObject)webEngine.executeScript(Polygon.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();
                                 }
