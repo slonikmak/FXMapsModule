@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
  * @autor slonikmak on 27.06.2018.
  */
 public class OptionsManager {
-    static public void fillOptions(Layer layer){
+   /* static public void fillOptions(Layer layer){
         if (layer instanceof Marker){
             fillMarkerOptions(layer);
         } else if (layer instanceof PolyLine){
@@ -128,7 +128,7 @@ public class OptionsManager {
     }
 
     private static void fillPolyLineOptions(Layer layer) {
-        PathOptions options = new PathOptions();
+       *//* PathOptions options = new PathOptions();
         PolyLine line = (PolyLine)layer;
         line.setEditable((Boolean) options.getOption("editable").orElse(false));
         line.setOpacity((Double) options.getOption("opacity").orElse(1.0));
@@ -136,11 +136,11 @@ public class OptionsManager {
         line.setWeight((Double) options.getOption("weight").orElse(3));
         line.setFillOpacity((Double)options.getOption("fillOpacity").orElse(1.0));
         line.setFill((Boolean)options.getOption("fill").orElse(false));
-        line.setFillColor(Color.web((String) options.getOption("fillColor").orElse("#3388ff")));
+        line.setFillColor(Color.web((String) options.getOption("fillColor").orElse("#3388ff")));*//*
 
     }
 
     private static void fillMarkerOptions(Layer layer) {
 
-    }
+    }*/
 }

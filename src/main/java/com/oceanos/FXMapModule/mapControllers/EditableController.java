@@ -4,6 +4,7 @@ import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
+import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.options.OptionsManager;
 import netscape.javascript.JSObject;
 
@@ -41,8 +42,6 @@ public class EditableController extends Evented {
         return polygon;
     }
 
-
-
     public static Marker startMarker(){
         Marker marker = new Marker();
         marker.addEventListener(MapEventType.editable_drawing_commit, (e)->{
@@ -65,6 +64,19 @@ public class EditableController extends Evented {
         circle.setId(id);
         mapView.addLayer(circle);
         return circle;
+    }
+
+    public static Mission startMission(){
+        Mission mission = new Mission();
+        //jsObject.call("startMission");
+        mission.addEventListener(MapEventType.editable_drawing_commit,(e)->{
+            mission.updateOptions();
+        });
+        //mission.setEditable(true);
+        int id =  (int) jsObject.call("startMission", OptionsManager.getOptionsJson(mission));
+        mission.setId(id);
+        mapView.addLayer(mission);
+        return mission;
     }
 
     public static void createTooltip(){

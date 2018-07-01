@@ -51,6 +51,19 @@ class EditableController extends Controller{
         return circle._leaflet_id;
     }
 
+    startMission(options){
+        const mission = this.map.editTools.startMissionPath({radius:15});
+        this.registerEvents(mission);
+        mission.on("mission:waypoint:new", (e)=>{
+            console.log("new waypoint")
+        });
+        mission.on("editable:drawing:commit", (e)=>{
+            this.mapGroup.addLayer(mission);
+            missionController.registerEvents(mission);
+        });
+        return mission._leaflet_id;
+    }
+
     registerEventsById(id){
         const layer = this.getLayerById(id);
         this.registerEvents(layer);

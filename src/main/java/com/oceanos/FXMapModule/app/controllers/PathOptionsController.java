@@ -2,6 +2,7 @@ package com.oceanos.FXMapModule.app.controllers;
 
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.Path;
+import com.oceanos.FXMapModule.options.PathOptions;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -58,14 +59,14 @@ public class PathOptionsController implements LayerOptionsController {
 
     @Override
     public void fillOptions() {
-        opacityField.valueProperty().bindBidirectional(layer.opacityProperty());
+        opacityField.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).opacityProperty());
         nameField.textProperty().bindBidirectional(layer.nameProperty());
-        editableBox.selectedProperty().bindBidirectional(layer.editableProperty());
-        thickField.textProperty().bindBidirectional(layer.weightProperty(), new MyStringConverter());
-        colorBox.valueProperty().bindBidirectional(layer.colorProperty());
-        fillCheckBox.selectedProperty().bindBidirectional(layer.fillProperty());
-        fillColorPicker.valueProperty().bindBidirectional(layer.fillColorProperty());
-        fillOpacityField.valueProperty().bindBidirectional(layer.fillOpacityProperty());
+        editableBox.selectedProperty().bindBidirectional(((PathOptions)layer.getOptions()).editableProperty());
+        thickField.textProperty().bindBidirectional(((PathOptions)layer.getOptions()).weightProperty(), new MyStringConverter());
+        colorBox.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).colorProperty());
+        fillCheckBox.selectedProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillProperty());
+        fillColorPicker.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillColorProperty());
+        fillOpacityField.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillOpacityProperty());
 
     }
 

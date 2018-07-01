@@ -32,5 +32,10 @@ class Controller{
         this.getLayerById(id).closePopup()
     }
 
+    //TODO: регистрация стандартных событий Leaflet
+    registerEvents(layer){
+
+    }
+
 }
 

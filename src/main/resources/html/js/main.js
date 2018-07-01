@@ -24,14 +24,16 @@ const editableController = new EditableController(map, mapGroup);
 const polyLineController = new PolylineController(map, mapGroup);
 const circleController = new CircleController(map, mapGroup);
 const polygonController = new PolygonController(map, mapGroup);
+const missionController = new MissionController(map, mapGroup);
+map.editTools = new L.MyEditable(map, {});
 
 
 
 ///Register map events
 //TODO: remove register to map controller
 map.on('click', (e)=>{
-    const event = new MapEvent(e.type, e.target._leaflet_id,e.latlng, null, "MouseEvent");
-    //markerController.addMarker(e.latlng.lat, e.latlng.lng,{});
+    const event = new MapEvent(e.type, e.target._leaflet_id,L.latLng(e.latlng.lat, e.latlng.lng), null, "MouseEvent");
+    //console.log(event);
     mapEventController.fireEventFromJS(JSON.stringify(event));
 });
 

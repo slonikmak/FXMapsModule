@@ -25,16 +25,16 @@ public class CustomTest {
         //String path = "C:/Users/Oceanos/mapApp/icons/marker-icon.png";
         //System.out.println(new File(path).toURI());
 
-        Color color = Color.web("#3388ff");
-        System.out.println("#" + Integer.toHexString(color.hashCode()).substring(0,6));
+        //Color color = Color.web("#3388ff");
+        //System.out.println("#" + Integer.toHexString(color.hashCode()).substring(0,6));
 
-       /*addProperty("1", 1);
+       addProperty("1", 1);
        addProperty("2","2");
        addProperty("3", 3.0);
 
         //people.addAll(new Person("Anton", "Doe", 12), new Person("3Anton", "Do3e", 14));
         Gson gson = FxGson.create();
-        System.out.println(gson.toJson(people));*/
+        System.out.println(gson.toJson(people));
 
     }
 

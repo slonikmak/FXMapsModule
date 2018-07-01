@@ -64,7 +64,7 @@ public class MainController {
 
     @FXML
     void addMission(ActionEvent event) {
-
+        EditableController.startMission();
     }
 
     @FXML
@@ -91,7 +91,8 @@ public class MainController {
         initTreeView();
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        TileLayer tileLayer = new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", "{}");
+        //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
+        TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", "{}");
         tileLayer.setName("osm map");
         mapView.onLoad(() -> {
             mapView.addLayer(tileLayer);

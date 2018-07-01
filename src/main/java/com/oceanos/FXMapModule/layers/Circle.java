@@ -57,7 +57,7 @@ public class Circle extends Path {
     //FIXME: move to Path
     //TODO: сделать что-то типа CommonPathOptions
     private void initHandlers() {
-        editableProperty().addListener((observable, oldValue, newValue) -> {
+        getOptions().editableProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue!=newValue){
                 jsObject.call("setEditable", getId(), newValue);
             }
