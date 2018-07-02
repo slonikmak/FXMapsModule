@@ -8,10 +8,11 @@ class Controller{
     }
 
     getLayerId(layer){
-        return this.mapGroup.getLayerId(layer);
+        return layer._leaflet_id;
     }
 
     getLayerById(id){
+        //this.map.findLayer(id);
         return this.mapGroup.getLayer(id);
     }
 

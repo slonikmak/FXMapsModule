@@ -19,6 +19,7 @@ public class EditableEvent extends MapEvent {
     @Override
     public void parseRawEvent(JsonObject object) {
         String typeString = object.get("type").getAsString().replace(":","_");
+        //System.out.println(typeString);
         MapEventType type = MapEventType.valueOf(typeString);
         this.target = object.get("target").getAsLong();
         this.type = type;

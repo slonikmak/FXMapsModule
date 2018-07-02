@@ -1,11 +1,16 @@
 package com.oceanos.FXMapModule.options;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.oceanos.FXMapModule.app.utills.CommonUtils;
 import com.oceanos.FXMapModule.app.utills.ReflectionHelper;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
+import org.eclipse.jetty.util.StringUtil;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
@@ -36,7 +41,7 @@ public abstract class LayerOptions implements Observable {
             try {
                 Object value = ((ReadOnlyProperty)f.get(this)).getValue();
                 String type = f.getType().toString();
-                String propertyName = f.getName().replace("Property","").toLowerCase();
+                String propertyName = CommonUtils.firstLetterLowerCase(f.getName().replace("Property",""));
                 if (type.endsWith("IntegerProperty")){
                     object.addProperty(propertyName, (Integer)value);
                 } else if (type.endsWith("DoubleProperty")){
@@ -51,6 +56,19 @@ public abstract class LayerOptions implements Observable {
             }
         });
         return object.toString();
+    }
+
+    public void fillOptions(String options){
+        JsonParser parser = new JsonParser();
+        JsonObject  object = parser.parse(options).getAsJsonObject();
+        object.keySet().forEach(k->{
+            Method method = ReflectionHelper.getDeepMethod(this.getClass(), "set"+ CommonUtils.capitalize(k));
+            try {
+                method.invoke(this, object.get(k));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     abstract void init();

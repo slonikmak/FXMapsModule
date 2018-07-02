@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.LayerOptions;
 import com.oceanos.FXMapModule.options.OptionsManager;
+import com.oceanos.FXMapModule.options.PathOptions;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -22,13 +24,13 @@ public class Circle extends Path {
     public static String jSController = "circleController";
     public static JSObject jsObject;
     public static Gson gson;
+    private CircleOptions options;
 
     static {
         gson = new Gson();
     }
 
     private ObjectProperty<LatLng> latlng = new SimpleObjectProperty<>();
-    private DoubleProperty radius = new SimpleDoubleProperty();
     private DoubleProperty lat = new SimpleDoubleProperty();
     private DoubleProperty lng = new SimpleDoubleProperty();
 
@@ -36,10 +38,19 @@ public class Circle extends Path {
 
     public Circle(){
         super();
-        OptionsManager.fillOptions(this);
+        setOptions(new CircleOptions());
         initHandlers();
         setName("circle");
-        //this.setOptions(new CircleOptions());
+    }
+
+    @Override
+    public void setOptions(LayerOptions options) {
+        this.options = (CircleOptions) options;
+    }
+
+    @Override
+    public LayerOptions getOptions() {
+        return this.options;
     }
 
     public Circle(LatLng latLng, int radius){
@@ -57,22 +68,18 @@ public class Circle extends Path {
     //FIXME: move to Path
     //TODO: сделать что-то типа CommonPathOptions
     private void initHandlers() {
-        getOptions().editableProperty().addListener((observable, oldValue, newValue) -> {
+        ((CircleOptions)getOptions()).editableProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue!=newValue){
                 jsObject.call("setEditable", getId(), newValue);
             }
         });
-        colorProperty().addListener(listener);
-        weightProperty().addListener(listener);
-        opacityProperty().addListener(listener);
-        radiusProperty().addListener((ob, o, n)->{
+        getOptions().addListener(listener);
+
+        options.radiusProperty().addListener((ob, o, n)->{
             if (!o.equals(n)){
                 jsObject.call("setRadius", getId(), getRadius());
             }
         });
-        fillColorProperty().addListener(listener);
-        fillProperty().addListener(listener);
-        fillOpacityProperty().addListener(listener);
 
         addEventListener(MapEventType.editable_vertex_dragend, (e)->{
             System.out.println("set radius");
@@ -83,12 +90,20 @@ public class Circle extends Path {
 
     @Override
     void redraw() {
-        jsObject.call("redraw", getId(), OptionsManager.getOptionsJson(this));
+        if (getId() != 0) {
+            jsObject.call("redraw", getId(), options.getJson());
+            System.out.println(options.getJson());
+        }
+    }
+
+    @Override
+    public void setEditable(boolean value) {
+
     }
 
     @Override
     public void addToMap() {
-        id = (int) jsObject.call("addCircle", gson.toJson(latlng.getValue()), OptionsManager.getOptionsJson(this));
+        id = (int) jsObject.call("addCircle", gson.toJson(latlng.getValue()), options.getJson());
     }
 
     @Override
@@ -103,15 +118,15 @@ public class Circle extends Path {
     }
 
     public double getRadius() {
-        return radius.get();
+        return options.getRadius();
     }
 
     public DoubleProperty radiusProperty() {
-        return radius;
+        return options.radiusProperty();
     }
 
     public void setRadius(double radius) {
-        this.radius.set(radius);
+        options.radiusProperty().setValue(radius);
     }
 
     public LatLng getLatlng() {

@@ -6,6 +6,7 @@ import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventListener;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
+import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import com.oceanos.FXMapModule.repository.Repository;
 import javafx.beans.property.ObjectProperty;
@@ -84,6 +85,7 @@ public class MapView extends AnchorPane {
                                 PolyLine.jsObject = (JSObject) webEngine.executeScript(PolyLine.jSController);
                                 Circle.jsObject = (JSObject) webEngine.executeScript(Circle.jSController);
                                 Polygon.jsObject = (JSObject)webEngine.executeScript(Polygon.jSController);
+                                Mission.jsObject = (JSObject)webEngine.executeScript(Mission.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();
                                 }
@@ -141,12 +143,12 @@ public class MapView extends AnchorPane {
     }
 
     public void fireEvent(MapEvent event){
-        System.out.println("Fire event from js");
+        //stem.out.println("Fire event from js");
         eventListeners.entrySet().stream()
                 .filter(e->e.getKey().equals(event.getType()))
                 .findFirst().map(Map.Entry::getValue)
                 .ifPresent((l)->l.forEach((listener)->listener.handle(event)));
-        System.out.println("end Fire event from js");
+        //System.out.println("end Fire event from js");
     }
 
     public void removeEventListener(MapEventType eventType, MapEventListener listener){
@@ -154,7 +156,7 @@ public class MapView extends AnchorPane {
     }
 
     public void fireEventFromJS(String event){
-        System.out.println("get event from js");
+        //System.out.println("get event from js");
         MapEvent mapEvent = EventController.parseEventFromJs(event);
         fireEvent(mapEvent);
     }

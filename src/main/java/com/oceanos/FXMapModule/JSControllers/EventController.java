@@ -55,6 +55,8 @@ public class EventController {
             case "EditableEvent": {
                 mapEvent = new EditableEvent(object);
                 break;
+            }case "MissionEvent": {
+                mapEvent = new MissionEvent(object);
             }
 
         }

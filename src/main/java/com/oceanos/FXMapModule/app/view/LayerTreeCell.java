@@ -48,6 +48,8 @@ public class LayerTreeCell extends TreeCell<Layer> {
 
             } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Polygon")){
                 iconView = new MaterialIconView(MaterialIcon.CROP_5_4);
+            } else if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Mission")){
+                iconView = new MaterialIconView(MaterialIcon.TIMELINE);
             }
             if (iconView != null){
                 iconView.getStyleClass().add("tree-icon-view");

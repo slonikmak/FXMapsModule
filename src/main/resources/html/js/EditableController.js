@@ -6,7 +6,6 @@ class EditableController extends Controller{
     }
     startPolyline(options){
         options  = JSON.parse(options);
-        //console.log(options);
         const line = this.map.editTools.startPolyline(null, options);
         this.mapGroup.addLayer(line);
         this.registerEvents(line);
@@ -16,15 +15,26 @@ class EditableController extends Controller{
 
     startPolygon(options){
         options  = JSON.parse(options);
-        //console.log(options);
         const polygon = this.map.editTools.startPolygon(null, options);
+        //log(polygon)
+        this.mapGroup.addLayer(polygon);
         this.registerEvents(polygon);
         polygonController.registerEvents(polygon);
-        polygon.on("editable:drawing:commit", (e)=>{
-            //FIXME регистрировать стандартные события при добавлении слоя
-            this.mapGroup.addLayer(polygon);
-        });
         return polygon._leaflet_id;
+    }
+
+
+    startMission(options){
+        options = JSON.parse(options);
+        const mission = this.map.editTools.startMissionPath(options);
+        this.mapGroup.addLayer(mission);
+        this.registerEvents(mission);
+        missionController.registerEvents(mission);
+        mission.on("mission:waypoint:new", (e)=>{
+            //console.log("new waypoint")
+        });
+
+        return mission._leaflet_id;
     }
 
     startMarker(){
@@ -40,7 +50,6 @@ class EditableController extends Controller{
     startCircle(options){
         options = JSON.parse(options);
         const circle = this.map.editTools.startCircle(null, options);
-
         //circleController.mapGroup.addLayer(circle);
         this.registerEvents(circle);
         circle.on("editable:drawing:commit", (e)=>{
@@ -51,18 +60,6 @@ class EditableController extends Controller{
         return circle._leaflet_id;
     }
 
-    startMission(options){
-        const mission = this.map.editTools.startMissionPath({radius:15});
-        this.registerEvents(mission);
-        mission.on("mission:waypoint:new", (e)=>{
-            console.log("new waypoint")
-        });
-        mission.on("editable:drawing:commit", (e)=>{
-            this.mapGroup.addLayer(mission);
-            missionController.registerEvents(mission);
-        });
-        return mission._leaflet_id;
-    }
 
     registerEventsById(id){
         const layer = this.getLayerById(id);
@@ -73,6 +70,7 @@ class EditableController extends Controller{
         //console.log(layer);
         const drawingEvents = ["editable:drawing:commit"];
         const vertexEvent = ["editable:vertex:dragend"];
+        const editEvents = ["editable:editing"];
 
        /* const events = {
             "editable:drawing:commit": (e)=>{
@@ -94,8 +92,17 @@ class EditableController extends Controller{
         for (let i=0;i<vertexEvent.length;i++){
             layer.on(vertexEvent[i], (e)=>{
                 const latlng = e.vertex.latlng;
-                //FIXME: сделать разные события
+                //FIXME: сделать разные  объекты события
                 const event = new MapEvent(vertexEvent[i], layer._leaflet_id, L.latLng(latlng.lat, latlng.lng));
+                event.eventClass = "EditableEvent";
+                eventController.fireEven(event)
+            });
+        }
+        for (let i=0;i<editEvents.length;i++){
+            layer.on(editEvents[i], (e)=>{
+                //console.log(e);
+                let latlng = L.latLng(0.0,0.0);
+                const event = new MapEvent(editEvents[i], layer._leaflet_id, latlng);
                 event.eventClass = "EditableEvent";
                 eventController.fireEven(event)
             });

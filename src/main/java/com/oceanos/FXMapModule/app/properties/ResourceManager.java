@@ -77,6 +77,7 @@ public class ResourceManager {
             list = Files.list(iconsFolder).map(Path::toString).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
+
         }
         return list;
     }

@@ -15,24 +15,14 @@ class PolygonController extends MultilineController{
         return id;
     }
 
-    getLatLngs(id) {
-        const layer = this.map.findLayer(id);
-        const latlngs = layer.getLatLngs()[0];
-        const result = [];
-        for (let i = 0; i < latlngs.length; i++) {
-            result[i] = [latlngs[i].lat, latlngs[i].lng]
-        }
-        return JSON.stringify(result);
-    }
     getLength(id){
         //FIXME: заменить везде поиск слоя и не добавлять слой в mapGroup, возможно сделать отдельную группу
-        const layer = this.map.findLayer(id);
+        const layer = this.getLayerById(id);
         const latlngs = layer.getLatLngs()[0];
-        let result = 0;
+        let result = 0.0;
         for (let i=0;i<latlngs.length-1;i++){
             result += latlngs[i].distanceTo(latlngs[i+1]);
         }
-
         result+= latlngs[0].distanceTo(latlngs[latlngs.length-1]);
         return result;
     }

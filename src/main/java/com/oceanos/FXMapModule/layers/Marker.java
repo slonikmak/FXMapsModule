@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.LayerEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.options.LayerOptions;
 import com.oceanos.FXMapModule.options.MarkerOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
@@ -23,6 +26,7 @@ public class Marker extends Layer {
     public static String jSController = "markerController";
     public static JSObject jsObject;
     private static Gson gson;
+    private MarkerOptions options;
 
     static {
         gson = new Gson();
@@ -35,6 +39,16 @@ public class Marker extends Layer {
     public Marker(){
         this.setOptions(new MarkerOptions());
         setName("marker");
+    }
+
+    @Override
+    public void setOptions(LayerOptions options) {
+        this.options = (MarkerOptions) options;
+    }
+
+    @Override
+    public LayerOptions getOptions() {
+        return this.options;
     }
 
     public Marker(double lat, double lng){
@@ -57,9 +71,7 @@ public class Marker extends Layer {
     }
 
     private void initHandlers(){
-        getOptions().setChangeListener((c)->{
-            update();
-        });
+        options.addListener(observable -> update());
         addEventListener(MapEventType.move, (event -> {
             lat.setValue(((LayerEvent)event).getLat());
             lng.setValue(((LayerEvent)event).getLng());

@@ -1,7 +1,10 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.google.gson.*;
+import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.options.LayerOptions;
 import com.oceanos.FXMapModule.options.OptionsManager;
+import com.oceanos.FXMapModule.options.PathOptions;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +19,7 @@ import java.util.List;
 public class PolyLine extends Path {
     public static String jSController = "polyLineController";
     public static JSObject jsObject;
-
+    private PathOptions options;
     public Gson gson;
     private ObservableList<LatLng> latLngs = FXCollections.observableArrayList();
     private DoubleProperty length = new SimpleDoubleProperty();
@@ -29,9 +32,20 @@ public class PolyLine extends Path {
     public PolyLine(){
         super();
         gson = new Gson();
-        OptionsManager.fillOptions(this);
+        //OptionsManager.fillOptions(this);
+        setOptions(new PathOptions());
         initHandlers();
         setName("polyline");
+    }
+
+    @Override
+    public void setOptions(LayerOptions options) {
+        this.options = (PathOptions) options;
+    }
+
+    @Override
+    public LayerOptions getOptions() {
+        return this.options;
     }
 
 
@@ -41,17 +55,19 @@ public class PolyLine extends Path {
     }
 
     private void initHandlers() {
-        editableProperty().addListener((observable, oldValue, newValue) -> {
+        ((PathOptions)getOptions()).editableProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue!=newValue){
                 jsObject.call("setEditable", getId(), newValue);
             }
         });
-        colorProperty().addListener(listener);
-        weightProperty().addListener(listener);
-        opacityProperty().addListener(listener);
-        fillColorProperty().addListener(listener);
-        fillProperty().addListener(listener);
-        fillOpacityProperty().addListener(listener);
+        this.addEventListener(MapEventType.editable_drawing_commit,(e)->{
+            this.updateOptions();
+        });
+        addEventListener(MapEventType.editable_editing, (e)->{
+            this.updateOptions();
+        });
+
+        getOptions().addListener(listener);
     }
 
 
@@ -97,7 +113,16 @@ public class PolyLine extends Path {
 
     @Override
     void redraw() {
-        jsObject.call("redraw", getId(), OptionsManager.getOptionsJson(this));
+        //FIXME: hardcode
+        if (getId() != 0){
+            jsObject.call("redraw", getId(), getOptions().getJson());
+        }
+
+    }
+
+    @Override
+    public void setEditable(boolean value) {
+        ((PathOptions)getOptions()).setEditable(value);
     }
 
     @Override
@@ -108,15 +133,16 @@ public class PolyLine extends Path {
     @Override
     public void addToMap() {
         String latlngs = gson.toJson(new ArrayList<>(this.latLngs));
-        Object value = jsObject.call("addPolyline",latlngs,OptionsManager.getOptionsJson(this));
+        Object value = jsObject.call("addPolyline",latlngs,getOptions().getJson());
         id = (int) value;
     }
 
     public void updateOptions() {
-        String result = (String) jsObject.call("getOptions", getId());
-        OptionsManager.fillOptions(this, result);
+        //System.out.println("update options");
+        /*String result = (String) jsObject.call("getOptions", getId());
+        getOptions().fillOptions(result);*/
         String latlngsString = (String) jsObject.call("getLatLngs", id);
-        System.out.println(latlngsString);
+        //System.out.println(latlngsString);
         JsonParser parser = new JsonParser();
         JsonArray array = parser.parse(latlngsString).getAsJsonArray();
         latLngs.clear();

@@ -28,7 +28,7 @@ public class Controller {
         MapMouseEvent event = (MapMouseEvent) e;
         Marker marker = new Marker(event.getLat(), event.getLng());
         //marker.setIcon("file:/C:/Users/Oceanos/Downloads/icons8.png");
-        marker.getOptions().setOption("draggable", true);
+        //marker.getOptions().setOption("draggable", true);
         mapView.addLayer(marker);
         mapView.removeEventListener(MapEventType.click, clickOnAddMarkerListener);
     }
@@ -41,7 +41,7 @@ public class Controller {
     void addCustomLine(){
         //lat=51.50158353472559 lng=-0.11003494262695312 lat=51.5116270804117 lng=-0.07518768310546876
         PolyLine line = new PolyLine(Arrays.asList(new LatLng(51.50158353472559,-0.11003494262695312), new LatLng(51.5116270804117,-0.07518768310546876)));
-        line.getOptions().setOption("color", "red");
+        //line.getOptions().setOption("color", "red");
         mapView.addLayer(line);
         line.addEventListener(MapEventType.click, (event -> System.out.println("click on line")));
     }

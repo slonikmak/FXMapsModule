@@ -1,8 +1,12 @@
 package com.oceanos.FXMapModule.app.controllers;
 
+import com.oceanos.FXMapModule.app.utills.ColorUtils;
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.Path;
 import com.oceanos.FXMapModule.options.PathOptions;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -11,6 +15,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 import java.text.DecimalFormat;
@@ -63,10 +68,28 @@ public class PathOptionsController implements LayerOptionsController {
         nameField.textProperty().bindBidirectional(layer.nameProperty());
         editableBox.selectedProperty().bindBidirectional(((PathOptions)layer.getOptions()).editableProperty());
         thickField.textProperty().bindBidirectional(((PathOptions)layer.getOptions()).weightProperty(), new MyStringConverter());
-        colorBox.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).colorProperty());
+        //((PathOptions)layer.getOptions()).colorProperty().bindBidirectional(colorBox.valueProperty(), new ColorUtils.ColorStringConverter());
         fillCheckBox.selectedProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillProperty());
-        fillColorPicker.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillColorProperty());
+        //((PathOptions)layer.getOptions()).fillColorProperty().bindBidirectional(fillColorPicker.valueProperty(), new ColorUtils.ColorStringConverter());
+        //fillColorPicker.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillColorProperty());
         fillOpacityField.valueProperty().bindBidirectional(((PathOptions)layer.getOptions()).fillOpacityProperty());
+
+        //FIXME: что-то сделать с bindings
+        colorBox.setValue(Color.web(((PathOptions)layer.getOptions()).colorProperty().getValue()));
+        colorBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            ((PathOptions)layer.getOptions()).colorProperty().setValue(ColorUtils.colorToHex(newValue));
+        });
+        ((PathOptions)layer.getOptions()).colorProperty().addListener((observable, oldValue, newValue) -> {
+            colorBox.setValue(Color.web(newValue));
+        });
+
+        fillColorPicker.setValue(Color.web(((PathOptions)layer.getOptions()).fillColorProperty().getValue()));
+        fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            ((PathOptions)layer.getOptions()).fillColorProperty().setValue(ColorUtils.colorToHex(newValue));
+        });
+        ((PathOptions)layer.getOptions()).fillColorProperty().addListener((observable, oldValue, newValue) -> {
+            fillColorPicker.setValue(Color.web(newValue));
+        });
 
     }
 

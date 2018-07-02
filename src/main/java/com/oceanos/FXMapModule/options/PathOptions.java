@@ -104,8 +104,6 @@ public class PathOptions extends LayerOptions{
         //getOptions().setOption("color", color.toString());
         this.color.set(color);
     }
-
-
     @Override
     void init() {
         color = new SimpleStringProperty("#8377ff");
@@ -114,6 +112,6 @@ public class PathOptions extends LayerOptions{
         fill = new SimpleBooleanProperty(false);
         fillColor = new SimpleStringProperty("#3388ff");
         fillOpacity = new SimpleDoubleProperty(0.2);
-        editable = new SimpleBooleanProperty(false);
+        editable = new SimpleBooleanProperty(true);
     }
 }

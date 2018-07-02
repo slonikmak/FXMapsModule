@@ -19,15 +19,16 @@ public class Polygon extends PolyLine {
     @Override
     public void addToMap(){
         String latlngs = gson.toJson(new ArrayList<>(getLatLngs()));
-        Object value = jsObject.call("addPolygon",latlngs, OptionsManager.getOptionsJson(this));
+        Object value = jsObject.call("addPolygon",latlngs, getOptions().getJson());
         id = (int) value;
     }
 
     //FIXME: разделить как-то с родителем
     public void updateOptions() {
-        System.out.println("update");
+        super.updateOptions();
+       /* System.out.println("update");
         String result = (String) jsObject.call("getOptions", getId());
-        OptionsManager.fillOptions(this, result);
+        getOptions().fillOptions(result);
         String latlngsString = (String) jsObject.call("getLatLngs", id);
         System.out.println(latlngsString);
         JsonParser parser = new JsonParser();
@@ -38,6 +39,6 @@ public class Polygon extends PolyLine {
             getLatLngs().add(new LatLng(latlngArray.get(0).getAsDouble(), latlngArray.get(1).getAsDouble()));
         });
         setPoints(getLatLngs().size());
-        setLength((Double) jsObject.call("getLength", id));
+        setLength((Double) jsObject.call("getLength", id));*/
     }
 }

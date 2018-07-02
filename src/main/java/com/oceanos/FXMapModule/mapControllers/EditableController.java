@@ -2,6 +2,7 @@ package com.oceanos.FXMapModule.mapControllers;
 
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.events.EditableEvent;
+import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
@@ -20,23 +21,29 @@ public class EditableController extends Evented {
 
     public static PolyLine startPolyLine(){
         PolyLine polyLine = new PolyLine();
-        polyLine.addEventListener(MapEventType.editable_drawing_commit,(e)->{
-            polyLine.updateOptions();
-        });
         polyLine.setEditable(true);
-        int id =  (int) jsObject.call("startPolyline", OptionsManager.getOptionsJson(polyLine));
+        int id =  (int) jsObject.call("startPolyline", polyLine.getOptions().getJson());
         polyLine.setId(id);
         mapView.addLayer(polyLine);
         return polyLine;
     }
 
+    public static Mission startMission(){
+        Mission mission = new Mission();
+        mission.addEventListener(MapEventType.editable_drawing_commit,(e)->{
+            //mission.updateOptions();
+        });
+        //mission.setEditable(true);
+        int id =  (int) jsObject.call("startMission", mission.getOptions().getJson());
+        mission.setId(id);
+        mapView.addLayer(mission);
+        return mission;
+    }
+
     public static Polygon startPolygon(){
         Polygon polygon = new Polygon();
-        polygon.addEventListener(MapEventType.editable_drawing_commit, (e)->{
-            polygon.updateOptions();
-        });
         polygon.setEditable(true);
-        int id = (int) jsObject.call("startPolygon", OptionsManager.getOptionsJson(polygon));
+        int id = (int) jsObject.call("startPolygon", polygon.getOptions().getJson());
         polygon.setId(id);
         mapView.addLayer(polygon);
         return polygon;
@@ -60,24 +67,13 @@ public class EditableController extends Evented {
             circle.setLatLng(((EditableEvent) e).getLat(),((EditableEvent) e).getLng());
         });
         circle.setEditable(true);
-        int id = (int) jsObject.call("startCircle", OptionsManager.getOptionsJson(circle));
+        int id = (int) jsObject.call("startCircle", circle.getOptions().getJson());
         circle.setId(id);
         mapView.addLayer(circle);
         return circle;
     }
 
-    public static Mission startMission(){
-        Mission mission = new Mission();
-        //jsObject.call("startMission");
-        mission.addEventListener(MapEventType.editable_drawing_commit,(e)->{
-            mission.updateOptions();
-        });
-        //mission.setEditable(true);
-        int id =  (int) jsObject.call("startMission", OptionsManager.getOptionsJson(mission));
-        mission.setId(id);
-        mapView.addLayer(mission);
-        return mission;
-    }
+
 
     public static void createTooltip(){
         jsObject.call("createTooltip");

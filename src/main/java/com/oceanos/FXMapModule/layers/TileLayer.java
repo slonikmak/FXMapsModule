@@ -1,5 +1,6 @@
 package com.oceanos.FXMapModule.layers;
 
+import com.oceanos.FXMapModule.options.LayerOptions;
 import netscape.javascript.JSObject;
 
 /**
@@ -16,6 +17,16 @@ public class TileLayer extends Layer {
     public TileLayer(String url, String options){
         this.url = url;
         this.options = options;
+    }
+
+    @Override
+    public void setOptions(LayerOptions options) {
+
+    }
+
+    @Override
+    public LayerOptions getOptions() {
+        return null;
     }
 
     public void addToMap(){

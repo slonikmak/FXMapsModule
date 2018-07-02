@@ -5,6 +5,8 @@ import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.app.view.LayerTreeCell;
 import com.oceanos.FXMapModule.layers.*;
+import com.oceanos.FXMapModule.layers.mission.Mission;
+import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -128,7 +130,16 @@ public class MainController {
             c.next();
             if (c.wasAdded()) {
                 Layer layer = c.getAddedSubList().get(0);
-                layerTreeView.getRoot().getChildren().add(new TreeItem<>(layer));
+                TreeItem<Layer> treeItem = new TreeItem<>(layer);
+                layerTreeView.getRoot().getChildren().add(treeItem);
+                if (layer instanceof Mission) {
+                    ((Mission)layer).getWaypoints().addListener((ListChangeListener<Waypoint>) c1 -> {
+                        c1.next();
+                        if (c1.wasAdded()){
+                            treeItem.getChildren().add(new TreeItem<>(c1.getAddedSubList().get(0)));
+                        }
+                    });
+                }
             }
         });
 

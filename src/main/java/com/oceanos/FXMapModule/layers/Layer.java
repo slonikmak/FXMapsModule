@@ -12,7 +12,6 @@ import netscape.javascript.JSObject;
  */
 public abstract class Layer extends Evented {
     protected long id;
-    private LayerOptions options;
     private StringProperty name = new SimpleStringProperty("layer");
 
     public Layer(){
@@ -22,17 +21,14 @@ public abstract class Layer extends Evented {
     public long getId(){
         return id;
     }
-    public void setOptions(LayerOptions options){
-        this.options = options;
-    }
+
+    public abstract void setOptions(LayerOptions options);
     //TODO: DO something
     public void subscribeToOptions(){
 
     }
 
-    public LayerOptions getOptions(){
-        return this.options;
-    }
+    public abstract LayerOptions getOptions();
 
     public String getName(){
         return name.getValue();

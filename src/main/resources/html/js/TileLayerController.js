@@ -14,6 +14,7 @@ class TileLayerController extends Controller{
         });*/
 
         this.mapGroup.addLayer(tileLayer);
+        tileLayer.addTo(this.map);
 
         return id;
     }

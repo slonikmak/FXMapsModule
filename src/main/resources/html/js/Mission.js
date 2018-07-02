@@ -7,12 +7,12 @@
                 options={};
             }
             options.editorClass = L.MissionEditor;
-            options.polylineClass = L.CustomPolyline;
+            options.polylineClass = L.Mission;
             return this.startPolyline(null,options)
         }
     });
 
-    L.CustomPolyline = L.Polyline.extend({
+    L.Mission = L.Polyline.extend({
         addCircle(latlng){
             const circle = new L.circle(latlng, {radius: this.options.radius});
             this.circles.addLayer(circle);
@@ -29,7 +29,7 @@
             //options.editTools.vertexMarkerClass = L.Waypoint;
             L.Polyline.prototype.initialize.call(this, latlngs, options);
             this.on("editable:vertex:new", function (e) {
-                console.log("add vertex");
+                //console.log("add vertex");
                 const circle = this.addCircle(e.latlng);
                 e.vertex.circle = circle;
                 e.vertex.on("move",(e)=>{
@@ -39,7 +39,12 @@
                 e.vertex.on("remove",(e)=>{
                     that.circles.removeLayer(e.sourceTarget.circle);
                 });
-                that.fire("mission:waypoint:new",{})
+
+                const id =  e.vertex._leaflet_id;
+                const event = new MissionEvent("mission:waypoint:new",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
+                //console.log("new event")
+                //console.log(event)
+                that.fire("mission:waypoint:new",event)
             });
         },
         onAdd: function (map) {
@@ -101,7 +106,7 @@
 
     L.MissionEditor = L.Editable.PolylineEditor.extend({
         addVertexMarker: function (latlng, latlngs, opts) {
-            console.log(this);
+            //console.log(this);
             return new L.Waypoint(latlng, latlngs, this, opts || {});
         },
         /*addVertexMarkers: function (latlngs) {
@@ -110,11 +115,66 @@
             }
         }*/
     });
-    console.log("init mission file");
+    //console.log("init mission file");
 })();
 
-class MissionController extends Controller{
+class MissionController extends MultilineController{
+    addMission(latlngs, options){
+        if (options === undefined){
+            options = {}
+        } else {
+            options = JSON.parse(options);
+        }
+        //options.bubblingMouseEvents = false;
+        latlngs = JSON.parse(latlngs);
+        const mission = new L.Mission(latlngs, options);
+        //console.log(options);
+        //this.mapGroup.addLayer(polyline);
+        const id = this.getLayerId(mission);
+        this.registerEvents(mission);
+        return id;
+    }
 
+
+
+    getLength(id){
+        const layer = this.getLayerById(id);
+        const latlngs = this.getLatLngs(layer._leaflet_id);
+        let result = 0.0;
+        for (let i=0;i<latlngs.length-1;i++){
+            result += latlngs[i].distanceTo(latlngs[i+1]);
+        }
+        return result;
+    }
+
+    getOptions(id){
+        const line = this.getLayerById(id);
+        const obj = {
+            opacity: line.options.opacity,
+            color: line.options.color,
+            weight: line.options.weight,
+            fill: line.options.fill,
+            fillColor: line.options.fillColor,
+            fillOpacity: line.options.fillOpacity,
+            bubblingMouseEvents: line.options.bubblingMouseEvents,
+            stroke: line.options.stroke,
+            editable: line.editEnabled()
+        };
+        return JSON.stringify(obj);
+    }
+
+    registerEvents(layer){
+        const missionEvents = ["mission:waypoint:new"];
+
+        for (let i = 0; i < missionEvents.length; i++) {
+            layer.on(missionEvents[i], (e)=>{
+                const event = new MissionEvent(e.type, e.target._leaflet_id, e.latlng, e.eventClass, e.layer);
+                //console.log("try to fire event");
+                //console.log(event);
+                eventController.fireEven(event);
+            })
+        }
+    }
 
 
 }

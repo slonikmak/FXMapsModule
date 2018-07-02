@@ -10,7 +10,7 @@ class PolylineController extends MultilineController{
         latLngs = JSON.parse(latLngs);
         const polyline = L.polyline(latLngs, options);
         console.log(options);
-        this.mapGroup.addLayer(polyline);
+        //this.mapGroup.addLayer(polyline);
         const id = this.getLayerId(polyline);
         this.registerEvents(polyline);
         return id;
@@ -21,7 +21,7 @@ class PolylineController extends MultilineController{
     getLength(id){
         const layer = this.getLayerById(id);
         const latlngs = layer.getLatLngs();
-        let result = 0;
+        let result = 0.0;
         for (let i=0;i<latlngs.length-1;i++){
             result += latlngs[i].distanceTo(latlngs[i+1]);
         }

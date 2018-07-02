@@ -4,11 +4,23 @@ class MultilineController extends PathController {
     }
 
     getLatLngs(id) {
-        const layer = this.map.findLayer(id);
-        const latlngs = layer.getLatLngs();
+        //FIXME:
         const result = [];
-        for (let i = 0; i < latlngs.length; i++) {
-            result[i] = [latlngs[i].lat, latlngs[i].lng]
+        const layer = this.map.findLayer(id);
+        //console.log(layer instanceof L.Polygon)
+        if (layer instanceof L.Polygon){
+            console.log("get latlngs")
+            const latlngs = layer.getLatLngs()[0];
+            console.log(layer);
+            for (let i = 0; i < latlngs.length; i++) {
+                result[i] = [latlngs[i].lat, latlngs[i].lng]
+            }
+        }else if (layer instanceof L.Polyline){
+
+            const latlngs = layer.getLatLngs();
+            for (let i = 0; i < latlngs.length; i++) {
+                result[i] = [latlngs[i].lat, latlngs[i].lng]
+            }
         }
         return JSON.stringify(result);
     }
@@ -39,7 +51,9 @@ class MultilineController extends PathController {
     }
 
     redraw(id, options) {
+        console.log(id+" "+options);
         const line = this.getLayerById(id);
+        console.log(line);
         options = JSON.parse(options);
         for (let key in options) {
             line.options[key] = options[key]

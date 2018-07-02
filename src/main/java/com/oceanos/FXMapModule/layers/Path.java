@@ -2,6 +2,8 @@ package com.oceanos.FXMapModule.layers;
 
 
 import com.oceanos.FXMapModule.options.PathOptions;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
@@ -17,12 +19,10 @@ public abstract class Path extends Layer {
     }
     abstract void redraw();
 
+    public abstract void setEditable(boolean value);
 
-    ChangeListener listener = ((observable, oldValue, newValue) -> {
-        if (!newValue.equals(oldValue)){
-            redraw();
-        }
-    });
+
+    InvalidationListener listener = observable -> redraw();
 
 
 }
