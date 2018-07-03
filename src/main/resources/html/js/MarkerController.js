@@ -60,7 +60,7 @@
     }
 
     hide(id){
-
+        this.map.findLayer(id).setOpacity(0);
     }
 
     registerEvents(id){
