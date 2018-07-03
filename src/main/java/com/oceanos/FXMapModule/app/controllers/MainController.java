@@ -154,6 +154,15 @@ public class MainController {
                         }
                     });
                 }
+            } else if (c.wasRemoved()){
+                System.out.println("remove");
+                Layer layer = c.getRemoved().get(0);
+                if (layer instanceof Waypoint) return;
+                layerTreeView.getRoot().getChildren()
+                        .stream()
+                        .filter((i)->i.getValue().equals(layer))
+                        .findFirst()
+                        .ifPresent((layerTreeItem -> layerTreeView.getRoot().getChildren().remove(layerTreeItem)));
             }
         });
 

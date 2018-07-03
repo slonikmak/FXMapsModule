@@ -8,7 +8,7 @@
         if (iconOptions != null && iconOptions !== undefined && iconOptions !== "null"){
             this.setIcon(id, iconOptions);
         }
-        this.registerEvents(id);
+        this.registerEvents(marker);
         return id
     }
 
@@ -59,7 +59,13 @@
         this.setOpacity(id, options.opacity);
     }
 
+    hide(id){
+
+    }
+
     registerEvents(id){
+        const layer = this.map.findLayer(id);
+
         const marker = this.getLayerById(id);
 
         const events = {
@@ -86,14 +92,16 @@
                 eventController.fireEven(event)
             },
             add: (e)=>{
-                const event = new MapEvent('add', id);
+                const event = new MapEvent('add', id, e.latlng);
                 event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
             },
             remove: (e)=>{
-                const event = new MapEvent('remove', id);
+                //console.log("remove marker");
+                const event = new MapEvent('remove', id, L.latLng(0,0));
                 event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
+                //console.log(event);
             }
         };
 

@@ -16,9 +16,9 @@ class Controller{
         return this.mapGroup.getLayer(id);
     }
 
-
-    remove(id){
-        this.getLayerById(id).remove()
+    removeLayer(id){
+        const layer = this.map.findLayer(id);
+        layer.remove();
     }
 
     bindPopup(id, text){

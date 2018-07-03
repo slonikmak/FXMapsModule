@@ -51,6 +51,7 @@ class CircleController extends PathController{
         }
     }
 
+
     registerEventsById(id){
         this.registerEvents(this.getLayerById(id));
     }
@@ -64,6 +65,11 @@ class CircleController extends PathController{
                 eventController.fireEven(event);
             })
         }
+        layer.on("remove", (e)=>{
+            const event = new MapEvent('remove', id, L.latLng(0,0));
+            event.eventClass = "LayerEvent";
+            eventController.fireEven(event)
+        })
     }
 }
 

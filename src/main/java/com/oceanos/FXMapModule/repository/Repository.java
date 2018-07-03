@@ -29,6 +29,10 @@ public class Repository {
         layers.add(layer);
     }
 
+    public void removeLayer(Layer layer){
+        layers.remove(layer);
+    }
+
     public Layer getActiveLayer() {
         return activeLayer.get();
     }

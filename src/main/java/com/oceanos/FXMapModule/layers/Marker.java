@@ -60,7 +60,17 @@ public class Marker extends Layer {
 
     @Override
     public void remove() {
+        jsObject.call("removeLayer", this.getId());
+    }
 
+    @Override
+    public void hide() {
+        jsObject.call("hide", getId());
+    }
+
+    @Override
+    public void show() {
+        jsObject.call("show", getId());
     }
 
     public void addToMap() {

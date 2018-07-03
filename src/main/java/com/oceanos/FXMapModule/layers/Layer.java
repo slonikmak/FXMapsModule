@@ -41,6 +41,8 @@ public abstract class Layer extends Evented {
     }
     public abstract void addToMap();
     public abstract void remove();
+    public abstract void hide();
+    public abstract void show();
 
     //TODO как сделать метод private
     public void setId(long id){

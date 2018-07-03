@@ -108,7 +108,17 @@ public class Circle extends Path {
 
     @Override
     public void remove() {
+        jsObject.call("removeLayer", this.getId());
+    }
 
+    @Override
+    public void hide() {
+        jsObject.call("hide");
+    }
+
+    @Override
+    public void show() {
+        jsObject.call("show");
     }
 
     public void setLatLng(double lat, double lng){

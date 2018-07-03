@@ -42,7 +42,17 @@ public class TileLayer extends Layer {
 
     @Override
     public void remove() {
+        jsObject.call("removeLayer", this.getId());
+    }
 
+    @Override
+    public void hide() {
+        jsObject.call("hide");
+    }
+
+    @Override
+    public void show() {
+        jsObject.call("show");
     }
 
 }

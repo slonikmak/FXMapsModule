@@ -192,12 +192,23 @@ class MissionController extends MultilineController{
     registerEvents(layer){
         const missionEvents = ["mission:waypoint:new","mission:waypoint:move"];
 
+        const layerEvents = ["remove"];
+
+        const id = layer._leaflet_id;
+
         for (let i = 0; i < missionEvents.length; i++) {
             layer.on(missionEvents[i], (e)=>{
                 const event = new MissionEvent(e.type, e.target._leaflet_id, e.latlng, e.eventClass, e.layer);
                 //console.log("try to fire event");
                 //console.log(event);
                 eventController.fireEven(event);
+            })
+        }
+        for (let i=0;i<layerEvents.length;i++){
+            layer.on(layerEvents[i], (e)=>{
+                const event = new MapEvent(layerEvents[i], id, L.latLng(0,0));
+                event.eventClass = "LayerEvent";
+                eventController.fireEven(event)
             })
         }
     }

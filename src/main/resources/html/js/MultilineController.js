@@ -66,12 +66,23 @@ class MultilineController extends PathController {
         this.registerEvents(layer);
     }
 
+    removeLayer(id){
+        console.log("remove!")
+        const layer = this.map.findLayer(id);
+        layer.remove();
+    }
+
     registerEvents(layer) {
         const id = layer._leaflet_id;
         const events = {
             click: (e) => {
                 const event = new MapEvent('click', id, e.latlng);
                 event.eventClass = 'MouseEvent';
+                eventController.fireEven(event)
+            },
+            remove: (e)=>{
+                const event = new MapEvent('remove', id, L.latLng(0,0));
+                event.eventClass = "LayerEvent";
                 eventController.fireEven(event)
             }
         };

@@ -139,6 +139,10 @@ public class MapView extends AnchorPane {
         }
         repository.addLayer(layer);
         registerHandlers(layer);
+        layer.addEventListener(MapEventType.remove, (e)->{
+            repository.removeLayer(layer);
+            System.out.println("remove");
+        });
     }
 
     private void registerHandlers(Layer layer) {

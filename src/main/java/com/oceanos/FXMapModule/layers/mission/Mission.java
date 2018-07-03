@@ -91,6 +91,16 @@ public class Mission extends PolyLine {
         id = (int) value;
     }
 
+    @Override
+    public void hide() {
+        jsObject.call("hide");
+    }
+
+    @Override
+    public void show() {
+        jsObject.call("show");
+    }
+
     public String getDescription() {
         return description.get();
     }
@@ -128,6 +138,16 @@ public class Mission extends PolyLine {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy:HH:mm", Locale.getDefault());
         String date = format.format(localDate);
         this.creationDate.set(date);
+    }
+
+    @Override
+    public void remove(){
+        int size = waypoints.size();
+        for (int i = 0; i < size; i++) {
+            mapView.getLayers().remove(waypoints.get(i));
+        }
+        super.remove();
+
     }
 
     //FIXME: разделить как-то с родителем

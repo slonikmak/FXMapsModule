@@ -6,6 +6,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeCell;
@@ -57,5 +59,8 @@ public class LayerTreeCell extends TreeCell<Layer> {
             }
             setGraphic(hBox);
         }
+        deleteBtn.setOnAction(event -> {
+            item.remove();
+        });
     }
 }
