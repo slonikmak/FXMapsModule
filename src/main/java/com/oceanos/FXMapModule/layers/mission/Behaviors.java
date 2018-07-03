@@ -50,4 +50,8 @@ public class Behaviors {
     public void setProperty(String behaviorName, String parametrName, Object value){
         behaviors.get(behaviorName).get(parametrName).setValue(value);
     }
+
+    public ObservableMap<String, ObservableMap<String, Property>> getBehaviors(){
+        return this.behaviors;
+    }
 }

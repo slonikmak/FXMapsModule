@@ -1,26 +1,21 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.oceanos.FXMapModule.options.LayerOptions;
-import javafx.beans.property.DoubleProperty;
 import netscape.javascript.JSObject;
 
 /**
- * @autor slonikmak on 15.06.2018.
+ * @autor slonikmak on 03.07.2018.
  */
-public class TileLayer extends Layer {
-
-    public static String jSController = "tileLayerController";
+public class WMSTileLayer extends Layer {
+    public static String jSController = "wmsLayerController";
     public static JSObject jsObject;
 
     private String url;
     private LayerOptions options;
 
-    public TileLayer(String url){
-        this.url = url;
-    }
 
-    public TileLayer(String url, LayerOptions options){
-        this(url);
+    public WMSTileLayer(String url, LayerOptions options) {
+        this.url = url;
         this.options = options;
     }
 
@@ -34,9 +29,10 @@ public class TileLayer extends Layer {
         return null;
     }
 
-    public void addToMap(){
+    @Override
+    public void addToMap() {
         System.out.println("add tile to map");
-        int a = (int) jsObject.call("addTileLayer", url, options);
+        int a = (int) jsObject.call("addTileLayer", url, options.getJson());
         id = a;
     }
 
@@ -44,5 +40,4 @@ public class TileLayer extends Layer {
     public void remove() {
 
     }
-
 }

@@ -29,7 +29,7 @@ public class EditableController extends Evented {
     }
 
     public static Mission startMission(){
-        Mission mission = new Mission();
+        Mission mission = new Mission(mapView);
         mission.addEventListener(MapEventType.editable_drawing_commit,(e)->{
             //mission.updateOptions();
         });

@@ -30,17 +30,21 @@
             L.Polyline.prototype.initialize.call(this, latlngs, options);
             this.on("editable:vertex:new", function (e) {
                 //console.log("add vertex");
+                const id =  e.vertex._leaflet_id;
                 const circle = this.addCircle(e.latlng);
                 e.vertex.circle = circle;
                 e.vertex.on("move",(e)=>{
+                    //console.log(e);
+                    const event = new MissionEvent("mission:waypoint:move",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
                     circle.setLatLng(e.latlng);
+                    that.fire("mission:waypoint:move", event);
                 });
                 this.updateWaypoints();
                 e.vertex.on("remove",(e)=>{
                     that.circles.removeLayer(e.sourceTarget.circle);
                 });
 
-                const id =  e.vertex._leaflet_id;
+
                 const event = new MissionEvent("mission:waypoint:new",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
                 //console.log("new event")
                 //console.log(event)
@@ -155,6 +159,20 @@ class MissionController extends MultilineController{
 
     }
 
+    updateWaypoints(id, options){
+        const layer = this.map.findLayer(id);
+        options = JSON.parse(options);
+        console.log(options);
+        layer.circles.eachLayer((l)=>{
+            //console.log(options);
+            for (let key in options){
+                l.options[key] = options[key]
+                l.setRadius(options.radius);
+            }
+            l.redraw();
+        })
+    }
+
     getOptions(id){
         const line = this.getLayerById(id);
         const obj = {
@@ -172,7 +190,7 @@ class MissionController extends MultilineController{
     }
 
     registerEvents(layer){
-        const missionEvents = ["mission:waypoint:new"];
+        const missionEvents = ["mission:waypoint:new","mission:waypoint:move"];
 
         for (let i = 0; i < missionEvents.length; i++) {
             layer.on(missionEvents[i], (e)=>{

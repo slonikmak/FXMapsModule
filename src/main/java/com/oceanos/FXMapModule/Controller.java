@@ -72,7 +72,7 @@ public class Controller {
 
     public void  initialize(){
         mapView = new MapView();
-        TileLayer tileLayer = new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png","{}");
+        TileLayer tileLayer = new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
         mapView.onLoad(()->{
             EditableController.createTooltip();
             mapView.getLayers().addListener((ListChangeListener<Layer>) c -> {

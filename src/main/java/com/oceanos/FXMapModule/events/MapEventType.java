@@ -5,5 +5,8 @@ package com.oceanos.FXMapModule.events;
  * TODO: register new event
  */
 public enum  MapEventType {
-    click, move, delete, add, mouseover, mouseout, editable_drawing_commit, editable_vertex_dragend, editable_editing, mission_waypoint_new
+    click, move, delete, add, mouseover,
+    mouseout, mousemove, editable_drawing_commit,
+    editable_vertex_dragend, editable_editing,
+    mission_waypoint_new, mission_waypoint_move
 }

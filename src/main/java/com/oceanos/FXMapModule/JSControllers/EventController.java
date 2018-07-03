@@ -5,7 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.events.*;
+import com.oceanos.FXMapModule.layers.Circle;
 import com.oceanos.FXMapModule.layers.Layer;
+import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.repository.Repository;
 
 import java.util.Map;
@@ -33,6 +35,7 @@ public class EventController {
         MapEvent mapEvent = parseEventFromJs(event);
         Optional<Layer> layer = repository.getLayerById(mapEvent.getTarget());
         layer.ifPresent((l)->{
+            //System.out.println(l instanceof Circle);
             l.fireEvent(mapEvent);
         });
     }

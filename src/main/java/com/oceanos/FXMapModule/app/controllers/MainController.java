@@ -8,6 +8,7 @@ import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.options.WmsLayerOptions;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.value.ChangeListener;
@@ -23,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import javafx.util.converter.NumberStringConverter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -53,6 +55,12 @@ public class MainController {
 
     @FXML
     private Color x4;
+
+    @FXML
+    private Label lat;
+
+    @FXML
+    private Label lng;
 
     @FXML
     void addCircle(ActionEvent event) {
@@ -94,17 +102,20 @@ public class MainController {
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
-        TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", "{}");
+        TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png");
+        WMSTileLayer wmsTileLayer = new WMSTileLayer("http://oceanos.nextgis.com/api/resource/65/wms", new WmsLayerOptions());
+        wmsTileLayer.setName("карта глубин");
         tileLayer.setName("osm map");
         mapView.onLoad(() -> {
             mapView.addLayer(tileLayer);
+            mapView.addLayer(wmsTileLayer);
             Marker marker = new Marker(60.055142,30.3400618);
             marker.setIcon(FilesUtills.normalizePath(ResourceManager.getInstance().getIconsList().get(0)));
             Marker marker1 = new Marker(60.0555,30.34007);
             marker.setName("marker 1");
 
-            mapView.addLayer(marker);
-            mapView.addLayer(marker1);
+            /*mapView.addLayer(marker);
+            mapView.addLayer(marker1);*/
         });
 
         mapView.initWebView();
@@ -115,6 +126,8 @@ public class MainController {
 
         initHandlers();
 
+        lat.textProperty().bindBidirectional(mapView.currentLatProperty(), new NumberStringConverter());
+        lng.textProperty().bindBidirectional(mapView.currentLngProperty(), new NumberStringConverter());
 
     }
 
@@ -130,6 +143,7 @@ public class MainController {
             c.next();
             if (c.wasAdded()) {
                 Layer layer = c.getAddedSubList().get(0);
+                if (layer instanceof Waypoint) return;
                 TreeItem<Layer> treeItem = new TreeItem<>(layer);
                 layerTreeView.getRoot().getChildren().add(treeItem);
                 if (layer instanceof Mission) {
@@ -181,7 +195,7 @@ public class MainController {
             controller.setLayer(value);
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);
-        } else if (value instanceof PolyLine){
+        } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.PolyLine") || value.getClass().getName().equals("com.oceanos.FXMapModule.layers.Polygon")){
             VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/polyLineOptions.fxml"));
             try {
@@ -194,7 +208,7 @@ public class MainController {
             controller.setLayer(value);
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);
-        } else if (value instanceof Circle){
+        } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.Circle")){
             VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/circleOptions.fxml"));
             try {
@@ -204,6 +218,32 @@ public class MainController {
             }
 
             CircleOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Mission")) {
+            Accordion elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/missionOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            MissionOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Waypoint")) {
+            VBox elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/waypointOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            WaypointController controller = loader.getController();
             controller.setLayer(value);
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);

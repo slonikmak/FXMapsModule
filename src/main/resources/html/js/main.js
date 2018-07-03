@@ -1,5 +1,5 @@
 
-const map = L.map('map',{editable: true, preferCanvas: true}).setView([51.505, -0.09], 13);
+const map = L.map('map',{editable: true, preferCanvas: true}).setView([60.722, 29.954], 15);
 
 L.Map.include({
     findLayer: function (id) {
@@ -25,6 +25,7 @@ const polyLineController = new PolylineController(map, mapGroup);
 const circleController = new CircleController(map, mapGroup);
 const polygonController = new PolygonController(map, mapGroup);
 const missionController = new MissionController(map, mapGroup);
+const wmsLayerController = new WMSTileController(map, mapGroup);
 map.editTools = new L.MyEditable(map, {});
 
 
@@ -34,6 +35,11 @@ map.editTools = new L.MyEditable(map, {});
 map.on('click', (e)=>{
     const event = new MapEvent(e.type, e.target._leaflet_id,L.latLng(e.latlng.lat, e.latlng.lng), null, "MouseEvent");
     //console.log(event);
+    mapEventController.fireEventFromJS(JSON.stringify(event));
+});
+
+map.on("mousemove", (e)=>{
+    const event = new MapEvent("mousemove", map._leaflet_id, e.latlng, null, "MouseEvent");
     mapEventController.fireEventFromJS(JSON.stringify(event));
 });
 

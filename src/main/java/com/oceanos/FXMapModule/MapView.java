@@ -5,11 +5,15 @@ import com.oceanos.FXMapModule.JSControllers.EventController;
 import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventListener;
 import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.events.MapMouseEvent;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
+import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import com.oceanos.FXMapModule.repository.Repository;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +21,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import java.awt.event.MouseEvent;
 import java.util.*;
 
 /**
@@ -34,6 +39,9 @@ public class MapView extends AnchorPane {
     private Map<MapEventType, List<MapEventListener>> eventListeners;
     private Gson gson;
 
+    private DoubleProperty currentLat = new SimpleDoubleProperty();
+    private DoubleProperty currentLng = new SimpleDoubleProperty();
+
 
     public MapView(){
         super();
@@ -41,6 +49,11 @@ public class MapView extends AnchorPane {
         eventController = new EventController(repository);
         gson = new Gson();
         eventListeners = new HashMap<>();
+
+        addEventListener(MapEventType.mousemove, event -> {
+            currentLat.setValue(((MapMouseEvent)event).getLat());
+            currentLng.setValue(((MapMouseEvent)event).getLng());
+        });
     }
 
     public void initWebView(){
@@ -80,12 +93,14 @@ public class MapView extends AnchorPane {
                                 //TODO: сделать универсальный способ инициализировать JS controller
                                 Marker.jsObject = (JSObject) webEngine.executeScript(Marker.jSController);
                                 TileLayer.jsObject = (JSObject) webEngine.executeScript(TileLayer.jSController);
+                                WMSTileLayer.jsObject = (JSObject)webEngine.executeScript(WMSTileLayer.jSController);
                                 EditableController.jsObject = (JSObject) webEngine.executeScript(EditableController.jSController);
                                 EditableController.mapView = this;
                                 PolyLine.jsObject = (JSObject) webEngine.executeScript(PolyLine.jSController);
                                 Circle.jsObject = (JSObject) webEngine.executeScript(Circle.jSController);
                                 Polygon.jsObject = (JSObject)webEngine.executeScript(Polygon.jSController);
                                 Mission.jsObject = (JSObject)webEngine.executeScript(Mission.jSController);
+                                //Waypoint.jsObject = (JSObject)webEngine.executeScript(Waypoint.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();
                                 }
@@ -177,4 +192,19 @@ public class MapView extends AnchorPane {
         repository.setActiveLayer(layer);
     }
 
+    public double getCurrentLat() {
+        return currentLat.get();
+    }
+
+    public DoubleProperty currentLatProperty() {
+        return currentLat;
+    }
+
+    public double getCurrentLng() {
+        return currentLng.get();
+    }
+
+    public DoubleProperty currentLngProperty() {
+        return currentLng;
+    }
 }
