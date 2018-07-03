@@ -3,6 +3,7 @@ package com.oceanos.FXMapModule.layers.mission;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.MissionEvent;
 import com.oceanos.FXMapModule.layers.PolyLine;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import netscape.javascript.JSObject;
@@ -14,13 +15,17 @@ public class Mission extends PolyLine {
     public static JSObject jsObject;
 
     private ObservableList<Waypoint> waypoints = FXCollections.observableArrayList();
+    private Behaviors behaviors;
 
     public Mission(){
         super();
         setName("mission");
+        behaviors = new Behaviors();
         addEventListener(MapEventType.mission_waypoint_new, (e)->{
             MissionEvent event = (MissionEvent) e;
-            waypoints.add(new Waypoint(((MissionEvent) e).getLayer()));
+            Waypoint waypoint = new Waypoint(((MissionEvent) e).getLayer());
+            waypoint.setName("waypoint");
+            waypoints.add(waypoint);
         });
     }
 

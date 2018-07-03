@@ -147,6 +147,14 @@ class MissionController extends MultilineController{
         return result;
     }
 
+    getDistance(id){
+
+    }
+
+    getIndex(id){
+
+    }
+
     getOptions(id){
         const line = this.getLayerById(id);
         const obj = {
