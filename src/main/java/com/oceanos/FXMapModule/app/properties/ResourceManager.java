@@ -20,6 +20,7 @@ public class ResourceManager {
 
     private Path resourceFolder;
     private Path iconsFolder;
+    private Path defaultStylesFolder;
 
     private ResourceManager() throws IOException {
         resourceFolder = Paths.get(System.getProperty("user.home") +
@@ -31,7 +32,12 @@ public class ResourceManager {
         if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getDefaultIconsFolder()))) {
             addIconsToResourceFolder();
         }
+        if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder()))) {
+            createDefaultStilesFolder();
+        }
     }
+
+
 
     public static ResourceManager getInstance() {
         if (instance == null) {
@@ -51,13 +57,33 @@ public class ResourceManager {
         copyIcons();
     }
 
+    private void createDefaultStilesFolder() throws IOException {
+        defaultStylesFolder =  resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder());
+        Files.createDirectory(defaultStylesFolder);
+        copyStyles();
+    }
+
+    private void copyStyles() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(PropertyManager.getInstance().getDefaultStylesFolder()).getFile());
+        Path path = file.toPath();
+        Files.list(path).forEach(f -> {
+            System.out.println("copy");
+            try {
+                Files.copy(f, defaultStylesFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private void copyIcons() throws IOException {
-        System.out.println("copy icons");
+        System.out.println("copy styles");
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("icons").getFile());
         Path path = file.toPath();
         Files.list(path).forEach(f -> {
-            System.out.println("copy");
+            System.out.println("copy style");
             try {
                 Files.copy(f, iconsFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
@@ -98,4 +124,27 @@ public class ResourceManager {
         FilesUtills.deleteDirectory(resourceFolder);
     }
 
+    public String getDefaultMissionOptions() {
+        String missionFile = PropertyManager.getInstance().getMissionStylesFile();
+        Path missionOptions = defaultStylesFolder.resolve(missionFile);
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            Files.lines(missionOptions).forEach(stringBuilder::append);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
+    public String getDefaultWaypointOptions() {
+        String waypointFile = PropertyManager.getInstance().getWaypointStylesFile();
+        Path waypointOptyons = defaultStylesFolder.resolve(waypointFile);
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            Files.lines(waypointOptyons).forEach(stringBuilder::append);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
 }

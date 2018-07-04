@@ -114,4 +114,5 @@ public class PathOptions extends LayerOptions{
         fillOpacity = new SimpleDoubleProperty(0.2);
         editable = new SimpleBooleanProperty(true);
     }
+
 }

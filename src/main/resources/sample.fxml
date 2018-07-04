@@ -27,45 +27,50 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
   <children>
-    <MenuBar styleClass="menu-item" VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="Файл">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Новый проект" />
-            <MenuItem mnemonicParsing="false" text="Открыть проект" />
-            <Menu mnemonicParsing="false" text="Открыть прошлые" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Закрыть" />
-            <MenuItem mnemonicParsing="false" text="Сохранить" />
-            <MenuItem mnemonicParsing="false" text="Сохранить как" />
-            <MenuItem mnemonicParsing="false" text="Загрузить слой" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Настройки" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Выход" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Правка">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Помощь">
-          <items>
-            <MenuItem mnemonicParsing="false" text="О программе" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
+      <AnchorPane VBox.vgrow="NEVER">
+         <children>
+          <MenuBar styleClass="menu-item">
+            <menus>
+              <Menu mnemonicParsing="false" text="Файл">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="Новый проект" />
+                  <MenuItem mnemonicParsing="false" text="Открыть проект" />
+                  <Menu mnemonicParsing="false" text="Открыть прошлые" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Закрыть" />
+                  <MenuItem mnemonicParsing="false" text="Сохранить" />
+                  <MenuItem mnemonicParsing="false" text="Сохранить как" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveSelected" text="Сохранить выбранное" />
+                  <MenuItem mnemonicParsing="false" text="Загрузить слой" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Настройки" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Выход" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Правка">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Redo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Cut" />
+                  <MenuItem mnemonicParsing="false" text="Copy" />
+                  <MenuItem mnemonicParsing="false" text="Paste" />
+                  <MenuItem mnemonicParsing="false" text="Delete" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Select All" />
+                  <MenuItem mnemonicParsing="false" text="Unselect All" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Помощь">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="О программе" />
+                </items>
+              </Menu>
+            </menus>
+          </MenuBar>
+         </children>
+      </AnchorPane>
     <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane fx:id="mapPane" prefHeight="551.0" prefWidth="255.0">

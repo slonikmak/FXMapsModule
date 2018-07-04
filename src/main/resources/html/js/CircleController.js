@@ -31,7 +31,7 @@ class CircleController extends PathController{
     redraw(id, options){
         const circle = this.getLayerById(id);
         options = JSON.parse(options);
-        //console.log(options);
+        console.log(circle);
         for (let key in options){
             circle.options[key] = options[key]
         }

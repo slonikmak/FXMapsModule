@@ -89,7 +89,7 @@ public class Circle extends Path {
     }
 
     @Override
-    void redraw() {
+    public void redraw() {
         if (getId() != 0) {
             jsObject.call("redraw", getId(), options.getJson());
             System.out.println(options.getJson());
@@ -119,6 +119,11 @@ public class Circle extends Path {
     @Override
     public void show() {
         jsObject.call("show");
+    }
+
+    @Override
+    public String convertToJson() {
+        return null;
     }
 
     public void setLatLng(double lat, double lng){

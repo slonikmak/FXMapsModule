@@ -73,6 +73,11 @@ public class Marker extends Layer {
         jsObject.call("show", getId());
     }
 
+    @Override
+    public String convertToJson() {
+        return null;
+    }
+
     public void addToMap() {
         Gson gson = new Gson();
         int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), getOptions().getJson(), gson.toJson(icon));

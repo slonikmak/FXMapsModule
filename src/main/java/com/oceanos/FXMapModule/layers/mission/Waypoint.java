@@ -1,7 +1,10 @@
 package com.oceanos.FXMapModule.layers.mission;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.oceanos.FXMapModule.layers.Circle;
 import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.LayerOptions;
 import javafx.beans.property.*;
 
 public class Waypoint extends Circle {
@@ -34,6 +37,24 @@ public class Waypoint extends Circle {
     public void updateProperties(){
 
     }
+
+    public JsonObject getJsonObject(){
+        JsonObject object = new JsonObject();
+        object.addProperty("lat", getLat());
+        object.addProperty("lng", getLng());
+        object.addProperty("azimuth", getAzimuth());
+        object.addProperty("distance", getDistance());
+        object.addProperty("target_depth", getTargetDepth());
+        object.addProperty("target_altitude", getTargetAltitude());
+        object.addProperty("depth", getDepth());
+        object.addProperty("capture_radius", getCaptureRadius());
+        object.addProperty("index", getIndex());
+        object.addProperty("id", getIndex());
+        object.addProperty("fix_gps", isFixGps());
+        object.add("tasks", new JsonArray());
+        return object;
+    }
+
 
     public double getAzimuth() {
         return azimuth.get();

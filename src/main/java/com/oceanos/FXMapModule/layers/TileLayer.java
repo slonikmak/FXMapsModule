@@ -55,4 +55,9 @@ public class TileLayer extends Layer {
         jsObject.call("show");
     }
 
+    @Override
+    public String convertToJson() {
+        return null;
+    }
+
 }

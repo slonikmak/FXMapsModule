@@ -31,7 +31,8 @@ public class PolyLine extends Path {
 
     public PolyLine(){
         super();
-        gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
+        gson = builder.setPrettyPrinting().create();
         //OptionsManager.fillOptions(this);
         setOptions(new PathOptions());
         initHandlers();
@@ -138,6 +139,11 @@ public class PolyLine extends Path {
     @Override
     public void show() {
         jsObject.call("show");
+    }
+
+    @Override
+    public String convertToJson() {
+        return null;
     }
 
     @Override

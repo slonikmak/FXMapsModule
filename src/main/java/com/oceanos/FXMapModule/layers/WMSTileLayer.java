@@ -50,4 +50,9 @@ public class WMSTileLayer extends Layer {
     public void show() {
         jsObject.call("show");
     }
+
+    @Override
+    public String convertToJson() {
+        return null;
+    }
 }

@@ -32,6 +32,7 @@
                 //console.log("add vertex");
                 const id =  e.vertex._leaflet_id;
                 const circle = this.addCircle(e.latlng);
+                const vertex = e.vertex;
                 e.vertex.circle = circle;
                 e.vertex.on("move",(e)=>{
                     //console.log(e);
@@ -44,6 +45,15 @@
                     that.circles.removeLayer(e.sourceTarget.circle);
                 });
 
+
+                e.vertex.bindTooltip("<div>" +
+                    "<span>Точка </span>"+e.vertex.getNumber()+"<br>" +
+                    "<span>Дистанция до следующей</span>" +"<br>" +
+                    "<span>Фиксация gps</span>"+"<br>" +
+                    "<span>Курс</span>"+"<br>" +
+                    "<span>Глубина погружения</span>"+"<br>" +
+                    "<span>Глубина всплытия</span>"+"<br>" +
+                    "</div>");
 
                 const event = new MissionEvent("mission:waypoint:new",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
                 //console.log("new event")
@@ -73,7 +83,7 @@
         iconHtml: function () {
             return '<div >' +
                 '<div class="my-div-span" style="">' +
-                '<div style="position: relative;top: -10px;left: -10px;width: 25px;height: 25px;background-color: white;border-radius: 50%;padding: 10px">'+this.numder +'</div>'+ '</div>';
+                '<div class="waypoint-icon" style="">'+this.numder +'</div>'+ '</div>';
         },
 
         initialize: function (latlng, latlngs, editor, options) {
@@ -104,6 +114,10 @@
                 html: this.iconHtml()
             }));
             this.fire("mission:waypoint:update",{});
+        },
+
+        getNumber(){
+            return this.numder;
         }
 
     });

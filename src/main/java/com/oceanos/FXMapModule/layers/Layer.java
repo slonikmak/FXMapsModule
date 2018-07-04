@@ -48,4 +48,6 @@ public abstract class Layer extends Evented {
     public void setId(long id){
         this.id = id;
     }
+
+    public abstract String convertToJson();
 }

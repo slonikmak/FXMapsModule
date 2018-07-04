@@ -23,11 +23,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Optional;
 
 public class MainController {
     private MapView mapView;
@@ -87,6 +90,25 @@ public class MainController {
         EditableController.startPolyLine();
     }
 
+    @FXML
+    void saveSelected(ActionEvent event){
+        Optional.ofNullable(mapView.activeLayerProperty().getValue()).ifPresent(l->{
+            if (l instanceof Mission){
+                saveMission((Mission) l);
+            }
+        });
+    }
+
+    private void saveMission(Mission l) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Выберите файл для сохранения миссии");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файл миссии", "*.mis"));
+        File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
+        String content = l.convertToJson();
+        FilesUtills.saveFile(file.toPath(), content);
+        System.out.println(file);
+    }
+
     public void addMarkerByClick() {
         EditableController.startMarker();
     }
@@ -94,6 +116,7 @@ public class MainController {
     public void addMarkerByCoords() {
 
     }
+
 
     public void initialize() {
         mapView = new MapView();

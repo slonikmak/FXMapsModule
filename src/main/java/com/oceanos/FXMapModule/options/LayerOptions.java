@@ -64,7 +64,18 @@ public abstract class LayerOptions implements Observable {
         object.keySet().forEach(k->{
             Method method = ReflectionHelper.getDeepMethod(this.getClass(), "set"+ CommonUtils.capitalize(k));
             try {
-                method.invoke(this, object.get(k));
+                Class[] types = method.getParameterTypes();
+                Object o = object.get(k);
+                if (types[0].equals(double.class)){
+                    method.invoke(this, object.get(k).getAsDouble());
+                } else if (types[0].equals(String.class)){
+                    method.invoke(this, object.get(k).getAsString());
+                } else if (types[0].equals(int.class)){
+                    method.invoke(this, object.get(k).getAsInt());
+                } else if (types[0].equals(boolean.class)){
+                    method.invoke(this, object.get(k).getAsBoolean());
+                }
+
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }

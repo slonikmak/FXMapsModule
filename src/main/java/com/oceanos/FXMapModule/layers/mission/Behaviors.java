@@ -1,10 +1,14 @@
 package com.oceanos.FXMapModule.layers.mission;
 
+import com.google.gson.*;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import org.hildan.fxgson.FxGson;
+
+import java.util.function.BiConsumer;
 
 public class Behaviors {
     private ObservableMap<String, ObservableMap<String, Property>> behaviors = FXCollections.observableHashMap();
@@ -22,6 +26,7 @@ public class Behaviors {
         behaviors.put("waypoint", waypoint);
         waypoint.put("lock_rudder", new SimpleBooleanProperty());
         waypoint.put("time_out", new SimpleIntegerProperty());
+        waypoint.put("rudder_range", new SimpleIntegerProperty());
 
         ObservableMap<String, Property> gps_fix = FXCollections.observableHashMap();
         behaviors.put("gps_fix", gps_fix);
@@ -53,5 +58,18 @@ public class Behaviors {
 
     public ObservableMap<String, ObservableMap<String, Property>> getBehaviors(){
         return this.behaviors;
+    }
+
+    public JsonArray getJsonObject(){
+        Gson gson = FxGson.fullBuilder()
+                .setPrettyPrinting()
+                .create();
+        JsonArray array = new JsonArray();
+        behaviors.forEach((s, stringPropertyObservableMap) -> {
+            JsonObject behavior = gson.toJsonTree(stringPropertyObservableMap).getAsJsonObject();
+            behavior.addProperty("name", s);
+            array.add(behavior);
+        });
+        return array;
     }
 }

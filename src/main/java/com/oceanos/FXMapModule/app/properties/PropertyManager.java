@@ -2,6 +2,7 @@ package com.oceanos.FXMapModule.app.properties;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -41,4 +42,15 @@ public class PropertyManager {
     }
 
 
+    public String getMissionStylesFile() {
+        return properties.getProperty("mission.default.options");
+    }
+
+    public String getWaypointStylesFile() {
+        return properties.getProperty("waypoint.default.options");
+    }
+
+    public String getDefaultStylesFolder() {
+        return properties.getProperty("styles.default.folder");
+    }
 }
