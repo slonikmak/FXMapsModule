@@ -1,13 +1,14 @@
 package com.oceanos.FXMapModule.layers.mission;
 
 import com.google.gson.*;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import org.hildan.fxgson.FxGson;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class Behaviors {
@@ -47,6 +48,26 @@ public class Behaviors {
         obstacle_detection.put("enabled", new SimpleBooleanProperty());
         obstacle_detection.put("time_period", new SimpleIntegerProperty());
         obstacle_detection.put("distance_length", new SimpleIntegerProperty());
+    }
+
+    Behaviors (JsonArray object){
+        this();
+        object.forEach(e->{
+            String behaviorName = e.getAsJsonObject().get("name").getAsString();
+            ObservableMap<String, Property> behavior = behaviors.get(behaviorName);
+            behavior.forEach((s, property) -> {
+                System.out.println(s);
+                if (property instanceof DoubleProperty){
+                    setProperty(behaviorName, s, e.getAsJsonObject().get(s).getAsDouble());
+                } else if (property instanceof IntegerProperty){
+                    setProperty(behaviorName, s, e.getAsJsonObject().get(s).getAsInt());
+                } else if (property instanceof BooleanProperty){
+                    setProperty(behaviorName, s, e.getAsJsonObject().get(s).getAsBoolean());
+                } else if (property instanceof StringProperty){
+                    setProperty(behaviorName, s, e.getAsJsonObject().get(s).getAsString());
+                }
+            });
+        });
     }
 
     public Property getProperty(String behaviorName, String parametrName){

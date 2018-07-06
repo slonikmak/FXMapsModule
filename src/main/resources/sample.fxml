@@ -41,7 +41,7 @@
                   <MenuItem mnemonicParsing="false" text="Сохранить" />
                   <MenuItem mnemonicParsing="false" text="Сохранить как" />
                         <MenuItem mnemonicParsing="false" onAction="#saveSelected" text="Сохранить выбранное" />
-                  <MenuItem mnemonicParsing="false" text="Загрузить слой" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadLayer" text="Загрузить слой" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Настройки" />
                   <SeparatorMenuItem mnemonicParsing="false" />

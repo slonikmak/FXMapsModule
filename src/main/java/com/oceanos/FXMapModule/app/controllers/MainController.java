@@ -99,6 +99,29 @@ public class MainController {
         });
     }
 
+    @FXML
+    void loadLayer(ActionEvent event){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл для загрузки");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы миссии", "*.mis"), new FileChooser.ExtensionFilter("GeoJson","*.json"));
+        File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
+        String content = FilesUtills.openFile(file.toPath());
+        if (file.getName().endsWith("mis")) {
+            loadMission(content);
+        } else if (file.getName().endsWith(".json")) {
+            loadMapLayer(content);
+        }
+    }
+
+    private void loadMapLayer(String content) {
+
+    }
+
+    private void loadMission(String content) {
+        Mission mission = Mission.getFromJson(content, mapView);
+        mapView.addLayer(mission);
+    }
+
     private void saveMission(Mission l) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Выберите файл для сохранения миссии");

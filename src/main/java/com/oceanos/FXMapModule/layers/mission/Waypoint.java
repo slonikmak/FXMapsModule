@@ -17,11 +17,8 @@ public class Waypoint extends Circle {
     private IntegerProperty index;
     private BooleanProperty fixGps;
 
-
-    public Waypoint(int id){
+    public Waypoint(){
         super();
-        setId(id);
-
         azimuth = new SimpleDoubleProperty();
         distance = new SimpleDoubleProperty();
         targetDepth = new SimpleDoubleProperty();
@@ -32,6 +29,18 @@ public class Waypoint extends Circle {
         fixGps = new SimpleBooleanProperty();
 
         captureRadius.bindBidirectional(((CircleOptions)getOptions()).radiusProperty());
+    }
+
+
+    public Waypoint(int id){
+        this();
+        setId(id);
+
+    }
+
+    @Override
+    public void addToMap(){
+
     }
 
     public void updateProperties(){
@@ -49,7 +58,7 @@ public class Waypoint extends Circle {
         object.addProperty("depth", getDepth());
         object.addProperty("capture_radius", getCaptureRadius());
         object.addProperty("index", getIndex());
-        object.addProperty("id", getIndex());
+        object.addProperty("id", getId());
         object.addProperty("fix_gps", isFixGps());
         object.add("tasks", new JsonArray());
         return object;
@@ -150,5 +159,20 @@ public class Waypoint extends Circle {
 
     public void setFixGps(boolean fixGps) {
         this.fixGps.set(fixGps);
+    }
+
+    public static Waypoint getFromJson(JsonObject jsonObject){
+        Waypoint waypoint = new Waypoint();
+        waypoint.setLat(jsonObject.get("lat").getAsDouble());
+        waypoint.setLng(jsonObject.get("lng").getAsDouble());
+        waypoint.setAzimuth(jsonObject.get("azimuth").getAsDouble());
+        waypoint.setDistance(jsonObject.get("distance").getAsDouble());
+        waypoint.setTargetDepth(jsonObject.get("target_depth").getAsDouble());
+        waypoint.setTargetAltitude(jsonObject.get("target_altitude").getAsDouble());
+        waypoint.setDepth(jsonObject.get("depth").getAsDouble());
+        waypoint.setCaptureRadius(jsonObject.get("capture_radius").getAsDouble());
+        waypoint.setIndex(jsonObject.get("index").getAsInt());
+        waypoint.setFixGps(jsonObject.get("fix_gps").getAsBoolean());
+        return waypoint;
     }
 }

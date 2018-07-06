@@ -1,6 +1,7 @@
 class PolylineController extends MultilineController{
 
     addPolyline(latLngs, options){
+        console.log("add polyline!")
         if (options === undefined){
             options = {}
         } else {

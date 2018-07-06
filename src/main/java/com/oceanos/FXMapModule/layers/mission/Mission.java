@@ -1,13 +1,11 @@
 package com.oceanos.FXMapModule.layers.mission;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.MissionEvent;
+import com.oceanos.FXMapModule.layers.LatLng;
 import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
@@ -23,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Mission extends PolyLine {
     public static String jSController = "missionController";
@@ -51,6 +50,7 @@ public class Mission extends PolyLine {
         waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
         captureRadius.bindBidirectional(waypointOptions.radiusProperty());
         addEventListener(MapEventType.mission_waypoint_new, (e)->{
+            //FIXME: перенести в метод addWaypoint()
             MissionEvent event = (MissionEvent) e;
             Waypoint waypoint = new Waypoint(((MissionEvent) e).getLayer());
             waypoint.setOptions(waypointOptions);
@@ -80,6 +80,17 @@ public class Mission extends PolyLine {
         });
     }
 
+    private void addWaypoint(Waypoint waypoint){
+        waypoint.setOptions(waypointOptions);
+        //updateWaypoints();
+        waypoints.add(waypoint);
+    }
+
+    void setWaypointId(Waypoint waypoint){
+       Integer waypointId = (Integer) jsObject.call("getWaypointId",this.getId(), waypoint.getLat(), waypoint.getLng());
+       waypoint.setId(waypointId);
+    }
+
     private void updateWaypoints(){
         System.out.println("update waypoints");
         jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
@@ -103,10 +114,16 @@ public class Mission extends PolyLine {
 
     @Override
     public void addToMap(){
-        String latlngs = gson.toJson(new ArrayList<>(getLatLngs()));
+        String latlngs = gson.toJson(waypoints.stream().map(w->new LatLng(w.getLat(), w.getLng())).collect(Collectors.toList()));
         Object value = jsObject.call("addMission",latlngs, getOptions().getJson());
-        id = (int) value;
+        id = (int)value;
+        waypoints.forEach(w->{
+            setWaypointId(w);
+            mapView.addLayer(w);
+        });
     }
+
+
 
     @Override
     public void hide() {
@@ -186,5 +203,23 @@ public class Mission extends PolyLine {
         object.add("waypoints", waypointsArray);
         object.add("behaviors", behaviors.getJsonObject());
         return gson.toJson(object);
+    }
+
+    public static Mission getFromJson(String content, MapView mapView) {
+        Mission mission = new Mission(mapView);
+        JsonObject contentObject = new JsonParser().parse(content).getAsJsonObject();
+        mission.setName(contentObject.get("name").getAsString());
+        mission.setDescription(contentObject.get("description").getAsString());
+        JsonArray waypointsArr = contentObject.getAsJsonArray("waypoints");
+        waypointsArr.forEach(w->{
+            Waypoint waypoint = Waypoint.getFromJson(w.getAsJsonObject());
+            mission.addWaypoint(waypoint);
+            //mission.waypoints.add(waypoint);
+        });
+        JsonArray behaviorsArr = contentObject.get("behaviors").getAsJsonArray();
+        Behaviors behaviors = new Behaviors(behaviorsArr);
+        mission.behaviors = behaviors;
+
+        return mission;
     }
 }

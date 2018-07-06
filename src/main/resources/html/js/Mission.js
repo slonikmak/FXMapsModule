@@ -138,6 +138,7 @@
 
 class MissionController extends MultilineController{
     addMission(latlngs, options){
+        console.log("add mission!");
         if (options === undefined){
             options = {}
         } else {
@@ -146,11 +147,25 @@ class MissionController extends MultilineController{
         //options.bubblingMouseEvents = false;
         latlngs = JSON.parse(latlngs);
         const mission = new L.Mission(latlngs, options);
+        mission.enableEdit(this.map);
         //console.log(options);
-        //this.mapGroup.addLayer(polyline);
-        const id = this.getLayerId(mission);
+        this.mapGroup.addLayer(mission);
+        mission.addTo(this.map);
+        const id = mission._leaflet_id;
         this.registerEvents(mission);
         return id;
+    }
+
+    getWaypointId(id, lat, lng){
+        const layer = this.getLayerById(id);
+        const latlngs = layer.getLatLngs();
+        for (let i =0;i<latlngs.length;i++){
+            if (latlngs[i].lat == lat && latlngs[i].lng == lng) {
+                //console.log("OKK");
+                return latlngs[i].__vertex._leaflet_id;
+            }
+        }
+
     }
 
 

@@ -35,4 +35,14 @@ public class FilesUtills {
             e.printStackTrace();
         }
     }
+
+    public static String openFile(Path toPath) {
+        StringBuilder builder = new StringBuilder();
+        try {
+            Files.lines(toPath, Charset.forName("UTF-8")).forEach(builder::append);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
+    }
 }
