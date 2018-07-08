@@ -26,12 +26,12 @@ class EditableController extends Controller{
 
     startMission(options){
         options = JSON.parse(options);
-        const mission = this.map.editTools.startMissionPath(options);
+        const mission = this.map.editTools.startMissionPath(null, options);
         this.mapGroup.addLayer(mission);
         this.registerEvents(mission);
         missionController.registerEvents(mission);
         mission.on("mission:waypoint:new", (e)=>{
-            //console.log("new waypoint")
+            console.log("new waypoint")
         });
 
         return mission._leaflet_id;
@@ -67,7 +67,6 @@ class EditableController extends Controller{
     }
 
     registerEvents(layer){
-        //console.log(layer);
         const drawingEvents = ["editable:drawing:commit"];
         const vertexEvent = ["editable:vertex:dragend"];
         const editEvents = ["editable:editing"];
@@ -100,11 +99,10 @@ class EditableController extends Controller{
         }
         for (let i=0;i<editEvents.length;i++){
             layer.on(editEvents[i], (e)=>{
-                //console.log(e);
                 let latlng = L.latLng(0.0,0.0);
                 const event = new MapEvent(editEvents[i], layer._leaflet_id, latlng);
                 event.eventClass = "EditableEvent";
-                eventController.fireEven(event)
+                eventController.fireEven(event);
             });
         }
 

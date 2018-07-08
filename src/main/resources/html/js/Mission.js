@@ -2,13 +2,15 @@
 
     L.MyEditable = L.Editable.extend({
 
-       startMissionPath: function (options) {
+       startMissionPath: function (latlngs,options) {
             if (options === null || options === undefined){
                 options={};
             }
             options.editorClass = L.MissionEditor;
             options.polylineClass = L.Mission;
-            return this.startPolyline(null,options)
+            console.log("start mission");
+            console.log(latlngs)
+            return this.startPolyline(latlngs,options)
         }
     });
 
@@ -23,13 +25,17 @@
             if (options === null || options === undefined){
                 options = {}
             }
+            options.editorClass = L.MissionEditor;
+            options.polylineClass = L.Mission;
             options.radius = 50;
             this.circles = new L.layerGroup();
             // options = options || {};
             //options.editTools.vertexMarkerClass = L.Waypoint;
             L.Polyline.prototype.initialize.call(this, latlngs, options);
+            //console.log(this);
             this.on("editable:vertex:new", function (e) {
-                //console.log("add vertex");
+                console.log("add vertex");
+                //FIXME: перенести в один метод initWaypoints()
                 const id =  e.vertex._leaflet_id;
                 const circle = this.addCircle(e.latlng);
                 const vertex = e.vertex;
@@ -56,16 +62,50 @@
                     "</div>");
 
                 const event = new MissionEvent("mission:waypoint:new",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
-                //console.log("new event")
+                console.log("new event")
                 //console.log(event)
                 that.fire("mission:waypoint:new",event)
             });
         },
+
+        initWaypoints(){
+            const that = this;
+            const latlngs = this.getLatLngs();
+            for (let i =0;i<latlngs.length;i++){
+                const latlng = latlngs[i];
+                const vertex = latlng.__vertex;
+                const id =  vertex._leaflet_id;
+                const circle = this.addCircle(latlng);
+                vertex.circle = circle;
+                vertex.on("move",(e)=>{
+                    //console.log(e);
+                    const event = new MissionEvent("mission:waypoint:move",id, L.latLng(latlng.lat, latlng.lng), "MissionEvent", id);
+                    circle.setLatLng(e.latlng);
+                    that.fire("mission:waypoint:move", event);
+                });
+                this.updateWaypoints();
+                vertex.on("remove",(e)=>{
+                    that.circles.removeLayer(e.sourceTarget.circle);
+                });
+
+
+                vertex.bindTooltip("<div>" +
+                    "<span>Точка </span>"+vertex.getNumber()+"<br>" +
+                    "<span>Дистанция до следующей</span>" +"<br>" +
+                    "<span>Фиксация gps</span>"+"<br>" +
+                    "<span>Курс</span>"+"<br>" +
+                    "<span>Глубина погружения</span>"+"<br>" +
+                    "<span>Глубина всплытия</span>"+"<br>" +
+                    "</div>");
+            }
+        },
+
         onAdd: function (map) {
             //this._super.onAdd(map);
             //.log("add custom line!");
             //console.log("custom id " + this._leaflet_id);
             L.Polyline.prototype.onAdd.call(this, map);
+            this.initWaypoints();
             this.circles.addTo(map);
         },
         updateWaypoints() {
@@ -123,6 +163,10 @@
     });
 
     L.MissionEditor = L.Editable.PolylineEditor.extend({
+        customFunc(){
+
+        },
+
         addVertexMarker: function (latlng, latlngs, opts) {
             //console.log(this);
             return new L.Waypoint(latlng, latlngs, this, opts || {});
@@ -139,29 +183,66 @@
 class MissionController extends MultilineController{
     addMission(latlngs, options){
         console.log("add mission!");
+        console.log(options);
+
         if (options === undefined){
             options = {}
         } else {
             options = JSON.parse(options);
         }
+        /*options.editOptions = {};
+        options.editOptions.editorClass = L.MissionEditor;
+        options.editOptions.vertexMarkerClass = L.Waypoint;*/
         //options.bubblingMouseEvents = false;
+        //this.map.editTools = new L.MyEditable(this.map,{editorClass:L.MissionEditor, polylineClass:L.Mission});
         latlngs = JSON.parse(latlngs);
         const mission = new L.Mission(latlngs, options);
+        //mission.editor = new L.MissionEditor();
+        //const mission = this.map.editTools.startMissionPath(latlngs[0], options);
+        //this.map.editTools.options.editorClass = L.MissionEditor;
+        //this.map.editTools.options.vertexMarkerClass = L.Waypoint;
         mission.enableEdit(this.map);
+        console.log(mission);
+        /*for (let i = 1; i < latlngs.length; i++) {
+            console.log("add vertex marker")
+            mission.editor.addVertexMarker(latlngs[i]);
+        }*/
+
+
+        /*mission.editor.tools.options.vertexMarkerClass = L.Waypoint;*/
+        mission.addTo(this.map);
+
+        //this.map.editTools.stopDrawing();
+
+        //mission.enableEdit(this.map);
         //console.log(options);
         this.mapGroup.addLayer(mission);
-        mission.addTo(this.map);
+        //mission.addTo(this.map);
         const id = mission._leaflet_id;
         this.registerEvents(mission);
+        editableController.registerEvents(mission);
         return id;
+    }
+    getWaypointIndex(id, waypointId){
+        const layer = this.getLayerById(id);
+        console.log("get waypoint index")
+        const latlngs = layer.getLatLngs();
+        for (let i =0;i<latlngs.length;i++){
+            if (latlngs[i].__vertex._leaflet_id == waypointId) {
+                console.log("Index = "+latlngs[i].__vertex.getNumber());
+                return latlngs[i].__vertex.getNumber();
+            }
+        }
     }
 
     getWaypointId(id, lat, lng){
         const layer = this.getLayerById(id);
+        console.log("get")
         const latlngs = layer.getLatLngs();
         for (let i =0;i<latlngs.length;i++){
             if (latlngs[i].lat == lat && latlngs[i].lng == lng) {
-                //console.log("OKK");
+                console.log("OKK");
+                console.log(latlngs[i].__vertex._leaflet_id);
                 return latlngs[i].__vertex._leaflet_id;
             }
         }

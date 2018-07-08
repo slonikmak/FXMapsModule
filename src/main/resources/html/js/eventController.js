@@ -19,10 +19,10 @@ eventController.fireEven = function(event){
     //console.log("fire event");
     //console.log(event);
     javaEventController.fireEvent(JSON.stringify(event));
-    const listeners = this.eventListeners.get(event.type);
+    /*const listeners = this.eventListeners.get(event.type);
     if (listeners !== undefined){
         for (let i = 0;i<listeners.length; i++){
             listeners[i](event);
         }
-    }
+    }*/
 };

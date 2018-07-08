@@ -15,15 +15,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 
@@ -193,9 +196,13 @@ public class MainController {
                 TreeItem<Layer> treeItem = new TreeItem<>(layer);
                 layerTreeView.getRoot().getChildren().add(treeItem);
                 if (layer instanceof Mission) {
+                    ((Mission) layer).getWaypoints().forEach(w->{
+                        treeItem.getChildren().add(new TreeItem<>(w));
+                    });
                     ((Mission)layer).getWaypoints().addListener((ListChangeListener<Waypoint>) c1 -> {
                         c1.next();
                         if (c1.wasAdded()){
+                            System.out.println("add waypoint item");
                             treeItem.getChildren().add(new TreeItem<>(c1.getAddedSubList().get(0)));
                         }
                     });
@@ -213,7 +220,18 @@ public class MainController {
         });
 
         layerTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mapView.setActivLayer(newValue.getValue());
+
+            if (!newValue.equals(oldValue)) mapView.setActivLayer(newValue.getValue());
+        });
+
+        layerTreeView.setOnContextMenuRequested(event -> {
+            //event.getTarget()
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem goToItem = new MenuItem("Переместиться к слою");
+            MenuItem deleteItem = new MenuItem("Удалить");
+            MenuItem hideItem = new MenuItem("Скрыть/показать");
+            contextMenu.getItems().addAll(goToItem, deleteItem, hideItem);
+            contextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
         });
 
 
@@ -221,7 +239,7 @@ public class MainController {
 
     private void initHandlers(){
         mapView.activeLayerProperty().addListener((observable, oldValue, newValue) -> {
-            //System.out.println(newValue);
+
             if (newValue instanceof Marker){
                 mapView.flyTo(((Marker)newValue).getLat(), ((Marker)newValue).getLng());
             } else if (newValue instanceof Circle){
@@ -231,7 +249,7 @@ public class MainController {
 
             int index = mapView.getLayers().indexOf(newValue);
 
-            layerTreeView.getSelectionModel().select(index);
+           // layerTreeView.getSelectionModel().select(index);
             /*layerTreeView.getSelectionModel().select*/
         });
     }

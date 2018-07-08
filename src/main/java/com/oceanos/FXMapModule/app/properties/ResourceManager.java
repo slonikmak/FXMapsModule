@@ -23,6 +23,7 @@ public class ResourceManager {
     private Path defaultStylesFolder;
 
     private ResourceManager() throws IOException {
+
         resourceFolder = Paths.get(System.getProperty("user.home") +
                 "/" +
                 PropertyManager.getInstance().getProjectResourceFolderName());

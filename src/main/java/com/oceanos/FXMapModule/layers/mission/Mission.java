@@ -50,6 +50,7 @@ public class Mission extends PolyLine {
         waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
         captureRadius.bindBidirectional(waypointOptions.radiusProperty());
         addEventListener(MapEventType.mission_waypoint_new, (e)->{
+            System.out.println("new waypoint");
             //FIXME: перенести в метод addWaypoint()
             MissionEvent event = (MissionEvent) e;
             Waypoint waypoint = new Waypoint(((MissionEvent) e).getLayer());
@@ -87,13 +88,17 @@ public class Mission extends PolyLine {
     }
 
     void setWaypointId(Waypoint waypoint){
-       Integer waypointId = (Integer) jsObject.call("getWaypointId",this.getId(), waypoint.getLat(), waypoint.getLng());
+        Object result = jsObject.call("getWaypointId",this.getId(), waypoint.getLat(), waypoint.getLng());
+       Integer waypointId = (Integer) result;
        waypoint.setId(waypointId);
     }
 
     private void updateWaypoints(){
         System.out.println("update waypoints");
         jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
+        waypoints.forEach(w->{
+            int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
+        });
     }
 
     public ObservableList<Waypoint> getWaypoints() {
@@ -117,10 +122,12 @@ public class Mission extends PolyLine {
         String latlngs = gson.toJson(waypoints.stream().map(w->new LatLng(w.getLat(), w.getLng())).collect(Collectors.toList()));
         Object value = jsObject.call("addMission",latlngs, getOptions().getJson());
         id = (int)value;
+        System.out.println("id "+id);
         waypoints.forEach(w->{
             setWaypointId(w);
             mapView.addLayer(w);
         });
+        updateWaypoints();
     }
 
 
