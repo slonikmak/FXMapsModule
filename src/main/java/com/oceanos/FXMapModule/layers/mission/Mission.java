@@ -98,6 +98,7 @@ public class Mission extends PolyLine {
         jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
         waypoints.forEach(w->{
             int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
+            w.setIndex(number);
         });
     }
 

@@ -310,7 +310,7 @@ class MissionController extends MultilineController{
             layer.on(missionEvents[i], (e)=>{
                 const event = new MissionEvent(e.type, e.target._leaflet_id, e.latlng, e.eventClass, e.layer);
                 //console.log("try to fire event");
-                //console.log(event);
+                console.log(e.type);
                 eventController.fireEven(event);
             })
         }
