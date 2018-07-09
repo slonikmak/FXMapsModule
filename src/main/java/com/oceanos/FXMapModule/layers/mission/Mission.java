@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Mission extends PolyLine {
@@ -55,13 +56,20 @@ public class Mission extends PolyLine {
             MissionEvent event = (MissionEvent) e;
             Waypoint waypoint = new Waypoint(((MissionEvent) e).getLayer());
             waypoint.setOptions(waypointOptions);
-            updateWaypoints();
+
             waypoint.setName("waypoint");
             waypoint.setId(event.getLayer());
             waypoint.setLat(((MissionEvent) e).getLat());
             waypoint.setLng(((MissionEvent) e).getLng());
             waypoints.add(waypoint);
             mapView.addLayer(waypoint);
+            updateWaypoints();
+        });
+        addEventListener(MapEventType.mission_waypoint_deleted, (e)->{
+            long id = e.getTarget();
+            Optional<Waypoint> waypoint = waypoints.stream().filter((waypoint1 -> waypoint1.getId()==id)).findFirst();
+            waypoint.ifPresent((waypoint1 -> waypoints.remove(waypoint1)));
+            System.out.println("delete");
         });
 
         addEventListener(MapEventType.mission_waypoint_move, (event1)->{
@@ -98,6 +106,7 @@ public class Mission extends PolyLine {
         jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
         waypoints.forEach(w->{
             int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
+            System.out.println("layer "+this.getId()+" waypoint "+w.getId()+"number "+number);
             w.setIndex(number);
         });
     }

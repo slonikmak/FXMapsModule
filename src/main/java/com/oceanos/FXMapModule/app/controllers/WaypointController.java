@@ -90,5 +90,7 @@ public class WaypointController implements LayerOptionsController {
         name.textProperty().bindBidirectional(layer.nameProperty());
         radius.textProperty().bindBidirectional(layer.radiusProperty(), new NumberStringConverter());
         index.textProperty().bindBidirectional(layer.indexProperty(), new NumberStringConverter());
+
+
     }
 }

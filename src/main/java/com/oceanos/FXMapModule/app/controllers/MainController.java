@@ -33,6 +33,7 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Comparator;
 import java.util.Optional;
 
 public class MainController {
@@ -204,6 +205,7 @@ public class MainController {
                         if (c1.wasAdded()){
                             System.out.println("add waypoint item");
                             treeItem.getChildren().add(new TreeItem<>(c1.getAddedSubList().get(0)));
+                            treeItem.getChildren().sort(Comparator.comparing(i->((Waypoint)i.getValue()).getIndex()));
                         }
                     });
                 }

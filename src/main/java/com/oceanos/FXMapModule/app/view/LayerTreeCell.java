@@ -2,10 +2,13 @@ package com.oceanos.FXMapModule.app.view;
 
 import com.oceanos.FXMapModule.layers.Circle;
 import com.oceanos.FXMapModule.layers.Layer;
+import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -35,7 +38,19 @@ public class LayerTreeCell extends TreeCell<Layer> {
             setGraphic(null);
         } else {
             String name = item.getName();
-            setText(name);
+
+            if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Waypoint")){
+                setText(name+" "+((Waypoint)item).getIndex());
+                item.nameProperty().addListener(observable -> {
+                    setText(item.getName()+" "+((Waypoint)item).getIndex());
+                });
+                ((Waypoint) item).indexProperty().addListener(observable -> {
+                    setText(item.getName()+" "+((Waypoint)item).getIndex());
+                });
+            } else {
+                setText(name);
+                item.nameProperty().addListener(observable -> setText(item.getName()));
+            }
             MaterialIconView iconView = null;
             //com.oceanos.FXMapModule.layers.Marker
             if (item.getClass().getName().equals("com.oceanos.FXMapModule.layers.Marker")) {

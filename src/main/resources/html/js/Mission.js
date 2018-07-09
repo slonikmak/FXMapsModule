@@ -66,6 +66,13 @@
                 //console.log(event)
                 that.fire("mission:waypoint:new",event)
             });
+            this.on("editable:vertex:deleted", (e)=>{
+                const id =  e.vertex._leaflet_id;
+                const event = new MissionEvent("mission:waypoint:new",id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent", id);
+                this.updateWaypoints();
+                that.fire("mission:waypoint:deleted",event);
+            })
+
         },
 
         initWaypoints(){
@@ -227,9 +234,10 @@ class MissionController extends MultilineController{
         const layer = this.getLayerById(id);
         console.log("get waypoint index")
         const latlngs = layer.getLatLngs();
+        console.log(latlngs);
         for (let i =0;i<latlngs.length;i++){
             if (latlngs[i].__vertex._leaflet_id == waypointId) {
-                console.log("Index = "+latlngs[i].__vertex.getNumber());
+                console.log("Number = "+latlngs[i].__vertex.getNumber());
                 return latlngs[i].__vertex.getNumber();
             }
         }
@@ -300,7 +308,7 @@ class MissionController extends MultilineController{
     }
 
     registerEvents(layer){
-        const missionEvents = ["mission:waypoint:new","mission:waypoint:move"];
+        const missionEvents = ["mission:waypoint:new","mission:waypoint:move","mission:waypoint:deleted"];
 
         const layerEvents = ["remove"];
 
