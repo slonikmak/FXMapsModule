@@ -49,6 +49,8 @@
                 this.updateWaypoints();
                 e.vertex.on("remove",(e)=>{
                     that.circles.removeLayer(e.sourceTarget.circle);
+                    /*const removeEvent = new MapEvent("remove", e.target._leaflet_id, L.latLng(e.latlng.lat, e.latlng.lng), "MissionEvent");
+                    eventController.fireEven(removeEvent);*/
                 });
 
 

@@ -55,6 +55,7 @@ public class Mission extends PolyLine {
             //FIXME: перенести в метод addWaypoint()
             MissionEvent event = (MissionEvent) e;
             Waypoint waypoint = new Waypoint(((MissionEvent) e).getLayer());
+            waypoint.setMission(this);
             waypoint.setOptions(waypointOptions);
 
             waypoint.setName("waypoint");
@@ -66,10 +67,13 @@ public class Mission extends PolyLine {
             updateWaypoints();
         });
         addEventListener(MapEventType.mission_waypoint_deleted, (e)->{
-            long id = e.getTarget();
+            long id = ((MissionEvent)e).getLayer();
             Optional<Waypoint> waypoint = waypoints.stream().filter((waypoint1 -> waypoint1.getId()==id)).findFirst();
-            waypoint.ifPresent((waypoint1 -> waypoints.remove(waypoint1)));
-            System.out.println("delete");
+            waypoint.ifPresent((waypoint1 -> {
+                waypoints.remove(waypoint1);
+                mapView.removeLayer(waypoint1);
+            }));
+            updateWaypoints();
         });
 
         addEventListener(MapEventType.mission_waypoint_move, (event1)->{
@@ -91,6 +95,7 @@ public class Mission extends PolyLine {
 
     private void addWaypoint(Waypoint waypoint){
         waypoint.setOptions(waypointOptions);
+        waypoint.setMission(this);
         //updateWaypoints();
         waypoints.add(waypoint);
     }

@@ -212,12 +212,23 @@ public class MainController {
             } else if (c.wasRemoved()){
                 System.out.println("remove");
                 Layer layer = c.getRemoved().get(0);
-                if (layer instanceof Waypoint) return;
-                layerTreeView.getRoot().getChildren()
-                        .stream()
-                        .filter((i)->i.getValue().equals(layer))
-                        .findFirst()
-                        .ifPresent((layerTreeItem -> layerTreeView.getRoot().getChildren().remove(layerTreeItem)));
+                if (layer instanceof Waypoint) {
+                    layerTreeView.getRoot().getChildren()
+                            .stream()
+                            .filter((i)->i.getValue().equals(((Waypoint)layer).getMission()))
+                            .findFirst()
+                            .ifPresent((missionTreeItem -> missionTreeItem.getChildren()
+                                    .stream()
+                                    .filter(layerTreeItem1 -> layerTreeItem1.getValue().equals(layer)).findFirst()
+                                    .ifPresent(waypointItem->missionTreeItem.getChildren().remove(waypointItem))));
+                } else {
+                    layerTreeView.getRoot().getChildren()
+                            .stream()
+                            .filter((i)->i.getValue().equals(layer))
+                            .findFirst()
+                            .ifPresent((layerTreeItem -> layerTreeView.getRoot().getChildren().remove(layerTreeItem)));
+                }
+
             }
         });
 

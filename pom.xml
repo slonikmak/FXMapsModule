@@ -7,17 +7,56 @@
     <groupId>com.oceanos</groupId>
     <artifactId>FXMapsModule</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
                 <configuration>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>1.9</source>
+                    <target>1.9</target>
+                    <jdkToolchain>
+                        <version>10</version>
+                    </jdkToolchain>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs/</classpathPrefix>
+                            <mainClass>
+                                com.oceanos.FXMapModule.app.Main
+                            </mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/libs
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
     </build>
 
     <repositories>

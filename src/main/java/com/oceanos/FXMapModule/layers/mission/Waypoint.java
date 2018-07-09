@@ -17,6 +17,8 @@ public class Waypoint extends Circle {
     private IntegerProperty index;
     private BooleanProperty fixGps;
 
+    private Mission mission;
+
     public Waypoint(){
         super();
         azimuth = new SimpleDoubleProperty();
@@ -174,5 +176,13 @@ public class Waypoint extends Circle {
         waypoint.setIndex(jsonObject.get("index").getAsInt());
         waypoint.setFixGps(jsonObject.get("fix_gps").getAsBoolean());
         return waypoint;
+    }
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public void setMission(Mission mission) {
+        this.mission = mission;
     }
 }
