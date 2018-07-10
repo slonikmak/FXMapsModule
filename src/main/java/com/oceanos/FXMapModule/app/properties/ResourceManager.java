@@ -67,6 +67,8 @@ public class ResourceManager {
     private void copyStyles() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(PropertyManager.getInstance().getDefaultStylesFolder()).getFile());
+        System.out.println("??????????????????????????????????????????????");
+        System.out.println(file);
         Path path = file.toPath();
         Files.list(path).forEach(f -> {
             System.out.println("copy");
