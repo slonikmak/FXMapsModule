@@ -1,0 +1,22 @@
+<assembly>
+
+    <id>batch-app-dist</id>
+
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+        <format>tar.bz2</format>
+    </formats>
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>resources</directory>
+            <lineEnding>unix</lineEnding>
+            <outputDirectory>extra-resources</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+
+</assembly>

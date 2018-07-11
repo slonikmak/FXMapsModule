@@ -4,6 +4,7 @@ import com.oceanos.FXMapModule.app.utills.FilesUtills;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,10 +66,22 @@ public class ResourceManager {
     }
 
     private void copyStyles() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(PropertyManager.getInstance().getDefaultStylesFolder()).getFile());
+
+        /*ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(PropertyManager.getInstance().getDefaultStylesFolder());
         System.out.println("??????????????????????????????????????????????");
-        System.out.println(file);
+        System.out.println(url);
+        String path1 = url.getPath();
+        File[] files = new File(path1).listFiles();
+        System.out.println(files);
+*/
+       /* for (File f: files) {
+            System.out.println(f.toString());
+        }*/
+
+       /* ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(PropertyManager.getInstance().getDefaultStylesFolder()).getFile());
+
         Path path = file.toPath();
         Files.list(path).forEach(f -> {
             System.out.println("copy");
@@ -77,22 +90,38 @@ public class ResourceManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
+        try {
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getDefaultStylesFolder()), defaultStylesFolder);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     private void copyIcons() throws IOException {
         System.out.println("copy styles");
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("icons").getFile());
-        Path path = file.toPath();
-        Files.list(path).forEach(f -> {
+        /*ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("icons").getFile());*/
+        /*File[] files = file.listFiles();
+        System.out.println("!!!!!!!!!!!");
+        System.out.println(Paths.get(file.toString().replace("file:\\", "jar:\\")));*/
+        //Path path = file.toPath();
+        //Path path = Paths.get(file.toString().replace("file:\\", ""));
+
+        try {
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP("icons"), iconsFolder);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        /*Files.list(path).forEach(f -> {
             System.out.println("copy style");
             try {
                 Files.copy(f, iconsFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
     }
 
     private void createResourceFolder() throws IOException {
