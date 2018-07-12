@@ -186,7 +186,7 @@ public class MapView extends AnchorPane {
     }
 
     public void flyTo(double lat, double lng){
-        //window.call("flyTo", lat, lng);
+        window.call("flyTo", lat, lng);
     }
 
     public ObservableList<Layer> getLayers(){

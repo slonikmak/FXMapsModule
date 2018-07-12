@@ -69,6 +69,16 @@
               </Menu>
             </menus>
           </MenuBar>
+            <MenuBar layoutX="488.0" layoutY="8.0" styleClass="menu-item" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Добавить">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#loadMissionLayer" text="Миссию" />
+                    <MenuItem mnemonicParsing="false" onAction="#loadMarkerLayer" text="Маркер" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
          </children>
       </AnchorPane>
     <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">

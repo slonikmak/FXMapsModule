@@ -143,6 +143,7 @@ public class PolyLine extends Path {
 
     @Override
     public String convertToJson() {
+        String result = (String) jsObject.call("this.getLayerById(id).toGeoJSON()", this.getId());
         return null;
     }
 

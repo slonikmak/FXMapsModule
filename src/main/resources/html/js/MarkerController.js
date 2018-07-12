@@ -4,6 +4,7 @@
         let optionsObj = JSON.parse(options);
         const marker = L.marker([lat, lng]);
         this.mapGroup.addLayer(marker);
+        marker.addTo(this.map);
         const id = this.getLayerId(marker);
         if (iconOptions != null && iconOptions !== undefined && iconOptions !== "null"){
             this.setIcon(id, iconOptions);
@@ -29,7 +30,7 @@
     }
 
     toGeoJson(id){
-        return this.getLayerById(id).toGeoJSON()
+        return JSON.stringify(this.getLayerById(id).toGeoJSON());
     }
 
     getLangLng(id){
@@ -51,9 +52,10 @@
     }
 
     update(id, lat, lng,  options){
-        //if (this.getLangLng(id) === undefined) return;
+        console.log("update marker "+id+" "+lat);
+
+        if (id === 0) return;
         options = JSON.parse(options);
-        console.log(options);
         //this.setIcon(id, properties);
         this.setLatLng(id, [lat, lng]);
         this.setOpacity(id, options.opacity);
@@ -63,10 +65,11 @@
         this.map.findLayer(id).setOpacity(0);
     }
 
-    registerEvents(id){
-        const layer = this.map.findLayer(id);
+    registerEvents(layer){
+        //const layer = this.map.findLayer(id);
+        const id = layer._leaflet_id;
 
-        const marker = this.getLayerById(id);
+        //const marker = this.getLayerById(id);
 
         const events = {
             click: (e)=>{
@@ -105,7 +108,7 @@
             }
         };
 
-        marker.on(events)
+        layer.on(events)
     }
 }
 

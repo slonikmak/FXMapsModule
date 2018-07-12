@@ -99,6 +99,18 @@ public class FilesUtills {
                     e.printStackTrace();
                 }
             });
+        } else {
+            files.forEach(f->{
+                try {
+                    System.out.println(f);
+                    Path filename = Paths.get(f).getFileName();
+                    Path to = directoryTo.resolve(filename);
+                    System.out.println(to);
+                    Files.copy(Paths.get(f),to, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
     }

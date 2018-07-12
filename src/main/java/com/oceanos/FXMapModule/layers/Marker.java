@@ -1,6 +1,8 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.LayerEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
@@ -39,6 +41,7 @@ public class Marker extends Layer {
     public Marker(){
         this.setOptions(new MarkerOptions());
         setName("marker");
+        initHandlers();
     }
 
     @Override
@@ -55,6 +58,7 @@ public class Marker extends Layer {
         this();
         this.lat.setValue(lat);
         this.lng.setValue(lng);
+
     }
 
 
@@ -75,14 +79,18 @@ public class Marker extends Layer {
 
     @Override
     public String convertToJson() {
-        return null;
+        String jsonString = (String) jsObject.call("toGeoJson", this.getId());
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(jsonString).getAsJsonObject();
+        JsonObject propObj = jsonObject.getAsJsonObject("properties");
+        propObj.addProperty("name", getName());
+        return jsonObject.toString();
     }
 
     public void addToMap() {
         Gson gson = new Gson();
         int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), getOptions().getJson(), gson.toJson(icon));
         id = value;
-        initHandlers();
     }
 
     private void initHandlers(){
@@ -92,7 +100,10 @@ public class Marker extends Layer {
             lng.setValue(((LayerEvent)event).getLng());
         }));
 
-        latProperty().addListener((observable, oldValue, newValue) -> update());
+        latProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("update");
+            update();
+        });
         lngProperty().addListener(observable -> update());
     }
 
@@ -131,8 +142,9 @@ public class Marker extends Layer {
     }
 
     private void update(){
+        System.out.println("update marker");
         //if (!isOnMap()) return;
-        jsObject.call("update", id, lat.get(), lng. get(), getOptions().getJson());
+        jsObject.call("update", id, lat.get(), lng.get(), getOptions().getJson());
     }
 
     private boolean isOnMap(){

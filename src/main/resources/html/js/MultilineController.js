@@ -1,6 +1,6 @@
 class MultilineController extends PathController {
     toGeoJson(id) {
-        return this.getLayerById(id).toGeoJSON()
+        return JSON.stringify(this.getLayerById(id).toGeoJSON());
     }
 
     getLatLngs(id) {

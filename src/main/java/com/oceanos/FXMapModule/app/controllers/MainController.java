@@ -1,5 +1,8 @@
 package com.oceanos.FXMapModule.app.controllers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
@@ -38,6 +41,7 @@ import java.util.Optional;
 
 public class MainController {
     private MapView mapView;
+    private ContextMenu layerContextMenu;
 
     @FXML
     private AnchorPane layerOptionsPane;
@@ -117,6 +121,40 @@ public class MainController {
         }
     }
 
+    @FXML
+    void loadMissionLayer(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл миссии");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы миссии", "*.mis"));
+        File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
+        String content = FilesUtills.openFile(file.toPath());
+        loadMission(content);
+    }
+
+    @FXML
+    void loadMarkerLayer(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл маркера");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы маркера", "*.json"));
+        File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
+        String content = FilesUtills.openFile(file.toPath());
+        loadMarker(content);
+    }
+
+    private void loadMarker(String content) {
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(content).getAsJsonObject();
+        JsonObject geometry = jsonObject.getAsJsonObject("geometry");
+        JsonArray coords = geometry.getAsJsonArray("coordinates");
+        Double lng = coords.get(0).getAsDouble();
+        Double lat = coords.get(1).getAsDouble();
+        JsonObject properties = jsonObject.getAsJsonObject("properties");
+        String name = properties.get("name").getAsString();
+        Marker marker = new Marker(lat, lng);
+        marker.setName(name);
+        mapView.addLayer(marker);
+    }
+
     private void loadMapLayer(String content) {
 
     }
@@ -149,6 +187,7 @@ public class MainController {
         mapView = new MapView();
         mapPane.getChildren().add(mapView);
         initTreeView();
+        initContextMenu();
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
@@ -164,8 +203,8 @@ public class MainController {
             Marker marker1 = new Marker(60.0555,30.34007);
             marker.setName("marker 1");
 
-            /*mapView.addLayer(marker);
-            mapView.addLayer(marker1);*/
+            mapView.addLayer(marker);
+            mapView.addLayer(marker1);
         });
 
         mapView.initWebView();
@@ -179,6 +218,29 @@ public class MainController {
         lat.textProperty().bindBidirectional(mapView.currentLatProperty(), new NumberStringConverter());
         lng.textProperty().bindBidirectional(mapView.currentLngProperty(), new NumberStringConverter());
 
+    }
+
+    private void initContextMenu() {
+        layerContextMenu = new ContextMenu();
+        MenuItem goToItem = new MenuItem("Переместиться к слою");
+        MenuItem deleteItem = new MenuItem("Удалить");
+        MenuItem hideItem = new MenuItem("Скрыть/показать");
+        MenuItem saveItem = new MenuItem("Сохранить");
+
+        saveItem.setOnAction(event -> {
+            Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
+            saveLayer(layer);
+        });
+
+        goToItem.setOnAction(event -> {
+            Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
+            if (layer instanceof Marker){
+                Marker marker = (Marker) layer;
+                mapView.flyTo(marker.getLat(), marker.getLng());
+            }
+        });
+
+        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem);
     }
 
     private void initTreeView() {
@@ -239,12 +301,9 @@ public class MainController {
 
         layerTreeView.setOnContextMenuRequested(event -> {
             //event.getTarget()
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem goToItem = new MenuItem("Переместиться к слою");
-            MenuItem deleteItem = new MenuItem("Удалить");
-            MenuItem hideItem = new MenuItem("Скрыть/показать");
-            contextMenu.getItems().addAll(goToItem, deleteItem, hideItem);
-            contextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+            layerContextMenu.hide();
+            layerContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+
         });
 
 
@@ -252,12 +311,12 @@ public class MainController {
 
     private void initHandlers(){
         mapView.activeLayerProperty().addListener((observable, oldValue, newValue) -> {
-
+/*
             if (newValue instanceof Marker){
                 mapView.flyTo(((Marker)newValue).getLat(), ((Marker)newValue).getLng());
             } else if (newValue instanceof Circle){
                 mapView.flyTo(((Circle)newValue).getLat(), ((Circle)newValue).getLng());
-            }
+            }*/
             fillOptionsPane(newValue);
 
             int index = mapView.getLayers().indexOf(newValue);
@@ -334,6 +393,26 @@ public class MainController {
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);
         }
+    }
+
+    private void saveLayer(Layer layer){
+        if (layer instanceof Marker){
+            Marker marker = (Marker) layer;
+            saveMarker(marker);
+        } else if (layer instanceof Mission){
+            saveMission((Mission) layer);
+        }
+    }
+
+    private void saveMarker(Marker marker) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Выберите файл для сохранения слоя");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Geo JSON", "*.json"));
+        File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
+        String content = marker.convertToJson();
+        System.out.println(content);
+        FilesUtills.saveFile(file.toPath(), content);
+        System.out.println(file);
     }
 
 }

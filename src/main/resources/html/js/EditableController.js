@@ -40,9 +40,12 @@ class EditableController extends Controller{
     startMarker(){
         const marker = this.map.editTools.startMarker();
         this.registerEvents(marker);
+        //FIXME: добавлять только в одну группу
+        markerController.mapGroup.addLayer(marker);
+        //markerController.registerEvents(marker);
         marker.on("editable:drawing:commit", (e)=>{
             this.mapGroup.addLayer(marker);
-            markerController.registerEvents(marker._leaflet_id);
+            markerController.registerEvents(marker);
         });
         return marker._leaflet_id;
     }

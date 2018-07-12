@@ -68,6 +68,7 @@ public class MarkerOptionsController implements LayerOptionsController {
         lngField.textProperty().bindBidirectional(layer.lngProperty(), new MyStringConverter());
         latField.textProperty().bindBidirectional(layer.latProperty(), new MyStringConverter());
         nameField.textProperty().bindBidirectional(layer.nameProperty());
+
     }
 
     public void initialize(){

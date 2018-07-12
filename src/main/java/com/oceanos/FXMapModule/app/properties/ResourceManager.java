@@ -99,7 +99,7 @@ public class ResourceManager {
     }
 
     private void copyIcons() throws IOException {
-        System.out.println("copy styles");
+        System.out.println("copy icons");
         /*ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("icons").getFile());*/
         /*File[] files = file.listFiles();

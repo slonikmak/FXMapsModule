@@ -12,7 +12,7 @@ class Controller{
     }
 
     getLayerById(id){
-        //this.map.findLayer(id);
+        //return this.map.findLayer(id);
         return this.mapGroup.getLayer(id);
     }
 
