@@ -11,6 +11,7 @@ import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.mapControllers.GeoJsonController;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -141,6 +142,20 @@ public class MainController {
         loadMarker(content);
     }
 
+    @FXML
+    void loadLineLayer(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл линии");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы линии", "*.json"));
+        File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
+        String content = FilesUtills.openFile(file.toPath());
+        loadLine(content);
+    }
+
+    private void loadLine(String content) {
+        GeoJsonController.addLayerFromJso(content);
+    }
+
     private void loadMarker(String content) {
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(content).getAsJsonObject();
@@ -203,8 +218,8 @@ public class MainController {
             Marker marker1 = new Marker(60.0555,30.34007);
             marker.setName("marker 1");
 
-            mapView.addLayer(marker);
-            mapView.addLayer(marker1);
+           // mapView.addLayer(marker);
+            //mapView.addLayer(marker1);
         });
 
         mapView.initWebView();
@@ -401,7 +416,33 @@ public class MainController {
             saveMarker(marker);
         } else if (layer instanceof Mission){
             saveMission((Mission) layer);
+        } else if (layer instanceof PolyLine){
+            savePolyline((PolyLine)layer);
+        } else if ( layer instanceof Polygon){
+            savePolygon((Polygon)layer);
         }
+    }
+
+    private void savePolygon(Polygon layer) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Выберите файл для сохранения слоя");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Geo JSON", "*.json"));
+        File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
+        String content = layer.convertToJson();
+        System.out.println(content);
+        FilesUtills.saveFile(file.toPath(), content);
+        System.out.println(file);
+    }
+
+    private void savePolyline(PolyLine layer) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Выберите файл для сохранения слоя");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Geo JSON", "*.json"));
+        File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
+        String content = layer.convertToJson();
+        System.out.println(content);
+        FilesUtills.saveFile(file.toPath(), content);
+        System.out.println(file);
     }
 
     private void saveMarker(Marker marker) {
@@ -410,9 +451,7 @@ public class MainController {
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Geo JSON", "*.json"));
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         String content = marker.convertToJson();
-        System.out.println(content);
         FilesUtills.saveFile(file.toPath(), content);
-        System.out.println(file);
     }
 
 }

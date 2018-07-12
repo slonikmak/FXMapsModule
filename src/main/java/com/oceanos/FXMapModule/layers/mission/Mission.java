@@ -224,10 +224,12 @@ public class Mission extends PolyLine {
         });
         object.add("waypoints", waypointsArray);
         object.add("behaviors", behaviors.getJsonObject());
-        return gson.toJson(object);
+        //FIXME: lng lon hardcode
+        return gson.toJson(object).replaceAll("lng", "lon");
     }
 
     public static Mission getFromJson(String content, MapView mapView) {
+        content = content.replaceAll("lon", "lng");
         Mission mission = new Mission(mapView);
         JsonObject contentObject = new JsonParser().parse(content).getAsJsonObject();
         mission.setName(contentObject.get("name").getAsString());

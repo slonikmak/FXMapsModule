@@ -10,6 +10,7 @@ import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.mapControllers.GeoJsonController;
 import com.oceanos.FXMapModule.repository.Repository;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -100,6 +101,7 @@ public class MapView extends AnchorPane {
                                 Circle.jsObject = (JSObject) webEngine.executeScript(Circle.jSController);
                                 Polygon.jsObject = (JSObject)webEngine.executeScript(Polygon.jSController);
                                 Mission.jsObject = (JSObject)webEngine.executeScript(Mission.jSController);
+                                GeoJsonController.jsObject = (JSObject)webEngine.executeScript(GeoJsonController.jSController);
                                 //Waypoint.jsObject = (JSObject)webEngine.executeScript(Waypoint.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();

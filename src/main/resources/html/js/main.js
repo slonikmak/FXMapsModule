@@ -26,6 +26,7 @@ const circleController = new CircleController(map, mapGroup);
 const polygonController = new PolygonController(map, mapGroup);
 const missionController = new MissionController(map, mapGroup);
 const wmsLayerController = new WMSTileController(map, mapGroup);
+const geoJsonController = new GeoJsonController(map, mapGroup);
 map.editTools = new L.MyEditable(map, {});
 
 
