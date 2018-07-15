@@ -1,8 +1,5 @@
 package com.oceanos.FXMapModule.layers;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.oceanos.FXMapModule.options.OptionsManager;
 import netscape.javascript.JSObject;
 
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ public class Polygon extends PolyLine {
     @Override
     public void addToMap(){
         String latlngs = gson.toJson(new ArrayList<>(getLatLngs()));
-        Object value = jsObject.call("addPolygon",latlngs, getOptions().getJson());
+        Object value = jsObject.call("addPolygon",latlngs, getOptions().getJsonString());
         id = (int) value;
     }
 

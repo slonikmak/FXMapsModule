@@ -106,7 +106,7 @@ public class OptionsManager {
         options.setOption("fill", circle.isFill());
         options.setOption("fillColor", ColorUtils.colorToHex(circle.getFillColor()));
         options.setOption("fillOpacity", circle.getFillOpacity());
-        return options.getJson();
+        return options.getJsonString();
     }
 
     private static String getPolylineOptionsJson(Layer layer) {
@@ -120,7 +120,7 @@ public class OptionsManager {
         options.setOption("fill", line.isFill());
         options.setOption("fillColor", ColorUtils.colorToHex(line.getFillColor()));
         options.setOption("fillOpacity", line.getFillOpacity());
-        return options.getJson();
+        return options.getJsonString();
     }
 
     private static String getMarkerOptionsJson(Layer layer) {

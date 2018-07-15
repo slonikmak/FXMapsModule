@@ -3,23 +3,13 @@ package com.oceanos.FXMapModule.layers;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.LayerEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.options.LayerOptions;
 import com.oceanos.FXMapModule.options.MarkerOptions;
-import com.oceanos.FXMapModule.options.PathOptions;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.image.Image;
 import netscape.javascript.JSObject;
-
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @autor slonikmak on 14.06.2018.
@@ -89,7 +79,7 @@ public class Marker extends Layer {
 
     public void addToMap() {
         Gson gson = new Gson();
-        int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), getOptions().getJson(), gson.toJson(icon));
+        int value = (int) jsObject.call("addMarker", lat.get(), lng.get(), getOptions().getJsonString(), gson.toJson(icon));
         id = value;
     }
 
@@ -144,7 +134,7 @@ public class Marker extends Layer {
     private void update(){
         System.out.println("update marker");
         //if (!isOnMap()) return;
-        jsObject.call("update", id, lat.get(), lng.get(), getOptions().getJson());
+        jsObject.call("update", id, lat.get(), lng.get(), getOptions().getJsonString());
     }
 
     private boolean isOnMap(){

@@ -102,6 +102,7 @@ public class MapView extends AnchorPane {
                                 Polygon.jsObject = (JSObject)webEngine.executeScript(Polygon.jSController);
                                 Mission.jsObject = (JSObject)webEngine.executeScript(Mission.jSController);
                                 GeoJsonController.jsObject = (JSObject)webEngine.executeScript(GeoJsonController.jSController);
+                                GeoJsonLayer.jsObject = (JSObject)webEngine.executeScript(GeoJsonLayer.jSController);
                                 //Waypoint.jsObject = (JSObject)webEngine.executeScript(Waypoint.jSController);
                                 if (onLoadHandler != null){
                                     onLoadHandler.run();

@@ -32,7 +32,7 @@ public class WMSTileLayer extends Layer {
     @Override
     public void addToMap() {
         System.out.println("add tile to map");
-        int a = (int) jsObject.call("addTileLayer", url, options.getJson());
+        int a = (int) jsObject.call("addTileLayer", url, options.getJsonString());
         id = a;
     }
 

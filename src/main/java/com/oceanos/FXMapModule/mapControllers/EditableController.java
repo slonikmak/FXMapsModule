@@ -2,11 +2,9 @@ package com.oceanos.FXMapModule.mapControllers;
 
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.events.EditableEvent;
-import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
-import com.oceanos.FXMapModule.options.OptionsManager;
 import netscape.javascript.JSObject;
 
 /**
@@ -22,7 +20,7 @@ public class EditableController extends Evented {
     public static PolyLine startPolyLine(){
         PolyLine polyLine = new PolyLine();
         polyLine.setEditable(true);
-        int id =  (int) jsObject.call("startPolyline", polyLine.getOptions().getJson());
+        int id =  (int) jsObject.call("startPolyline", polyLine.getOptions().getJsonString());
         polyLine.setId(id);
         mapView.addLayer(polyLine);
         return polyLine;
@@ -34,7 +32,7 @@ public class EditableController extends Evented {
             //mission.updateOptions();
         });
         //mission.setEditable(true);
-        int id =  (int) jsObject.call("startMission", mission.getOptions().getJson());
+        int id =  (int) jsObject.call("startMission", mission.getOptions().getJsonString());
         mission.setId(id);
         mapView.addLayer(mission);
         return mission;
@@ -43,7 +41,7 @@ public class EditableController extends Evented {
     public static Polygon startPolygon(){
         Polygon polygon = new Polygon();
         polygon.setEditable(true);
-        int id = (int) jsObject.call("startPolygon", polygon.getOptions().getJson());
+        int id = (int) jsObject.call("startPolygon", polygon.getOptions().getJsonString());
         polygon.setId(id);
         mapView.addLayer(polygon);
         return polygon;
@@ -67,7 +65,7 @@ public class EditableController extends Evented {
             circle.setLatLng(((EditableEvent) e).getLat(),((EditableEvent) e).getLng());
         });
         circle.setEditable(true);
-        int id = (int) jsObject.call("startCircle", circle.getOptions().getJson());
+        int id = (int) jsObject.call("startCircle", circle.getOptions().getJsonString());
         circle.setId(id);
         mapView.addLayer(circle);
         return circle;

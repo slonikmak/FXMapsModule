@@ -11,32 +11,21 @@ import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
-import com.oceanos.FXMapModule.mapControllers.GeoJsonController;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
-import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -153,7 +142,9 @@ public class MainController {
     }
 
     private void loadLine(String content) {
-        GeoJsonController.addLayerFromJso(content);
+        GeoJsonLayer layer = new GeoJsonLayer(content);
+        mapView.addLayer(layer);
+        //GeoJsonController.addLayerFromJson(content);
     }
 
     private void loadMarker(String content) {
@@ -240,11 +231,12 @@ public class MainController {
         MenuItem goToItem = new MenuItem("Переместиться к слою");
         MenuItem deleteItem = new MenuItem("Удалить");
         MenuItem hideItem = new MenuItem("Скрыть/показать");
-        MenuItem saveItem = new MenuItem("Сохранить");
+        MenuItem saveItem = new MenuItem("Сохранить как GeoJson");
+        MenuItem saveAsLayer = new MenuItem("Сохранить слой");
 
         saveItem.setOnAction(event -> {
             Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
-            saveLayer(layer);
+            saveAsGeoJson(layer);
         });
 
         goToItem.setOnAction(event -> {
@@ -255,7 +247,7 @@ public class MainController {
             }
         });
 
-        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem);
+        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem, saveAsLayer);
     }
 
     private void initTreeView() {
@@ -410,7 +402,7 @@ public class MainController {
         }
     }
 
-    private void saveLayer(Layer layer){
+    private void saveAsGeoJson(Layer layer){
         if (layer instanceof Marker){
             Marker marker = (Marker) layer;
             saveMarker(marker);

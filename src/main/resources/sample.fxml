@@ -75,7 +75,7 @@
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#loadMissionLayer" text="Миссию" />
                     <MenuItem mnemonicParsing="false" onAction="#loadMarkerLayer" text="Маркер" />
-                        <MenuItem mnemonicParsing="false" onAction="#loadLineLayer" text="Линию" />
+                        <MenuItem mnemonicParsing="false" onAction="#loadLineLayer" text="GPX/GeoJson" />
                   </items>
                 </Menu>
               </menus>

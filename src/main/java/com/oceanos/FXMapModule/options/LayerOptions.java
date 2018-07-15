@@ -35,7 +35,11 @@ public abstract class LayerOptions implements Observable {
     public Optional<Object> getOption(String option){
         return Optional.ofNullable(options.get(option));
     }*/
-    public String getJson(){
+    public String getJsonString(){
+        return getJsonObject().toString();
+    }
+
+    public JsonObject getJsonObject(){
         JsonObject object = new JsonObject();
         ReflectionHelper.getAllPropertyFields(this.getClass()).forEach(f->{
             try {
@@ -55,7 +59,7 @@ public abstract class LayerOptions implements Observable {
                 e.printStackTrace();
             }
         });
-        return object.toString();
+        return object;
     }
 
     public void fillOptions(String options){

@@ -9,16 +9,12 @@ import com.oceanos.FXMapModule.layers.LatLng;
 import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import netscape.javascript.JSObject;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
@@ -85,7 +81,7 @@ public class Mission extends PolyLine {
 
         waypointOptions.addListener(observable -> {
             System.out.println("update waypoints");
-            jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
+            jsObject.call("updateWaypoints",getId(), waypointOptions.getJsonString());
         });
 
         captureRadius.addListener((o)->{
@@ -108,7 +104,7 @@ public class Mission extends PolyLine {
 
     private void updateWaypoints(){
         System.out.println("update waypoints");
-        jsObject.call("updateWaypoints",getId(), waypointOptions.getJson());
+        jsObject.call("updateWaypoints",getId(), waypointOptions.getJsonString());
         waypoints.forEach(w->{
             int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
             System.out.println("layer "+this.getId()+" waypoint "+w.getId()+"number "+number);
@@ -135,7 +131,7 @@ public class Mission extends PolyLine {
     @Override
     public void addToMap(){
         String latlngs = gson.toJson(waypoints.stream().map(w->new LatLng(w.getLat(), w.getLng())).collect(Collectors.toList()));
-        Object value = jsObject.call("addMission",latlngs, getOptions().getJson());
+        Object value = jsObject.call("addMission",latlngs, getOptions().getJsonString());
         id = (int)value;
         System.out.println("id "+id);
         waypoints.forEach(w->{

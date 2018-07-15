@@ -1,20 +1,13 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.LayerOptions;
-import com.oceanos.FXMapModule.options.OptionsManager;
-import com.oceanos.FXMapModule.options.PathOptions;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import netscape.javascript.JSObject;
 
 /**
@@ -91,8 +84,8 @@ public class Circle extends Path {
     @Override
     public void redraw() {
         if (getId() != 0) {
-            jsObject.call("redraw", getId(), options.getJson());
-            System.out.println(options.getJson());
+            jsObject.call("redraw", getId(), options.getJsonString());
+            System.out.println(options.getJsonString());
         }
     }
 
@@ -103,7 +96,7 @@ public class Circle extends Path {
 
     @Override
     public void addToMap() {
-        id = (int) jsObject.call("addCircle", gson.toJson(latlng.getValue()), options.getJson());
+        id = (int) jsObject.call("addCircle", gson.toJson(latlng.getValue()), options.getJsonString());
     }
 
     @Override

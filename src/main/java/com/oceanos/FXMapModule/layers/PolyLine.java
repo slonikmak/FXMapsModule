@@ -3,7 +3,6 @@ package com.oceanos.FXMapModule.layers;
 import com.google.gson.*;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.options.LayerOptions;
-import com.oceanos.FXMapModule.options.OptionsManager;
 import com.oceanos.FXMapModule.options.PathOptions;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -116,7 +115,7 @@ public class PolyLine extends Path {
     void redraw() {
         //FIXME: hardcode
         if (getId() != 0){
-            jsObject.call("redraw", getId(), getOptions().getJson());
+            jsObject.call("redraw", getId(), getOptions().getJsonString());
         }
 
     }
@@ -147,7 +146,9 @@ public class PolyLine extends Path {
         System.out.println(result);
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(result).getAsJsonObject();
+        object.add("properties", options.getJsonObject());
         JsonObject properties = object.getAsJsonObject("properties");
+
         properties.addProperty("name", getName());
         return object.toString();
     }
@@ -155,7 +156,7 @@ public class PolyLine extends Path {
     @Override
     public void addToMap() {
         String latlngs = gson.toJson(new ArrayList<>(this.latLngs));
-        Object value = jsObject.call("addPolyline",latlngs,getOptions().getJson());
+        Object value = jsObject.call("addPolyline",latlngs,getOptions().getJsonString());
         id = (int) value;
     }
 
