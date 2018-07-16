@@ -127,8 +127,13 @@ public class MainController {
         fileChooser.setTitle("Выберите файл маркера");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы маркера", "*.json"));
         File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
-        String content = FilesUtills.openFile(file.toPath());
-        loadMarker(content);
+        try {
+            String content = FilesUtills.openFile(file.toPath());
+            loadMarker(content);
+        } catch (NullPointerException e){
+            //FIXME: Нормально отлавливать исключения
+            System.out.println("Нет файла");
+        }
     }
 
     @FXML
@@ -175,9 +180,17 @@ public class MainController {
         chooser.setTitle("Выберите файл для сохранения миссии");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файл миссии", "*.mis"));
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
-        String content = l.convertToJson();
+        String content = l.convertToMissionJson();
         FilesUtills.saveFile(file.toPath(), content);
-        System.out.println(file);
+    }
+
+    private void saveMissionAsGeoJson(Mission mission){
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Выберите файл для сохранения миссии в формате GeoJson");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файл JSON", "*.json"));
+        File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
+        String content = mission.convertToJson();
+        FilesUtills.saveFile(file.toPath(), content);
     }
 
     public void addMarkerByClick() {
@@ -244,6 +257,14 @@ public class MainController {
             if (layer instanceof Marker){
                 Marker marker = (Marker) layer;
                 mapView.flyTo(marker.getLat(), marker.getLng());
+            }
+        });
+
+        saveAsLayer.setOnAction(event -> {
+            Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
+            if (layer instanceof Mission){
+                Mission mission = (Mission) layer;
+                saveMission(mission);
             }
         });
 
@@ -407,7 +428,7 @@ public class MainController {
             Marker marker = (Marker) layer;
             saveMarker(marker);
         } else if (layer instanceof Mission){
-            saveMission((Mission) layer);
+            saveMissionAsGeoJson((Mission) layer);
         } else if (layer instanceof PolyLine){
             savePolyline((PolyLine)layer);
         } else if ( layer instanceof Polygon){

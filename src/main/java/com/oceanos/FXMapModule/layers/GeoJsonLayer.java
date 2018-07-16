@@ -31,10 +31,13 @@ public class GeoJsonLayer extends Layer {
         JsonParser jsonParser = new JsonParser();
         JsonObject object = jsonParser.parse(string).getAsJsonObject();
         JsonObject properties = object.getAsJsonObject("properties");
-        JsonElement name = properties.get("name");
-        if (name!=null) {
-            setName(name.getAsString());
+        if (properties != null){
+            JsonElement name = properties.get("name");
+            if (name!=null) {
+                setName(name.getAsString());
+            }
         }
+
         int result = (int) jsObject.call("addLayer", string);
         setId(result);
     }

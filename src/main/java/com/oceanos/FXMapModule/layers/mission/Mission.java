@@ -9,6 +9,7 @@ import com.oceanos.FXMapModule.layers.LatLng;
 import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
+import com.oceanos.FXMapModule.utils.GeoJsonUtils;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -209,7 +210,23 @@ public class Mission extends PolyLine {
 
     @Override
     public String convertToJson() {
+        String jsonResult = super.convertToJson();
+        JsonParser parser = new JsonParser();
+        JsonObject lineObj = parser.parse(jsonResult).getAsJsonObject();
+        GeoJsonUtils.GeoJsonBuilder geoJsonBuilder = new GeoJsonUtils.GeoJsonBuilder();
+        geoJsonBuilder.addFeature(lineObj);
+        waypoints.forEach(w->{
+            geoJsonBuilder.addPoint(w.getLat(),w.getLng());
+        });
+        JsonObject properties = new JsonObject();
+        geoJsonBuilder.getFeatureCollection().add("properties", properties);
+        properties.addProperty("name", getName());
+        properties.addProperty("description", getDescription());
 
+        return geoJsonBuilder.getFeatureCollection().toString();
+    }
+
+    public String convertToMissionJson(){
         JsonObject object = new JsonObject();
         object.addProperty("name", getName());
         object.addProperty("id", getId());
