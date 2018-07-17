@@ -1,5 +1,6 @@
 package com.oceanos.FXMapModule.app.controllers;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,22 +13,30 @@ import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
+import com.oceanos.FXMapModule.utils.GpsReader;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainController {
     private MapView mapView;
@@ -95,6 +104,52 @@ public class MainController {
                 saveMission((Mission) l);
             }
         });
+    }
+
+    @FXML
+    private void addTrackingLayer(){
+        CurrentPositionLayer positionLayer = new CurrentPositionLayer();
+        positionLayer.setName("GPS позиция");
+        //positionLayer.setIcon(FilesUtills.normalizePath("/icons/icons8-submarine-48.png"));
+        Stage stage = new Stage();
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        ChoiceBox<String> choicePort = new ChoiceBox<>();
+        SerialPort[] ports = positionLayer.getPortNames();
+        choicePort.getItems().addAll(Stream.of(ports).map(SerialPort::getDescriptivePortName).collect(Collectors.toList()));
+        choicePort.getSelectionModel().select(0);
+        ChoiceBox<Integer> choiceBoudrate = new ChoiceBox<>();
+        choiceBoudrate.getItems().addAll(9600, 115200);
+        choiceBoudrate.getSelectionModel().select(0);
+        Button okBtn = new Button("Добавить");
+        Button cancelBtn = new Button("Отмена");
+        ButtonBar buttonBar = new ButtonBar();
+        buttonBar.getButtons().addAll(okBtn, cancelBtn);
+        hBox.getChildren().addAll(choicePort, choiceBoudrate, buttonBar);
+        Scene scene = new Scene(hBox, 400, 50);
+        stage.setScene(scene);
+        cancelBtn.setOnAction(e->{
+            stage.close();
+        });
+        okBtn.setOnAction(e->{
+            positionLayer.setBaudrate(choiceBoudrate.getValue());
+            SerialPort port = ports[choicePort.getSelectionModel().getSelectedIndex()];
+            positionLayer.setPort(port);
+            positionLayer.startPort();
+            mapView.addLayer(positionLayer);
+            stage.close();
+        });
+        stage.showAndWait();
+
+        mapPane.getScene().getWindow().setOnCloseRequest(e->{
+            positionLayer.closeReader();
+        });
+
+       /* GpsReader reader = new GpsReader();
+        reader.setBaudrate(9600);
+        reader.setPort("COM3");
+        reader.startPort();*/
+
     }
 
     @FXML
@@ -466,5 +521,7 @@ public class MainController {
         String content = marker.convertToJson();
         FilesUtills.saveFile(file.toPath(), content);
     }
+
+
 
 }

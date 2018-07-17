@@ -100,6 +100,7 @@ public class Marker extends Layer {
     public void setIcon(String src){
         this.icon = new Icon(src);
         String json =  gson.toJson(icon);
+        System.out.println(json);
         if (isOnMap()) jsObject.call("setIcon", id, json);
     }
 
