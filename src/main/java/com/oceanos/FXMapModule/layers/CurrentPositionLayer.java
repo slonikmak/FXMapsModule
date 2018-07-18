@@ -1,6 +1,7 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.utils.GpsReader;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -12,9 +13,13 @@ import javafx.beans.value.ObservableValue;
 public class CurrentPositionLayer extends Marker {
     private GpsReader reader;
 
+    //869Gmmor
     public CurrentPositionLayer(){
         reader = new GpsReader();
-
+        ResourceManager.getInstance().getIconPath("icons8-submarine-48.png").ifPresent(i->{
+            System.out.println("icon: "+i);
+            setIcon("file:/"+i);
+        });
     }
 
     public void setPort(SerialPort portName){

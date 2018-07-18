@@ -67,6 +67,11 @@
                   <MenuItem mnemonicParsing="false" text="О программе" />
                 </items>
               </Menu>
+                  <Menu mnemonicParsing="false" text="Инструменты">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#openResourceManager" text="Менеджер ресурсов" />
+                    </items>
+                  </Menu>
             </menus>
           </MenuBar>
             <MenuBar layoutX="488.0" layoutY="8.0" styleClass="menu-item" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

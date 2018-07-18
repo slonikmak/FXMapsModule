@@ -53,4 +53,16 @@ public class PropertyManager {
     public String getDefaultStylesFolder() {
         return properties.getProperty("styles.default.folder");
     }
+
+    public String getLayersFolder(){
+        return properties.getProperty("layers.folder");
+    }
+
+    public String getLayersTileFolder(){
+        return properties.getProperty("layers.tile.folder");
+    }
+
+    public String getLayersWmsFolder(){
+        return properties.getProperty("layers.wms.folder");
+    }
 }

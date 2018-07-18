@@ -10,8 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @autor slonikmak on 26.06.2018.
@@ -22,6 +25,9 @@ public class ResourceManager {
     private Path resourceFolder;
     private Path iconsFolder;
     private Path defaultStylesFolder;
+    private Path layersFolder;
+    private Path layersTileFolder;
+    private Path layrsWmsFolder;
 
     private ResourceManager() throws IOException {
 
@@ -36,6 +42,12 @@ public class ResourceManager {
         }
         if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder()))) {
             createDefaultStilesFolder();
+        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder()))) {
+            createLayersFolder();
+        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder()))) {
+            createLayersTileFolder();
+        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder()))) {
+            createLayersWmsFolder();
         }
     }
 
@@ -65,32 +77,40 @@ public class ResourceManager {
         copyStyles();
     }
 
+    private void createLayersFolder() throws IOException {
+        layersFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder());
+        Files.createDirectory(layersFolder);
+    }
+
+    private void createLayersTileFolder() throws IOException {
+        layersTileFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder());
+        Files.createDirectory(layersTileFolder);
+        copyTiles();
+    }
+
+    private void copyTiles() throws IOException {
+        try {
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersTileFolder()), layersTileFolder);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createLayersWmsFolder() throws IOException {
+        layrsWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
+        Files.createDirectory(layrsWmsFolder);
+        copyWms();
+    }
+
+    private void copyWms() throws IOException {
+        try {
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersWmsFolder()), layrsWmsFolder);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void copyStyles() throws IOException {
-
-        /*ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(PropertyManager.getInstance().getDefaultStylesFolder());
-        System.out.println("??????????????????????????????????????????????");
-        System.out.println(url);
-        String path1 = url.getPath();
-        File[] files = new File(path1).listFiles();
-        System.out.println(files);
-*/
-       /* for (File f: files) {
-            System.out.println(f.toString());
-        }*/
-
-       /* ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(PropertyManager.getInstance().getDefaultStylesFolder()).getFile());
-
-        Path path = file.toPath();
-        Files.list(path).forEach(f -> {
-            System.out.println("copy");
-            try {
-                Files.copy(f, defaultStylesFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });*/
         try {
             FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getDefaultStylesFolder()), defaultStylesFolder);
         } catch (URISyntaxException e) {
@@ -100,13 +120,6 @@ public class ResourceManager {
 
     private void copyIcons() throws IOException {
         System.out.println("copy icons");
-        /*ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("icons").getFile());*/
-        /*File[] files = file.listFiles();
-        System.out.println("!!!!!!!!!!!");
-        System.out.println(Paths.get(file.toString().replace("file:\\", "jar:\\")));*/
-        //Path path = file.toPath();
-        //Path path = Paths.get(file.toString().replace("file:\\", ""));
 
         try {
             FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP("icons"), iconsFolder);
@@ -114,14 +127,6 @@ public class ResourceManager {
             e.printStackTrace();
         }
 
-        /*Files.list(path).forEach(f -> {
-            System.out.println("copy style");
-            try {
-                Files.copy(f, iconsFolder.resolve(f.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });*/
     }
 
     private void createResourceFolder() throws IOException {
@@ -178,5 +183,31 @@ public class ResourceManager {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    public Optional<String> getIconPath(String iconName){
+        return getIconsList().stream().filter(i->Paths.get(i).getFileName().toString().equals(iconName)).findFirst();
+    }
+
+    public List<String> getTileLayers(){
+        List<String> list = new ArrayList<>();
+        try {
+            list = Files.list(layersTileFolder).map(Path::toString).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return list;
+    }
+
+    public List<String> getWmsLayers(){
+        List<String> list = new ArrayList<>();
+        try {
+            list = Files.list(layrsWmsFolder).map(Path::toString).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return list;
     }
 }

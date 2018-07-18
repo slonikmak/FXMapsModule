@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -104,6 +105,20 @@ public class MainController {
                 saveMission((Mission) l);
             }
         });
+    }
+
+    @FXML
+    void openResourceManager(){
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        try {
+            Parent parent = loader.load(getClass().getResource("/resourceManager.fxml"));
+            Scene scene = new Scene(parent,600, 400);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -518,8 +533,10 @@ public class MainController {
         chooser.setTitle("Выберите файл для сохранения слоя");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Geo JSON", "*.json"));
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
-        String content = marker.convertToJson();
-        FilesUtills.saveFile(file.toPath(), content);
+        if (file!=null){
+            String content = marker.convertToJson();
+            FilesUtills.saveFile(file.toPath(), content);
+        }
     }
 
 
