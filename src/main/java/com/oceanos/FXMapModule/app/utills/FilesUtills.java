@@ -88,30 +88,32 @@ public class FilesUtills {
         return filenames;
     }
 
-    public static void copyFiles(List<String> files, Path directoryTo) throws IOException {
+    public static List<Path> copyFiles(List<String> files, Path directoryTo) throws IOException {
+        List<Path> result = new ArrayList<>();
         if (!Files.exists(directoryTo)) Files.createDirectory(directoryTo);
         if (files.get(0).startsWith("jar:")){
             files.forEach(f->{
                 String fileName = f.split("!")[1];
+                Path newFile = directoryTo.resolve(Paths.get(fileName).getFileName());
                 try {
-                    Files.copy(FilesUtills.class.getResourceAsStream(fileName), directoryTo.resolve(Paths.get(fileName).getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(FilesUtills.class.getResourceAsStream(fileName), newFile, StandardCopyOption.REPLACE_EXISTING);
+                    result.add(newFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         } else {
             files.forEach(f->{
+                Path filename = Paths.get(f).getFileName();
+                Path to = directoryTo.resolve(filename);
                 try {
-                    System.out.println(f);
-                    Path filename = Paths.get(f).getFileName();
-                    Path to = directoryTo.resolve(filename);
-                    System.out.println(to);
                     Files.copy(Paths.get(f),to, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                result.add(to);
             });
         }
-
+        return result;
     }
 }

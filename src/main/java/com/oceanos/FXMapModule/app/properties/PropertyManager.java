@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * @autor slonikmak on 26.06.2018.
@@ -64,5 +65,13 @@ public class PropertyManager {
 
     public String getLayersWmsFolder(){
         return properties.getProperty("layers.wms.folder");
+    }
+
+    public String getLayersWmsFile(){
+        return properties.getProperty("layers.wms.file");
+    }
+
+    public String getLayersTilesFile(){
+        return properties.getProperty("layers.tiles.file");
     }
 }

@@ -110,9 +110,11 @@ public class MainController {
     @FXML
     void openResourceManager(){
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourceManager.fxml"));
         try {
-            Parent parent = loader.load(getClass().getResource("/resourceManager.fxml"));
+            Parent parent = loader.load();
+            ResourceManagerController controller = loader.getController();
+            controller.setMapView(mapView);
             Scene scene = new Scene(parent,600, 400);
             stage.setScene(scene);
             stage.showAndWait();

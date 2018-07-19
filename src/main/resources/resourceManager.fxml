@@ -56,6 +56,8 @@
                                           <TextField fx:id="mapUrlField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
+                                    <Button layoutX="14.0" layoutY="92.0" mnemonicParsing="false" onAction="#saveTile" text="Сохранить" />
+                                    <Button layoutX="99.0" layoutY="92.0" mnemonicParsing="false" onAction="#addMapOnMap" text="Добавить на карту" />
                                  </children>
                               </AnchorPane>
                           </items>
@@ -108,11 +110,13 @@
                                           <Label text="Прозрачность" GridPane.rowIndex="4" />
                                           <Label text="Слои" GridPane.rowIndex="2" />
                                           <Label text="Формат" GridPane.rowIndex="3" />
-                                          <TextField fx:id="wmsLayers" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <TextField fx:id="wmsLayersField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                           <ChoiceBox fx:id="wmsTransparancy" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                           <ChoiceBox fx:id="wmsFormat" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                        </children>
                                     </GridPane>
+                                    <Button layoutX="14.0" layoutY="165.0" mnemonicParsing="false" onAction="#saveWms" text="Сохранить" />
+                                    <Button layoutX="106.0" layoutY="165.0" mnemonicParsing="false" onAction="#addWmsOnMap" text="Добавить на карту" />
                                  </children>
                               </AnchorPane>
                            </items>

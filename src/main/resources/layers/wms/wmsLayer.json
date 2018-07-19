@@ -1,4 +1,4 @@
-{
+[{
   "url":"http://oceanos.nextgis.com/api/resource/65/wms",
   "name":"sapernoe izobata",
   "options":{
@@ -6,4 +6,4 @@
     "format":"format",
     "transparent":true
   }
-}
+}]

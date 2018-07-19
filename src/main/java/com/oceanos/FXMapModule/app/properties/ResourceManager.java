@@ -1,6 +1,10 @@
 package com.oceanos.FXMapModule.app.properties;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
+import com.oceanos.FXMapModule.layers.TileLayer;
+import com.oceanos.FXMapModule.layers.WMSTileLayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +31,9 @@ public class ResourceManager {
     private Path defaultStylesFolder;
     private Path layersFolder;
     private Path layersTileFolder;
-    private Path layrsWmsFolder;
+    private Path layersWmsFolder;
+    private Path layersWmsFile;
+    private Path layersTileFile;
 
     private ResourceManager() throws IOException {
 
@@ -91,20 +97,22 @@ public class ResourceManager {
     private void copyTiles() throws IOException {
         try {
             FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersTileFolder()), layersTileFolder);
+            layersTileFile = layersTileFolder.resolve(PropertyManager.getInstance().getLayersTilesFile());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
     private void createLayersWmsFolder() throws IOException {
-        layrsWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
-        Files.createDirectory(layrsWmsFolder);
+        layersWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
+        Files.createDirectory(layersWmsFolder);
         copyWms();
     }
 
     private void copyWms() throws IOException {
         try {
-            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersWmsFolder()), layrsWmsFolder);
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersWmsFolder()), layersWmsFolder);
+            layersWmsFile = layersWmsFolder.resolve(PropertyManager.getInstance().getLayersWmsFile());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -189,25 +197,43 @@ public class ResourceManager {
         return getIconsList().stream().filter(i->Paths.get(i).getFileName().toString().equals(iconName)).findFirst();
     }
 
-    public List<String> getTileLayers(){
-        List<String> list = new ArrayList<>();
+    public List<TileLayer> getTileLayers(){
+        List<TileLayer> list = new ArrayList<>();
         try {
-            list = Files.list(layersTileFolder).map(Path::toString).collect(Collectors.toList());
+            Files.lines(layersTileFile).reduce((s1, s2) -> s1 + s2).ifPresent(s -> {
+                JsonParser parser = new JsonParser();
+                JsonArray arr = parser.parse(s).getAsJsonArray();
+                arr.forEach(o -> list.add(TileLayer.getFromJson(o.toString())));
+            });
         } catch (IOException e) {
             e.printStackTrace();
-
         }
         return list;
     }
 
-    public List<String> getWmsLayers(){
-        List<String> list = new ArrayList<>();
+    public List<WMSTileLayer> getWmsLayers(){
+        List<WMSTileLayer> list = new ArrayList<>();
         try {
-            list = Files.list(layrsWmsFolder).map(Path::toString).collect(Collectors.toList());
+            Files.lines(layersWmsFile).reduce((s1, s2) -> s1 + s2).ifPresent(s -> {
+                JsonParser parser = new JsonParser();
+                JsonArray arr = parser.parse(s).getAsJsonArray();
+                arr.forEach(o -> list.add(WMSTileLayer.getFromJson(o.toString())));
+            });
         } catch (IOException e) {
             e.printStackTrace();
-
         }
         return list;
+    }
+
+    public Path getIconsFolder() {
+        return iconsFolder;
+    }
+
+    public Path getLayersWmsFile() {
+        return layersWmsFile;
+    }
+
+    public Path getLayersTileFile() {
+        return layersTileFile;
     }
 }
