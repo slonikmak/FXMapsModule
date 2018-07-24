@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by User on 15.05.2017.
@@ -21,8 +20,6 @@ public class HttpDownloadUtility {
     private static final String dir = "tiles";
     private static List<Callback> callbacks = new ArrayList<>();
     private static List<Callback> onFinishedDownload = new ArrayList<>();
-
-    private BlockingQueue
 
 
     /**
@@ -96,7 +93,7 @@ public class HttpDownloadUtility {
 
     public static void loadTiles(String urlTo, Path to) throws IOException {
 
-        final String url = urlTo;
+        String url = urlTo;
         new Thread(new Runnable() {
             @Override
             public void run() {
