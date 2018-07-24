@@ -71,7 +71,11 @@ public class MapView extends AnchorPane {
         AnchorPane.setRightAnchor(this, 0d);
         AnchorPane.setLeftAnchor(this, 0d);*/
         webEngine.setJavaScriptEnabled(true);
-        webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
+
+        //file:/C:/Users/sloni/IdeaProjects/FXMapsModule/target/classes/html/index.html
+        System.out.println(getClass().getResource("/html/index.html").toExternalForm());
+        //webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
+        webEngine.load("file:///c:/Users/sloni/IdeaProjects/FXMapsModule/target/classes/html/index.html");
         /*WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
             System.out.println(message + "[at " + lineNumber + "]");
         });*/

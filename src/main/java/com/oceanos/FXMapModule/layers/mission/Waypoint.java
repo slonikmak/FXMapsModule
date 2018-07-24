@@ -21,6 +21,9 @@ public class Waypoint extends Circle {
 
     public Waypoint(){
         super();
+
+        setName("Waypoint");
+
         azimuth = new SimpleDoubleProperty();
         distance = new SimpleDoubleProperty();
         targetDepth = new SimpleDoubleProperty();
@@ -175,6 +178,7 @@ public class Waypoint extends Circle {
         waypoint.setCaptureRadius(jsonObject.get("capture_radius").getAsDouble());
         waypoint.setIndex(jsonObject.get("index").getAsInt());
         waypoint.setFixGps(jsonObject.get("fix_gps").getAsBoolean());
+        //waypoint.setName("Waypoint "+waypoint.getIndex());
         return waypoint;
     }
 

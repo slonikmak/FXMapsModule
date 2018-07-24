@@ -42,7 +42,7 @@
     }
 
     setIcon(id, options){
-        //console.log(JSON.parse(properties));
+        console.log(JSON.parse(options).iconUrl);
         const icon = L.icon(JSON.parse(options));
         this.getLayerById(id).setIcon(icon)
     }

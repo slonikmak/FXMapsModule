@@ -55,7 +55,7 @@ public class Mission extends PolyLine {
             waypoint.setMission(this);
             waypoint.setOptions(waypointOptions);
 
-            waypoint.setName("waypoint");
+            waypoint.setName("Waypoint");
             waypoint.setId(event.getLayer());
             waypoint.setLat(((MissionEvent) e).getLat());
             waypoint.setLng(((MissionEvent) e).getLng());

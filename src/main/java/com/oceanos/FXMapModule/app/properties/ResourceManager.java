@@ -40,6 +40,13 @@ public class ResourceManager {
         resourceFolder = Paths.get(System.getProperty("user.home") +
                 "/" +
                 PropertyManager.getInstance().getProjectResourceFolderName());
+
+        iconsFolder = resourceFolder.resolve("icons");
+        defaultStylesFolder =  resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder());
+        layersFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder());
+        layersTileFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder());
+        layersWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
+
         if (!Files.exists(resourceFolder)) {
             createResourceFolder();
         }
@@ -72,24 +79,23 @@ public class ResourceManager {
 
     private void addIconsToResourceFolder() throws IOException {
         System.out.println("add icons");
-        iconsFolder = resourceFolder.resolve("icons");
+
         Files.createDirectory(iconsFolder);
         copyIcons();
     }
 
     private void createDefaultStilesFolder() throws IOException {
-        defaultStylesFolder =  resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder());
+
         Files.createDirectory(defaultStylesFolder);
         copyStyles();
     }
 
     private void createLayersFolder() throws IOException {
-        layersFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder());
+
         Files.createDirectory(layersFolder);
     }
 
     private void createLayersTileFolder() throws IOException {
-        layersTileFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder());
         Files.createDirectory(layersTileFolder);
         copyTiles();
     }
@@ -104,7 +110,7 @@ public class ResourceManager {
     }
 
     private void createLayersWmsFolder() throws IOException {
-        layersWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
+
         Files.createDirectory(layersWmsFolder);
         copyWms();
     }
@@ -166,7 +172,7 @@ public class ResourceManager {
 
 
     public void close() throws IOException {
-        FilesUtills.deleteDirectory(resourceFolder);
+        //FilesUtills.deleteDirectory(resourceFolder);
     }
 
     public String getDefaultMissionOptions() {

@@ -43,8 +43,8 @@ public class GpsReader {
 
     private void parseRawData(String str){
         String[] arr = str.split(",");
-        if (arr[0].equals("$GNGGA")){
-            //System.out.println("Parse "+str);
+        if (arr[0].equals("$GNGGA") || arr[0].equals("$GPGGA")){
+            System.out.println("Parse "+str);
 
             String rawLat = arr[2];
             String let1 = arr[3];
