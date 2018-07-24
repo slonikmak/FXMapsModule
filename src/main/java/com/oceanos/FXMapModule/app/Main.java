@@ -26,6 +26,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 1300, 900));
         primaryStage.show();
         ResourceManager.getInstance();
+        System.out.println("end init resources");
 
         primaryStage.setOnCloseRequest((e)->{
             try {

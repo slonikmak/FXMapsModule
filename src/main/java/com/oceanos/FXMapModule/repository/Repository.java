@@ -22,6 +22,7 @@ public class Repository {
     }
 
     public Optional<Layer> getLayerById(long id){
+        System.out.println("");
         return layers.stream().filter(l->l.getId() == id).findFirst();
     }
 

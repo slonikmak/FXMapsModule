@@ -2,11 +2,18 @@ package com.oceanos.FXMapModule.layers;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.oceanos.FXMapModule.app.properties.ResourceManager;
+import com.oceanos.FXMapModule.events.MapEventType;
+import com.oceanos.FXMapModule.events.TileEvent;
 import com.oceanos.FXMapModule.options.LayerOptions;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import netscape.javascript.JSObject;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @autor slonikmak on 15.06.2018.
@@ -18,9 +25,33 @@ public class TileLayer extends Layer {
 
     private StringProperty url = new SimpleStringProperty();
     private LayerOptions options;
+    private BooleanProperty cashed = new SimpleBooleanProperty(false);
 
     public TileLayer(String url){
         this.url.setValue(url);
+
+        ////FIXME: перенести кеширование в другое место
+        cashed.addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                Path path = ResourceManager.getInstance().getLayersCashFolder().resolve(getName());
+                if (!Files.exists(path)){
+                    try {
+                        System.out.println("create cashe dir "+path);
+                        Files.createDirectory(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        addEventListener(MapEventType.tileload, (e)->{
+
+            if (cashed.get()){
+                TileEvent event = (TileEvent) e;
+
+            }
+
+        });
     }
 
     public TileLayer(String url, LayerOptions options){
@@ -81,6 +112,14 @@ public class TileLayer extends Layer {
         return url.getValue();
     }
 
+    public boolean isCashed() {
+        return cashed.get();
+    }
+
+    public BooleanProperty cashedProperty() {
+        return cashed;
+    }
+
     public static TileLayer getFromJson(String toString) {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(toString).getAsJsonObject();
@@ -88,6 +127,8 @@ public class TileLayer extends Layer {
         tileLayer.setName(object.get("name").getAsString());
         return tileLayer;
     }
+
+
 
 
 

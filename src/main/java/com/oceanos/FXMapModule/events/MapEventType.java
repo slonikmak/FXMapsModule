@@ -9,5 +9,5 @@ public enum  MapEventType {
     mouseout, mousemove, editable_drawing_commit,
     editable_vertex_dragend, editable_editing,
     mission_waypoint_new, mission_waypoint_move,
-    mission_waypoint_deleted
+    mission_waypoint_deleted, tileload
 }

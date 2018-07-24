@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -48,6 +49,9 @@ public class ResourceManagerController {
     JsonObject currentWmsJsonObj;
     JsonObject currentTileJsonObj;
 
+
+    @FXML
+    private AnchorPane mapPane;
 
     @FXML
     private ListView<TileLayer> mapList;
@@ -211,6 +215,7 @@ public class ResourceManagerController {
         mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             mapNameField.textProperty().bindBidirectional(newValue.nameProperty());
             mapUrlField.textProperty().bindBidirectional(newValue.urlProperty());
+            mapPane.setDisable(false);
         });
     }
 

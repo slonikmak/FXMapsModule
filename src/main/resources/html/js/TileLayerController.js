@@ -4,7 +4,7 @@ class TileLayerController extends Controller{
         this.mapGroup.addLayer(tileLayer);
         const id = this.getLayerId(tileLayer);
         console.log("add tile to map "+url+" "+options+" id "+id);
-        this.registerEvents(id);
+        this.registerEvents(tileLayer);
 
         /*var nexrad = L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
             layers: 'nexrad-n0r-900913',
@@ -25,10 +25,17 @@ class TileLayerController extends Controller{
         return this.getLayerById(id).getTileUrl();
     }
 
-    registerEvents(id){
-        const layer = this.getLayerById(id);
+    registerEvents(layer){
+        //const layer = this.getLayerById(id);
         console.log(this);
-        const events = {}
+        const events = {tileload:(e)=>{
+                //console.log("load");
+                //console.log(e.tile.src);
+                const event = new TileLayerEvent("tileload", layer._leaflet_id, e.tile.src, e.coords.x,e.coords.y, e.coords.z);
+                event.eventClass = "TileEvent";
+                eventController.fireEven(event);
+            }
+        };
         layer.on(events);
     }
 }

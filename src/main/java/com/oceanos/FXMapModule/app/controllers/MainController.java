@@ -173,7 +173,7 @@ public class MainController {
     void loadLayer(ActionEvent event){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите файл для загрузки");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы миссии", "*.mis"), new FileChooser.ExtensionFilter("GeoJson","*.json"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы миссии", "*.mis"), new FileChooser.ExtensionFilter("Json","*.json"));
         File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
         String content = FilesUtills.openFile(file.toPath());
         if (file.getName().endsWith("mis")) {
@@ -212,7 +212,7 @@ public class MainController {
     void loadLineLayer(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите файл линии");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы линии", "*.json"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы линии", "*.json"), new FileChooser.ExtensionFilter("GeoJson","*.geojson"));
         File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
         String content = FilesUtills.openFile(file.toPath());
         loadLine(content);
@@ -287,6 +287,7 @@ public class MainController {
         wmsTileLayer.setName("карта глубин");
         tileLayer.setName("osm map");
         mapView.onLoad(() -> {
+            System.out.println("add layers");
             mapView.addLayer(tileLayer);
             mapView.addLayer(wmsTileLayer);
             Marker marker = new Marker(60.055142,30.3400618);
@@ -492,6 +493,21 @@ public class MainController {
             controller.setLayer(value);
             layerOptionsPane.getChildren().clear();
             layerOptionsPane.getChildren().add(elem);
+        } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.TileLayer")) {
+            VBox elem = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tileLayerOptions.fxml"));
+            try {
+                elem = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            TileLayerOptionsController controller = loader.getController();
+            controller.setLayer(value);
+            layerOptionsPane.getChildren().clear();
+            layerOptionsPane.getChildren().add(elem);
+        } else {
+            layerOptionsPane.getChildren().clear();
         }
     }
 

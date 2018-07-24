@@ -35,7 +35,6 @@ public class EventController {
         MapEvent mapEvent = parseEventFromJs(event);
         Optional<Layer> layer = repository.getLayerById(mapEvent.getTarget());
         layer.ifPresent((l)->{
-            //System.out.println(l instanceof Circle);
             l.fireEvent(mapEvent);
         });
     }
@@ -60,6 +59,8 @@ public class EventController {
                 break;
             }case "MissionEvent": {
                 mapEvent = new MissionEvent(object);
+            }case "TileEvent": {
+                mapEvent = new TileEvent(object);
             }
 
         }

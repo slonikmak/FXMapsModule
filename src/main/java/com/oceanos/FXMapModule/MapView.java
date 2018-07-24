@@ -12,6 +12,7 @@ import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
 import com.oceanos.FXMapModule.mapControllers.GeoJsonController;
 import com.oceanos.FXMapModule.repository.Repository;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -74,8 +75,8 @@ public class MapView extends AnchorPane {
 
         //file:/C:/Users/sloni/IdeaProjects/FXMapsModule/target/classes/html/index.html
         System.out.println(getClass().getResource("/html/index.html").toExternalForm());
-        //webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
-        webEngine.load("file:///c:/Users/sloni/IdeaProjects/FXMapsModule/target/classes/html/index.html");
+        webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
+        //webEngine.load("file:///c:/Users/sloni/IdeaProjects/FXMapsModule/target/classes/html/index.html");
         /*WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
             System.out.println(message + "[at " + lineNumber + "]");
         });*/
@@ -109,6 +110,7 @@ public class MapView extends AnchorPane {
                                 GeoJsonLayer.jsObject = (JSObject)webEngine.executeScript(GeoJsonLayer.jSController);
                                 //Waypoint.jsObject = (JSObject)webEngine.executeScript(Waypoint.jSController);
                                 if (onLoadHandler != null){
+                                    System.out.println("run onload");
                                     onLoadHandler.run();
                                 }
                                 //JSObject jsToJava = (JSObject) webEngine.executeScript("fromJavaToJs");
@@ -164,7 +166,8 @@ public class MapView extends AnchorPane {
     }
 
     public void onLoad(Runnable handler){
-        this.onLoadHandler = handler;
+
+            this.onLoadHandler = handler;
     }
 
     public void addEventListener(MapEventType eventType, MapEventListener listener){

@@ -34,6 +34,7 @@ public class ResourceManager {
     private Path layersWmsFolder;
     private Path layersWmsFile;
     private Path layersTileFile;
+    private Path layersCashFolder;
 
     private ResourceManager() throws IOException {
 
@@ -41,11 +42,16 @@ public class ResourceManager {
                 "/" +
                 PropertyManager.getInstance().getProjectResourceFolderName());
 
+        System.out.println("resource folder: "+resourceFolder);
         iconsFolder = resourceFolder.resolve("icons");
         defaultStylesFolder =  resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder());
         layersFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder());
         layersTileFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder());
         layersWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
+        layersTileFile = layersTileFolder.resolve(PropertyManager.getInstance().getLayersTilesFile());
+        layersWmsFile = layersWmsFolder.resolve(PropertyManager.getInstance().getLayersWmsFile());
+        layersCashFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersCashFolder());
+
 
         if (!Files.exists(resourceFolder)) {
             createResourceFolder();
@@ -55,20 +61,26 @@ public class ResourceManager {
         }
         if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getDefaultStylesFolder()))) {
             createDefaultStilesFolder();
-        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder()))) {
+        }
+        if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersFolder()))) {
             createLayersFolder();
-        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder()))) {
+        }
+        if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersTileFolder()))) {
             createLayersTileFolder();
-        } if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder()))) {
+        }
+        if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder()))) {
             createLayersWmsFolder();
         }
+        if (!Files.exists(layersCashFolder)){
+            createLayersCashFolder();
+        }
     }
-
 
 
     public static ResourceManager getInstance() {
         if (instance == null) {
             try {
+                System.out.println("init resource manager");
                 instance = new ResourceManager();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,10 +97,17 @@ public class ResourceManager {
     }
 
     private void createDefaultStilesFolder() throws IOException {
-
+        System.out.println("createDefaultStilesFolder");
         Files.createDirectory(defaultStylesFolder);
         copyStyles();
     }
+
+
+    private void createLayersCashFolder() throws IOException {
+        System.out.println("create cash folder");
+        Files.createDirectory(layersCashFolder);
+    }
+
 
     private void createLayersFolder() throws IOException {
 
@@ -103,7 +122,7 @@ public class ResourceManager {
     private void copyTiles() throws IOException {
         try {
             FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersTileFolder()), layersTileFolder);
-            layersTileFile = layersTileFolder.resolve(PropertyManager.getInstance().getLayersTilesFile());
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -118,7 +137,6 @@ public class ResourceManager {
     private void copyWms() throws IOException {
         try {
             FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getLayersWmsFolder()), layersWmsFolder);
-            layersWmsFile = layersWmsFolder.resolve(PropertyManager.getInstance().getLayersWmsFile());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -220,6 +238,7 @@ public class ResourceManager {
     public List<WMSTileLayer> getWmsLayers(){
         List<WMSTileLayer> list = new ArrayList<>();
         try {
+            System.out.println("layers wms "+layersTileFile);
             Files.lines(layersWmsFile).reduce((s1, s2) -> s1 + s2).ifPresent(s -> {
                 JsonParser parser = new JsonParser();
                 JsonArray arr = parser.parse(s).getAsJsonArray();
@@ -242,4 +261,10 @@ public class ResourceManager {
     public Path getLayersTileFile() {
         return layersTileFile;
     }
+
+    public Path getLayersCashFolder(){
+        return layersCashFolder;
+    }
+
+
 }
