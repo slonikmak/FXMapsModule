@@ -3,17 +3,12 @@ package com.oceanos.FXMapModule.layers;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
-import com.oceanos.FXMapModule.events.MapEventType;
-import com.oceanos.FXMapModule.events.TileEvent;
+
 import com.oceanos.FXMapModule.options.LayerOptions;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import netscape.javascript.JSObject;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @autor slonikmak on 15.06.2018.
@@ -24,33 +19,22 @@ public class TileLayer extends Layer {
     public static JSObject jsObject;
 
     private StringProperty url = new SimpleStringProperty();
+    private StringProperty cachedUrl = new SimpleStringProperty();
     private LayerOptions options;
     private BooleanProperty cashed = new SimpleBooleanProperty(false);
+    private BooleanProperty loadFromCache = new SimpleBooleanProperty(false);
+
 
     public TileLayer(String url){
         this.url.setValue(url);
+        createCachedUrl();
 
-        ////FIXME: перенести кеширование в другое место
-        cashed.addListener((observable, oldValue, newValue) -> {
+        loadFromCache.addListener((observable, oldValue, newValue) -> {
             if (newValue){
-                Path path = ResourceManager.getInstance().getLayersCashFolder().resolve(getName());
-                if (!Files.exists(path)){
-                    try {
-                        System.out.println("create cashe dir "+path);
-                        Files.createDirectory(path);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                setUrl(cachedUrl.getValue());
+            } else {
+                setUrl(this.url.getValue());
             }
-        });
-        addEventListener(MapEventType.tileload, (e)->{
-
-            if (cashed.get()){
-                TileEvent event = (TileEvent) e;
-
-            }
-
         });
     }
 
@@ -77,6 +61,10 @@ public class TileLayer extends Layer {
         id = a;
     }
 
+    public void setUrl(String url){
+        jsObject.call("setUrl", getId(), url);
+    }
+
     @Override
     public void remove() {
         jsObject.call("removeLayer", this.getId());
@@ -95,6 +83,12 @@ public class TileLayer extends Layer {
     @Override
     public String convertToJson() {
         return convertToRawJsonObject().toString();
+    }
+
+    @Override
+    public void setName(String name){
+        super.setName(name);
+        createCachedUrl();
     }
 
     public JsonObject convertToRawJsonObject(){
@@ -120,6 +114,19 @@ public class TileLayer extends Layer {
         return cashed;
     }
 
+    public boolean isLoadFromCache() {
+        return loadFromCache.get();
+    }
+
+    public BooleanProperty loadFromCacheProperty() {
+        return loadFromCache;
+    }
+
+    public void setLoadFromCache(boolean loadFromCache) {
+        this.loadFromCache.set(loadFromCache);
+    }
+
+
     public static TileLayer getFromJson(String toString) {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(toString).getAsJsonObject();
@@ -128,8 +135,12 @@ public class TileLayer extends Layer {
         return tileLayer;
     }
 
-
-
+    private void createCachedUrl(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("myapp:///").append(ResourceManager.getInstance().getLayersCacheFolder().resolve(getName()).resolve("{z}").resolve("{x}").resolve("{y}.png"));
+        cachedUrl.setValue(stringBuilder.toString().replace("\\", "/"));
+        System.out.println("Cached url "+stringBuilder.toString().replace("\\", "/"));
+    }
 
 
 }

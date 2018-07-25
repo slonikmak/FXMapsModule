@@ -13,12 +13,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @autor slonikmak on 26.06.2018.
@@ -34,7 +32,7 @@ public class ResourceManager {
     private Path layersWmsFolder;
     private Path layersWmsFile;
     private Path layersTileFile;
-    private Path layersCashFolder;
+    private Path layersCacheFolder;
 
     private ResourceManager() throws IOException {
 
@@ -50,7 +48,7 @@ public class ResourceManager {
         layersWmsFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder());
         layersTileFile = layersTileFolder.resolve(PropertyManager.getInstance().getLayersTilesFile());
         layersWmsFile = layersWmsFolder.resolve(PropertyManager.getInstance().getLayersWmsFile());
-        layersCashFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersCashFolder());
+        layersCacheFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersCacheFolder());
 
 
         if (!Files.exists(resourceFolder)) {
@@ -71,7 +69,7 @@ public class ResourceManager {
         if (!Files.exists(resourceFolder.resolve(PropertyManager.getInstance().getLayersWmsFolder()))) {
             createLayersWmsFolder();
         }
-        if (!Files.exists(layersCashFolder)){
+        if (!Files.exists(layersCacheFolder)){
             createLayersCashFolder();
         }
     }
@@ -105,7 +103,7 @@ public class ResourceManager {
 
     private void createLayersCashFolder() throws IOException {
         System.out.println("create cash folder");
-        Files.createDirectory(layersCashFolder);
+        Files.createDirectory(layersCacheFolder);
     }
 
 
@@ -262,8 +260,8 @@ public class ResourceManager {
         return layersTileFile;
     }
 
-    public Path getLayersCashFolder(){
-        return layersCashFolder;
+    public Path getLayersCacheFolder(){
+        return layersCacheFolder;
     }
 
 

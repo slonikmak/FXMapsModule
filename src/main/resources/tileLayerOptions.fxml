@@ -42,6 +42,7 @@
                                     <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="1" />
                                     <Text fx:id="url" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <CheckBox fx:id="cashBox" mnemonicParsing="false" text="кешировать" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="fromCache" mnemonicParsing="false" text="из кеша" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                  </children>
                               </GridPane>
                            </children>

@@ -112,6 +112,7 @@ public class MissionOptionsController implements LayerOptionsController {
             ((TextField) node).textProperty().bindBidirectional((SimpleIntegerProperty)property, new NumberStringConverter());
         } else if (property instanceof SimpleBooleanProperty){
             node = new CheckBox("");
+            ((CheckBox)node).setSelected(((SimpleBooleanProperty) property).getValue());
             ((SimpleBooleanProperty)property).bindBidirectional(((CheckBox) node).selectedProperty());
         }
         gridPane.add(node, 1, row);

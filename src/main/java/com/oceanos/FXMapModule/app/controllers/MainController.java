@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
+import com.oceanos.FXMapModule.app.utills.cache.TileCache;
 import com.oceanos.FXMapModule.app.view.LayerTreeCell;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
@@ -286,6 +287,9 @@ public class MainController {
         WMSTileLayer wmsTileLayer = new WMSTileLayer("http://oceanos.nextgis.com/api/resource/65/wms", new WmsLayerOptions());
         wmsTileLayer.setName("карта глубин");
         tileLayer.setName("osm map");
+
+        TileCache cache = new TileCache(tileLayer);
+
         mapView.onLoad(() -> {
             System.out.println("add layers");
             mapView.addLayer(tileLayer);

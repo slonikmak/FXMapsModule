@@ -26,13 +26,13 @@ public class TileLayerOptionsController implements LayerOptionsController {
     @FXML
     private CheckBox cashBox;
 
+    @FXML
+    private CheckBox fromCache;
+
     @Override
     public void setLayer(Layer layer) {
         this.layer = (TileLayer) layer;
         fillOptions();
-        layer.addEventListener(MapEventType.tileload, (e)->{
-            System.out.println("load!!");
-        });
     }
 
     @Override
@@ -40,12 +40,20 @@ public class TileLayerOptionsController implements LayerOptionsController {
         name.textProperty().bind(layer.nameProperty());
         url.textProperty().bind(layer.urlProperty());
         cashBox.selectedProperty().bindBidirectional(layer.cashedProperty());
+        fromCache.selectedProperty().bindBidirectional(layer.loadFromCacheProperty());
+
+        fromCache.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                cashBox.setSelected(false);
+            }
+        });
 
         cashBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
-
+                fromCache.setSelected(false);
             }
         });
+
 
     }
 

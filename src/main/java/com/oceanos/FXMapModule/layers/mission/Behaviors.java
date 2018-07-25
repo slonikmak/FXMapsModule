@@ -34,6 +34,10 @@ public class Behaviors {
         gps_fix.put("fix_rate", new SimpleIntegerProperty());
         gps_fix.put("finish_on_gps_fix", new SimpleIntegerProperty());
         gps_fix.put("time_out", new SimpleIntegerProperty());
+        gps_fix.put("vbe_bow", new SimpleIntegerProperty());
+        gps_fix.put("ballast_pitch", new SimpleIntegerProperty());
+        gps_fix.put("ballast_roll", new SimpleIntegerProperty());
+        gps_fix.put("vbe_aft", new SimpleIntegerProperty());
 
         ObservableMap<String, Property> surface = FXCollections.observableHashMap();
         behaviors.put("surface", surface);

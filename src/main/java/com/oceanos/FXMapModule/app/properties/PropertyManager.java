@@ -75,7 +75,7 @@ public class PropertyManager {
         return properties.getProperty("layers.tiles.file");
     }
 
-    public String getLayersCashFolder(){
-        return properties.getProperty("layers.cash.folder");
+    public String getLayersCacheFolder(){
+        return properties.getProperty("layers.cache.folder");
     }
 }

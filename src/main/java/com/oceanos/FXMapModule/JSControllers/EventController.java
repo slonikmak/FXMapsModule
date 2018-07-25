@@ -59,6 +59,7 @@ public class EventController {
                 break;
             }case "MissionEvent": {
                 mapEvent = new MissionEvent(object);
+                break;
             }case "TileEvent": {
                 mapEvent = new TileEvent(object);
             }

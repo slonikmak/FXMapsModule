@@ -8,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +55,10 @@ public class HttpDownloadUtility {
                         fileURL.length());
             }
 
-            System.out.println("Content-Type = " + contentType);
+           /* System.out.println("Content-Type = " + contentType);
             System.out.println("Content-Disposition = " + disposition);
             System.out.println("Content-Length = " + contentLength);
-            System.out.println("fileName = " + fileName);
+            System.out.println("fileName = " + fileName);*/
 
             String[] msg = {"Downloading file:= " + fileName} ;
 
@@ -91,7 +90,7 @@ public class HttpDownloadUtility {
         System.out.println("done");
     }
 
-    public static void loadTiles(String urlTo, Path to) throws IOException {
+    /*public static void loadTiles(String urlTo, Path to) throws IOException {
 
         String url = urlTo;
         new Thread(new Runnable() {
@@ -168,7 +167,7 @@ public class HttpDownloadUtility {
 
         System.out.println("result url: "+res);
         return res;
-    }
+    }*/
 
     private static boolean isFileExist(String fileName, Path path) {
         return Files.exists(path.resolve(fileName));

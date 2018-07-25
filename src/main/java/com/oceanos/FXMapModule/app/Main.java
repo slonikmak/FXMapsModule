@@ -3,6 +3,7 @@ package com.oceanos.FXMapModule.app;
 import com.oceanos.FXMapModule.app.MyHttpProtocol.MyURLStreamHandlerFactory;
 import com.oceanos.FXMapModule.app.controllers.MainController;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
+import com.oceanos.FXMapModule.app.utills.cache.TileCache;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,8 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest((e)->{
             try {
                 ResourceManager.getInstance().close();
+                //FIXME: hardcode
+                TileCache.run.setValue(false);
                 //controller.close();
 
             } catch (IOException e1) {
