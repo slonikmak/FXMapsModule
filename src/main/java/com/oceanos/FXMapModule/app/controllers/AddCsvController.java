@@ -2,6 +2,7 @@ package com.oceanos.FXMapModule.app.controllers;
 
 import com.google.gson.JsonObject;
 import com.oceanos.FXMapModule.MapView;
+import com.oceanos.FXMapModule.layers.GeoJsonLayer;
 import com.oceanos.FXMapModule.utils.GeoJsonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -85,6 +86,25 @@ public class AddCsvController {
     }
 
     private void prepareCoords() {
+
+        separators.getChildren().forEach(c->{
+            if (((RadioButton)c).isSelected()){
+                switch (((RadioButton) c).getText()) {
+                    case ",":
+                        separatorType.setValue(",");
+                        break;
+                    case ";":
+                        separatorType.setValue(";");
+                        break;
+                    case "пробел":
+                        separatorType.setValue(" ");
+                        break;
+                    case "табуляция":
+                        separatorType.setValue("\\t");
+                }
+            }
+        });
+
         data = lines.stream().skip(1).map(l->l.split(separatorType.get())).collect(Collectors.toList());
         String[] headers = header.getText().split(";");
         for (int i = 0; i < headers.length; i++) {
@@ -100,9 +120,21 @@ public class AddCsvController {
         GeoJsonUtils.GeoJsonBuilder builder = new GeoJsonUtils.GeoJsonBuilder();
 
         data.forEach(d->{
-            builder.addPoint(Double.parseDouble(d[latIndex]), Double.parseDouble(d[lngIndex]));
+            Double lat = null;
+            Double lng = null;
+            try {
+                lat = Double.parseDouble(d[latIndex]);
+                lng = Double.parseDouble(d[lngIndex]);
+                builder.addPoint(lat, lng);
+            } catch (NumberFormatException e){
+                //e.printStackTrace();
+            }
+
+
         });
-        System.out.println(builder.getFeatureCollection().toString());
+        //System.out.println();
+        //GeoJsonLayer layer = new GeoJsonLayer(builder.toString());
+        //mapView.addLayer(layer);
     }
 
     private void loadAsLine() {
@@ -133,28 +165,16 @@ public class AddCsvController {
     public void initialize(){
         separators.getChildren().forEach(n->{
             ((RadioButton)n).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
+               /* if (newValue) {
                     separators.getChildren().forEach(n1->{
                         if (!n1.equals(n)){
                             ((RadioButton)n).setSelected(false);
                         }
                     });
-                }
+                }*/
 
             });
-            switch (((RadioButton) n).getText()) {
-                case ",":
-                    separatorType.setValue(",");
-                    break;
-                case ";":
-                    separatorType.setValue(";");
-                    break;
-                case "пробел":
-                    separatorType.setValue(" ");
-                    break;
-                case "табуляция":
-                    separatorType.setValue("\\t");
-            }
+
         });
     }
 
