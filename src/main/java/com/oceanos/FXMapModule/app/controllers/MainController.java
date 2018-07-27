@@ -125,6 +125,22 @@ public class MainController {
     }
 
     @FXML
+    void loadCsv(){
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/addCSV.fxml"));
+        try {
+            Parent parent = loader.load();
+            AddCsvController controller = loader.getController();
+            controller.setMapView(mapView);
+            Scene scene = new Scene(parent,600, 400);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void addTrackingLayer(){
         CurrentPositionLayer positionLayer = new CurrentPositionLayer();
         positionLayer.setName("GPS позиция");

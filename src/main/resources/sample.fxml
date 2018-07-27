@@ -82,6 +82,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#loadMarkerLayer" text="Маркер" />
                         <MenuItem mnemonicParsing="false" onAction="#loadLineLayer" text="GPX/GeoJson" />
                         <MenuItem mnemonicParsing="false" onAction="#addTrackingLayer" text="GPS трекинг" />
+                        <MenuItem mnemonicParsing="false" onAction="#loadCsv" text="CSV" />
                   </items>
                 </Menu>
               </menus>

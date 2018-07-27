@@ -1,5 +1,7 @@
 package com.oceanos.FXMapModule.app.controllers;
 
+import com.google.gson.JsonObject;
+import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.utils.GeoJsonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,9 +29,14 @@ import java.util.stream.Stream;
 /**
  * @autor slonikmak on 25.07.2018.
  */
-public class addCsvController {
+public class AddCsvController {
+    private MapView mapView;
+
     private Path sourceFile;
     private List<String> lines;
+    private List<String[]> data;
+
+    int latIndex, lngIndex;
 
     private StringProperty featureType = new SimpleStringProperty();
     private StringProperty separatorType = new SimpleStringProperty();
@@ -67,6 +75,7 @@ public class addCsvController {
     @FXML
     void add(ActionEvent event) {
         if (lines != null && lines.size()>1){
+            prepareCoords();
             if (line.isSelected()){
                 loadAsLine();
             } else if (dots.isSelected()){
@@ -75,8 +84,25 @@ public class addCsvController {
         }
     }
 
-    private void loadDots() {
+    private void prepareCoords() {
+        data = lines.stream().skip(1).map(l->l.split(separatorType.get())).collect(Collectors.toList());
+        String[] headers = header.getText().split(";");
+        for (int i = 0; i < headers.length; i++) {
+            if (headers[i].equals("Latitude")) {
+                latIndex = i;
+            } else if (headers[i].equals("Longtitude")){
+                lngIndex = i;
+            }
+        }
+    }
 
+    private void loadDots() {
+        GeoJsonUtils.GeoJsonBuilder builder = new GeoJsonUtils.GeoJsonBuilder();
+
+        data.forEach(d->{
+            builder.addPoint(Double.parseDouble(d[latIndex]), Double.parseDouble(d[lngIndex]));
+        });
+        System.out.println(builder.getFeatureCollection().toString());
     }
 
     private void loadAsLine() {
@@ -130,5 +156,9 @@ public class addCsvController {
                     separatorType.setValue("\\t");
             }
         });
+    }
+
+    public void setMapView(MapView mapView){
+        this.mapView = mapView;
     }
 }
