@@ -1,5 +1,6 @@
 package com.oceanos.FXMapModule.app.controllers;
 
+import com.oceanos.FXMapModule.utils.GeoJsonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -7,25 +8,37 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @autor slonikmak on 25.07.2018.
  */
 public class addCsvController {
     private Path sourceFile;
+    private List<String> lines;
 
     private StringProperty featureType = new SimpleStringProperty();
     private StringProperty separatorType = new SimpleStringProperty();
 
     @FXML
     private TextField header;
+
+
+    @FXML
+    private Label records;
 
     @FXML
     private ColorPicker color;
@@ -53,6 +66,20 @@ public class addCsvController {
 
     @FXML
     void add(ActionEvent event) {
+        if (lines != null && lines.size()>1){
+            if (line.isSelected()){
+                loadAsLine();
+            } else if (dots.isSelected()){
+                loadDots();
+            }
+        }
+    }
+
+    private void loadDots() {
+
+    }
+
+    private void loadAsLine() {
 
     }
 
@@ -68,6 +95,12 @@ public class addCsvController {
         File file = fileChooser.showOpenDialog(color.getParent().getScene().getWindow());
         if (file != null){
             sourceFile = file.toPath();
+            try {
+                lines = Files.lines(file.toPath()).collect(Collectors.toList());
+                records.setText(String.valueOf(lines.size()-1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -75,16 +108,27 @@ public class addCsvController {
         separators.getChildren().forEach(n->{
             ((RadioButton)n).selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-
-
-
                     separators.getChildren().forEach(n1->{
                         if (!n1.equals(n)){
                             ((RadioButton)n).setSelected(false);
                         }
                     });
                 }
+
             });
+            switch (((RadioButton) n).getText()) {
+                case ",":
+                    separatorType.setValue(",");
+                    break;
+                case ";":
+                    separatorType.setValue(";");
+                    break;
+                case "пробел":
+                    separatorType.setValue(" ");
+                    break;
+                case "табуляция":
+                    separatorType.setValue("\\t");
+            }
         });
     }
 }
