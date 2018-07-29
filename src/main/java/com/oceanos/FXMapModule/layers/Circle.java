@@ -95,6 +95,16 @@ public class Circle extends Path {
     }
 
     @Override
+    public void showMeasurements() {
+        jsObject.call("showMeasurements", this.getId());
+    }
+
+    @Override
+    public void hideMeasurements() {
+        jsObject.call("hideMeasurements", this.getId());
+    }
+
+    @Override
     public void addToMap() {
         id = (int) jsObject.call("addCircle", gson.toJson(latlng.getValue()), options.getJsonString());
     }

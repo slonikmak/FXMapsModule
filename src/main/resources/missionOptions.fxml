@@ -15,13 +15,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<Accordion maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MissionOptionsController">
+<Accordion maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MissionOptionsController">
   <panes>
     <TitledPane animated="false" text="Параметры">
          <content>
             <ScrollPane prefHeight="200.0" prefWidth="200.0">
                <content>
-                  <GridPane prefHeight="181.0" prefWidth="290.0">
+                  <GridPane prefHeight="222.0" prefWidth="290.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="118.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.0" minWidth="10.0" prefWidth="172.0" />
@@ -30,6 +30,7 @@
                       <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -47,6 +48,8 @@
                         <Label fx:id="date" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="Радиус захвата" GridPane.rowIndex="5" />
                         <TextField fx:id="captureRadius" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="Измерения" GridPane.rowIndex="6" />
+                        <CheckBox fx:id="measurements" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>
                   </GridPane>
                </content>

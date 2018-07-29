@@ -21,6 +21,10 @@ public abstract class Path extends Layer {
 
     public abstract void setEditable(boolean value);
 
+    public abstract void showMeasurements();
+
+    public abstract void hideMeasurements();
+
 
     InvalidationListener listener = observable -> redraw();
 

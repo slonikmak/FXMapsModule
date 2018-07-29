@@ -65,5 +65,9 @@ public class GeoJsonUtils {
         public JsonArray getFeatures() {
             return features;
         }
+
+        public String build(){
+            return featureCollection.toString();
+        }
     }
 }

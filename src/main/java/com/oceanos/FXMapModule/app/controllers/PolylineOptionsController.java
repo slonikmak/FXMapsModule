@@ -2,7 +2,10 @@ package com.oceanos.FXMapModule.app.controllers;
 
 import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.PolyLine;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -33,6 +36,8 @@ public class PolylineOptionsController extends PathOptionsController {
     private AnchorPane stylesPane;
 
 
+
+
     @Override
     public void setLayer(Layer layer) {
         super.setLayer(layer);
@@ -46,6 +51,7 @@ public class PolylineOptionsController extends PathOptionsController {
         lengthLabel.textProperty().bindBidirectional(((PolyLine)layer).lengthProperty(), new MyStringConverter());
         pointsLabel.textProperty().bindBidirectional(((PolyLine)layer).pointsProperty(), new MyStringConverter());
         nameField.textProperty().bindBidirectional(((PolyLine)layer).nameProperty());
+
     }
 
     private class MyStringConverter extends StringConverter<Number> {

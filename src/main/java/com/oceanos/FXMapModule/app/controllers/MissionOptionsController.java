@@ -77,6 +77,9 @@ public class MissionOptionsController implements LayerOptionsController {
     @FXML
     private TextField captureRadius;
 
+    @FXML
+    private CheckBox measurements;
+
     @Override
     public void setLayer(Layer layer) {
         this.layer = (Mission) layer;
@@ -159,6 +162,12 @@ public class MissionOptionsController implements LayerOptionsController {
         });
         waypointOptions.colorProperty().addListener((observable, oldValue, newValue) -> {
             pointLinColor.setValue(Color.web(newValue));
+        });
+
+        measurements.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                layer.showMeasurements();
+            } else layer.hideMeasurements();
         });
     }
 }

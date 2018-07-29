@@ -28,6 +28,14 @@ class CircleController extends PathController{
         return this.getLayerById(id).getLatLng()
     }
 
+    showMeasurements(id){
+        this.getLayerById(id).showMeasurements();
+    }
+
+    hideMeasurements(id){
+        this.getLayerById(id).hideMeasurements();
+    }
+
     redraw(id, options){
         const circle = this.getLayerById(id);
         options = JSON.parse(options);
@@ -69,6 +77,9 @@ class CircleController extends PathController{
             const event = new MapEvent('remove', id, L.latLng(0,0));
             event.eventClass = "LayerEvent";
             eventController.fireEven(event)
+        });
+        layer.on("editable:editing", function (e) {
+            layer.updateMeasurements();
         })
     }
 }

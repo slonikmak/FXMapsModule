@@ -56,6 +56,9 @@ public class PathOptionsController implements LayerOptionsController {
     @FXML
     private CheckBox fillCheckBox;
 
+    @FXML
+    private CheckBox measurements;
+
     @Override
     public void setLayer(Layer layer) {
         this.layer = (Path)layer;
@@ -89,6 +92,12 @@ public class PathOptionsController implements LayerOptionsController {
         });
         ((PathOptions)layer.getOptions()).fillColorProperty().addListener((observable, oldValue, newValue) -> {
             fillColorPicker.setValue(Color.web(newValue));
+        });
+
+        measurements.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                layer.showMeasurements();
+            } else layer.hideMeasurements();
         });
 
     }

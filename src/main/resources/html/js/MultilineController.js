@@ -38,6 +38,14 @@ class MultilineController extends PathController {
         return this.getLayerById(id).isEmpty()
     }
 
+    showMeasurements(id){
+        this.getLayerById(id).showMeasurements();
+    }
+
+    hideMeasurements(id){
+        this.getLayerById(id).hideMeasurements();
+    }
+
     addLatLng(id, latLng) {
         this.getLayerById(id).addLatLng(latLng)
     }
@@ -91,6 +99,9 @@ class MultilineController extends PathController {
                 eventController.fireEven(event)
             }
         };
-        layer.on(events)
+        layer.on(events);
+        layer.on("editable:editing", function (e) {
+            layer.updateMeasurements();
+        })
     }
 }

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.PolylineOptionsController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.PolylineOptionsController">
    <children>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Настройки">
          <content>
@@ -37,6 +37,7 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
                                     <Label text="Имя" GridPane.rowIndex="3" />
@@ -47,6 +48,8 @@
                                     <Label text="Редактировать" GridPane.rowIndex="2" />
                                     <CheckBox fx:id="editableBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <Label fx:id="pointsLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Измерения" GridPane.rowIndex="4" />
+                                    <CheckBox fx:id="measurements" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                            </children>

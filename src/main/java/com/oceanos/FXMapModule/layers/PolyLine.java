@@ -126,6 +126,16 @@ public class PolyLine extends Path {
     }
 
     @Override
+    public void showMeasurements() {
+        jsObject.call("showMeasurements", this.getId());
+    }
+
+    @Override
+    public void hideMeasurements() {
+        jsObject.call("hideMeasurements", this.getId());
+    }
+
+    @Override
     public void remove() {
         jsObject.call("removeLayer", this.getId());
     }

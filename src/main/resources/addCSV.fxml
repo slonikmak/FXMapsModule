@@ -7,15 +7,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="230.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.AddCsvController">
+<AnchorPane prefHeight="230.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.AddCsvController">
    <children>
-      <GridPane layoutX="14.0" layoutY="14.0" prefHeight="206.0" prefWidth="567.0">
+      <GridPane layoutX="14.0" layoutY="14.0" prefHeight="281.0" prefWidth="567.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="0.0" prefWidth="137.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="508.0" minWidth="10.0" prefWidth="235.0" />
@@ -28,16 +29,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" onAction="#openFile" text="открыть файл" />
             <TextField GridPane.columnIndex="1" />
             <Label text="Заголовок" GridPane.rowIndex="1" />
-            <TextField fx:id="header" text="Latitude,Longtitude,Altitude,Time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="header" text="latitude,longitude,altitude,time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Конвертировать как" GridPane.rowIndex="3" />
             <Label text="Цвет линии" GridPane.rowIndex="4" />
             <ColorPicker fx:id="color" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="6">
               <buttons>
                 <Button mnemonicParsing="false" onAction="#cancel" text="Отмена" />
                   <Button mnemonicParsing="false" onAction="#add" text="Добавить" />
@@ -45,8 +47,8 @@
             </ButtonBar>
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="286.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
-                  <RadioButton fx:id="line" mnemonicParsing="false" selected="true" text="линия" />
-                  <RadioButton fx:id="dots" mnemonicParsing="false" text="точки" />
+                  <RadioButton fx:id="line" mnemonicParsing="false" text="линия" />
+                  <RadioButton fx:id="dots" mnemonicParsing="false" selected="true" text="точки" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -55,10 +57,13 @@
             <Label text="Разделитель" GridPane.rowIndex="2" />
             <HBox fx:id="separators" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <RadioButton fx:id="dotSeparator" mnemonicParsing="false" selected="true" text="." />
-                  <RadioButton fx:id="colomnSeparator" mnemonicParsing="false" text=";" />
-                  <RadioButton fx:id="spaceSeparator" mnemonicParsing="false" text="пробел" />
-                  <RadioButton fx:id="tabSeparator" mnemonicParsing="false" text="табуляция" />
+                  <RadioButton fx:id="dotSeparator" mnemonicParsing="false" text=".">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="separ" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton fx:id="colomnSeparator" mnemonicParsing="false" text=";" toggleGroup="$separ" />
+                  <RadioButton fx:id="spaceSeparator" mnemonicParsing="false" text="пробел" toggleGroup="$separ" />
+                  <RadioButton fx:id="tabSeparator" mnemonicParsing="false" selected="true" text="табуляция" toggleGroup="$separ" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2">
@@ -67,6 +72,8 @@
                   <Label text="записей" />
                </children>
             </HBox>
+            <Label text="Название" GridPane.rowIndex="5" />
+            <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

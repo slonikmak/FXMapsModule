@@ -45,6 +45,9 @@ public class AddCsvController {
     @FXML
     private TextField header;
 
+    @FXML
+    private TextField name;
+
 
     @FXML
     private Label records;
@@ -106,11 +109,12 @@ public class AddCsvController {
         });
 
         data = lines.stream().skip(1).map(l->l.split(separatorType.get())).collect(Collectors.toList());
-        String[] headers = header.getText().split(";");
+        String[] headers = header.getText().split(",");
         for (int i = 0; i < headers.length; i++) {
-            if (headers[i].equals("Latitude")) {
+            if (headers[i].toLowerCase().equals("latitude")) {
                 latIndex = i;
-            } else if (headers[i].equals("Longtitude")){
+            }
+            if (headers[i].toLowerCase().equals("longitude")){
                 lngIndex = i;
             }
         }
@@ -132,9 +136,10 @@ public class AddCsvController {
 
 
         });
-        //System.out.println();
-        //GeoJsonLayer layer = new GeoJsonLayer(builder.toString());
-        //mapView.addLayer(layer);
+        System.out.println(builder.build());
+        GeoJsonLayer layer = new GeoJsonLayer(builder.build());
+        if (!name.getText().equals("")) layer.setName(name.getText());
+        mapView.addLayer(layer);
     }
 
     private void loadAsLine() {
