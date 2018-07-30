@@ -339,8 +339,18 @@ public class MainController {
         MenuItem goToItem = new MenuItem("Переместиться к слою");
         MenuItem deleteItem = new MenuItem("Удалить");
         MenuItem hideItem = new MenuItem("Скрыть/показать");
-        MenuItem saveItem = new MenuItem("Сохранить как GeoJson");
+        MenuItem saveItem = new MenuItem("Сохранить");
         MenuItem saveAsLayer = new MenuItem("Сохранить слой");
+        MenuItem convertToLayer = new MenuItem("Преобразовать в слой");
+
+        convertToLayer.setOnAction(event -> {
+            Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
+            if (layer instanceof GeoJsonLayer){
+                PolyLine polyLine = PolyLine.getFromJson(((GeoJsonLayer)layer).getString());
+                //System.out.println("ok!");
+                mapView.addLayer(polyLine);
+            }
+        });
 
         saveItem.setOnAction(event -> {
             Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
@@ -352,6 +362,8 @@ public class MainController {
             if (layer instanceof Marker){
                 Marker marker = (Marker) layer;
                 mapView.flyTo(marker.getLat(), marker.getLng());
+            } else if (layer instanceof PolyLine){
+                mapView.flyTo(((PolyLine)layer).getLatLngs().get(0).getLat(), ((PolyLine)layer).getLatLngs().get(0).getLng());
             }
         });
 
@@ -363,7 +375,7 @@ public class MainController {
             }
         });
 
-        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem, saveAsLayer);
+        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem, convertToLayer);
     }
 
     private void initTreeView() {

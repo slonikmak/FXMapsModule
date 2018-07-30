@@ -76,7 +76,7 @@
           </MenuBar>
             <MenuBar layoutX="488.0" layoutY="8.0" styleClass="menu-item" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Добавить">
+                <Menu mnemonicParsing="false" text="Загрузить">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#loadMissionLayer" text="Миссию" />
                     <MenuItem mnemonicParsing="false" onAction="#loadMarkerLayer" text="Маркер" />

@@ -187,4 +187,21 @@ public class PolyLine extends Path {
         setLength((Double) jsObject.call("getLength", id));
     }
 
+    public static PolyLine getFromJson(String json){
+        PolyLine polyLine = new PolyLine();
+
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(json).getAsJsonObject();
+        JsonObject properties = object.get("properties").getAsJsonObject();
+        JsonArray coords = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
+        coords.forEach(c->{
+            polyLine.addLatLng(c.getAsJsonArray().get(1).getAsDouble(), c.getAsJsonArray().get(0).getAsDouble());
+        });
+        PathOptions options = new PathOptions();
+        options.fillOptions(properties.toString());
+        polyLine.setOptions(options);
+        polyLine.setName(properties.get("name").getAsString());
+        return polyLine;
+    }
+
 }

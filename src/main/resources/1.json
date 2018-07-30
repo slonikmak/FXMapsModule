@@ -1,11 +1,30 @@
 {
   "type": "Feature",
-  "properties": {},
+  "properties": {
+    "weight": 8.0,
+    "opacity": 1.0,
+    "editable": true,
+    "color": "#8377ff",
+    "fill": false,
+    "fillColor": "#3388ff",
+    "fillOpacity": 0.2,
+    "name": "polyline"
+  },
   "geometry": {
-    "type": "Point",
+    "type": "LineString",
     "coordinates": [
-      29.953065,
-      60.723733
+      [
+        29.947572,
+        60.725013
+      ],
+      [
+        29.95079,
+        60.723124
+      ],
+      [
+        29.953194,
+        60.722537
+      ]
     ]
   }
 }

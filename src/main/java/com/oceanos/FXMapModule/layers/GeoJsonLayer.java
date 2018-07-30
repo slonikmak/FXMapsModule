@@ -16,6 +16,10 @@ public class GeoJsonLayer extends Layer {
         this.string = geoJsonString;
     }
 
+    public String getString() {
+        return string;
+    }
+
     @Override
     public void setOptions(LayerOptions options) {
 

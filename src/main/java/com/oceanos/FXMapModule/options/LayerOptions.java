@@ -66,23 +66,27 @@ public abstract class LayerOptions implements Observable {
         JsonParser parser = new JsonParser();
         JsonObject  object = parser.parse(options).getAsJsonObject();
         object.keySet().forEach(k->{
-            Method method = ReflectionHelper.getDeepMethod(this.getClass(), "set"+ CommonUtils.capitalize(k));
-            try {
-                Class[] types = method.getParameterTypes();
-                Object o = object.get(k);
-                if (types[0].equals(double.class)){
-                    method.invoke(this, object.get(k).getAsDouble());
-                } else if (types[0].equals(String.class)){
-                    method.invoke(this, object.get(k).getAsString());
-                } else if (types[0].equals(int.class)){
-                    method.invoke(this, object.get(k).getAsInt());
-                } else if (types[0].equals(boolean.class)){
-                    method.invoke(this, object.get(k).getAsBoolean());
-                }
+            //fixme: хардкод
+            if (!k.toLowerCase().equals("name")){
+                Method method = ReflectionHelper.getDeepMethod(this.getClass(), "set"+ CommonUtils.capitalize(k));
+                try {
+                    Class[] types = method.getParameterTypes();
+                    Object o = object.get(k);
+                    if (types[0].equals(double.class)){
+                        method.invoke(this, object.get(k).getAsDouble());
+                    } else if (types[0].equals(String.class)){
+                        method.invoke(this, object.get(k).getAsString());
+                    } else if (types[0].equals(int.class)){
+                        method.invoke(this, object.get(k).getAsInt());
+                    } else if (types[0].equals(boolean.class)){
+                        method.invoke(this, object.get(k).getAsBoolean());
+                    }
 
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
+
         });
     }
 

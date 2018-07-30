@@ -165,6 +165,7 @@ public class ReflectionHelper {
 
     public static Method getDeepMethod(Class<?> clazz, String methodName) {
         Class<?> tmpClass = clazz;
+        System.out.println(methodName);
         do {
             for ( Method method : tmpClass.getDeclaredMethods() ) {
                 String candidateName = method.getName();

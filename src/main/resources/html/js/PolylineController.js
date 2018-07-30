@@ -1,7 +1,9 @@
 class PolylineController extends MultilineController{
 
     addPolyline(latLngs, options){
-        console.log("add polyline!")
+        console.log("add polyline! ");
+
+
         if (options === undefined){
             options = {}
         } else {
@@ -9,12 +11,15 @@ class PolylineController extends MultilineController{
         }
         //options.bubblingMouseEvents = false;
         latLngs = JSON.parse(latLngs);
+        console.log(latLngs);
+        console.log(options);
         const polyline = L.polyline(latLngs, options);
         console.log(options);
-        //this.mapGroup.addLayer(polyline);
+        polyline.addTo(this.map);
+        this.mapGroup.addLayer(polyline);
         const id = this.getLayerId(polyline);
         this.registerEvents(polyline);
-        return id;
+        return polyline._leaflet_id;
     }
 
 
