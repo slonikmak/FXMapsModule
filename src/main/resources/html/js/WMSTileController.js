@@ -30,7 +30,13 @@ class WMSTileController extends Controller{
     registerEvents(id){
         const layer = this.getLayerById(id);
         console.log(this);
-        const events = {}
+        const events = {
+            remove: (e)=>{
+                const event = new MapEvent('remove', id, L.latLng(0,0));
+                event.eventClass = "LayerEvent";
+                eventController.fireEven(event)
+            }
+        };
         layer.on(events);
     }
 }

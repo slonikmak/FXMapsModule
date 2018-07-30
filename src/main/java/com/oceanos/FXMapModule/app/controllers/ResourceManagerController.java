@@ -85,7 +85,7 @@ public class ResourceManagerController {
 
     @FXML
     void addWmsOnMap() {
-
+        mapView.addLayer(wmsList.getSelectionModel().getSelectedItem());
     }
 
     @FXML

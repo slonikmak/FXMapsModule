@@ -300,6 +300,8 @@ public class MainController {
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
         TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png");
+        // http://oceanos.nextgis.com/api/resource/68/wms
+        //http://oceanos.nextgis.com/api/resource/65/wms
         WMSTileLayer wmsTileLayer = new WMSTileLayer("http://oceanos.nextgis.com/api/resource/65/wms", new WmsLayerOptions());
         wmsTileLayer.setName("карта глубин");
         tileLayer.setName("osm map");

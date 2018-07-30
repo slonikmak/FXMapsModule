@@ -143,7 +143,23 @@ public class AddCsvController {
     }
 
     private void loadAsLine() {
-
+        GeoJsonUtils.GeoJsonBuilder builder = new GeoJsonUtils.GeoJsonBuilder();
+        List<double[]> dots = new ArrayList<>();
+        data.forEach(d->{
+            Double lat = null;
+            Double lng = null;
+            try {
+                lat = Double.parseDouble(d[latIndex]);
+                lng = Double.parseDouble(d[lngIndex]);
+                dots.add(new double[]{lat,lng});
+            } catch (NumberFormatException e){
+                //e.printStackTrace();
+            }
+        });
+        builder.addLineString(dots);
+        GeoJsonLayer layer = new GeoJsonLayer(builder.build());
+        if (!name.getText().equals("")) layer.setName(name.getText());
+        mapView.addLayer(layer);
     }
 
     @FXML

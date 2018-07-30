@@ -3,7 +3,17 @@
   "name":"sapernoe izobata",
   "options":{
     "layers":"izobata",
-    "format":"format",
+    "format":"image/png",
     "transparent":true
   }
-}]
+},
+  {
+    "url":"http://oceanos.nextgis.com/api/resource/68/wms",
+    "name":"ladoga priozersk",
+    "options":{
+      "layers":"ladoga",
+      "format":"image/png",
+      "transparent":true
+    }
+  }
+]
