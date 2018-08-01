@@ -1,5 +1,9 @@
 package com.oceanos.FXMapModule.layers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.oceanos.FXMapModule.options.PathOptions;
 import netscape.javascript.JSObject;
 
 import java.util.ArrayList;
@@ -37,5 +41,20 @@ public class Polygon extends PolyLine {
         });
         setPoints(getLatLngs().size());
         setLength((Double) jsObject.call("getLength", id));*/
+    }
+    public static Polygon getFromJson(String json){
+        Polygon polygone = new Polygon();
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(json).getAsJsonObject();
+        JsonObject properties = object.get("properties").getAsJsonObject();
+        JsonArray coords = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
+        coords.forEach(c->{
+            polygone.addLatLng(c.getAsJsonArray().get(1).getAsDouble(), c.getAsJsonArray().get(0).getAsDouble());
+        });
+        PathOptions options = (PathOptions) polygone.getOptions();
+        options.fillOptions(properties.toString());
+        polygone.setOptions(options);
+        polygone.setName(properties.get("name").getAsString());
+        return polygone;
     }
 }

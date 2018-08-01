@@ -122,6 +122,7 @@ public class PolyLine extends Path {
 
     @Override
     public void setEditable(boolean value) {
+        System.out.println("set editable");
         ((PathOptions)getOptions()).setEditable(value);
     }
 
@@ -197,7 +198,7 @@ public class PolyLine extends Path {
         coords.forEach(c->{
             polyLine.addLatLng(c.getAsJsonArray().get(1).getAsDouble(), c.getAsJsonArray().get(0).getAsDouble());
         });
-        PathOptions options = new PathOptions();
+        PathOptions options = (PathOptions) polyLine.getOptions();
         options.fillOptions(properties.toString());
         polyLine.setOptions(options);
         polyLine.setName(properties.get("name").getAsString());

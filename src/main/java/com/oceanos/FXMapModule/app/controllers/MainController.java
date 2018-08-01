@@ -346,6 +346,8 @@ public class MainController {
         convertToLayer.setOnAction(event -> {
             Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
             if (layer instanceof GeoJsonLayer){
+                JsonParser parser = new JsonParser();
+                JsonObject object = parser.parse(((GeoJsonLayer)layer).getString()).getAsJsonObject();
                 PolyLine polyLine = PolyLine.getFromJson(((GeoJsonLayer)layer).getString());
                 //System.out.println("ok!");
                 mapView.addLayer(polyLine);

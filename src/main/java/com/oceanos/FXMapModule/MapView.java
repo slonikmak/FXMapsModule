@@ -25,11 +25,15 @@ import netscape.javascript.JSObject;
 
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @autor slonikmak on 13.06.2018.
  */
 public class MapView extends AnchorPane {
+
+    private static Logger logger = Logger.getLogger(String.valueOf(MapView.class));
+
     private long id;
 
     private WebView webView;
@@ -150,13 +154,12 @@ public class MapView extends AnchorPane {
         registerHandlers(layer);
         layer.addEventListener(MapEventType.remove, (e)->{
             repository.removeLayer(layer);
-            System.out.println("remove");
         });
     }
 
     public void removeLayer(Layer layer){
         repository.removeLayer(layer);
-        System.out.println("remove");
+        logger.info("слой "+layer.getName()+" удалён");
     }
 
     private void registerHandlers(Layer layer) {
