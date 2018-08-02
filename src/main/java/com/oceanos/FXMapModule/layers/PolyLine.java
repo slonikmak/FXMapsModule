@@ -1,5 +1,10 @@
 package com.oceanos.FXMapModule.layers;
 
+import com.github.filosganga.geogson.gson.GeometryAdapterFactory;
+import com.github.filosganga.geogson.model.Feature;
+import com.github.filosganga.geogson.model.LineString;
+import com.github.filosganga.geogson.model.Point;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.options.LayerOptions;
@@ -11,6 +16,8 @@ import netscape.javascript.JSObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @autor slonikmak on 19.06.2018.
@@ -18,11 +25,11 @@ import java.util.List;
 public class PolyLine extends Path {
     public static String jSController = "polyLineController";
     public static JSObject jsObject;
-    private PathOptions options;
+    PathOptions options;
     public Gson gson;
-    private ObservableList<LatLng> latLngs = FXCollections.observableArrayList();
-    private DoubleProperty length = new SimpleDoubleProperty();
-    private LongProperty points = new SimpleLongProperty();
+    ObservableList<LatLng> latLngs = FXCollections.observableArrayList();
+    DoubleProperty length = new SimpleDoubleProperty();
+    LongProperty points = new SimpleLongProperty();
 
     static {
 
@@ -153,15 +160,25 @@ public class PolyLine extends Path {
 
     @Override
     public String convertToJson() {
-        String result = (String) jsObject.call("toGeoJson", this.getId());
+        /*String result = (String) jsObject.call("toGeoJson", this.getId());
         System.out.println(result);
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(result).getAsJsonObject();
         object.add("properties", options.getJsonObject());
         JsonObject properties = object.getAsJsonObject("properties");
-
         properties.addProperty("name", getName());
-        return object.toString();
+        return object.toString();*/
+
+        System.out.println("convert!!!");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new GeometryAdapterFactory())
+                .create();
+
+        LineString lineString = LineString.of(latLngs.stream().map(l->Point.from(l.getLng(),l.getLat())).collect(Collectors.toList()));
+        Map<String, JsonElement> map = options.getOptionsMap();
+        map.put("name", new JsonPrimitive(getName()));
+        Feature feature = Feature.of(lineString).withProperties(ImmutableMap.copyOf(map));
+        return gson.toJson(feature);
     }
 
     @Override
@@ -188,10 +205,26 @@ public class PolyLine extends Path {
         setLength((Double) jsObject.call("getLength", id));
     }
 
+    /**
+     *
+     * @param json GeoJson Feature
+     * @return Polyline object
+     */
     public static PolyLine getFromJson(String json){
         PolyLine polyLine = new PolyLine();
 
-        JsonParser parser = new JsonParser();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new GeometryAdapterFactory())
+                .create();
+        Feature feature = gson.fromJson(json, Feature.class);
+        ((LineString)feature.geometry()).points().forEach(p->polyLine.addLatLng(p.lat(),p.lon()));
+        PathOptions options = (PathOptions) polyLine.getOptions();
+        options.fillOptions(feature.properties());
+        polyLine.setOptions(options);
+        polyLine.setName(feature.properties().get("name").getAsString());
+
+
+        /*JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(json).getAsJsonObject();
         JsonObject properties = object.get("properties").getAsJsonObject();
         JsonArray coords = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
@@ -201,7 +234,7 @@ public class PolyLine extends Path {
         PathOptions options = (PathOptions) polyLine.getOptions();
         options.fillOptions(properties.toString());
         polyLine.setOptions(options);
-        polyLine.setName(properties.get("name").getAsString());
+        polyLine.setName(properties.get("name").getAsString());*/
         return polyLine;
     }
 

@@ -1,7 +1,10 @@
 package com.oceanos.FXMapModule.options;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.oceanos.FXMapModule.app.utills.CommonUtils;
 import com.oceanos.FXMapModule.app.utills.ReflectionHelper;
 import javafx.beans.InvalidationListener;
@@ -11,6 +14,8 @@ import org.eclipse.jetty.util.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -62,6 +67,30 @@ public abstract class LayerOptions implements Observable {
         return object;
     }
 
+    public Map<String, JsonElement> getOptionsMap(){
+        Map<String, JsonElement> map = new HashMap<>();
+        JsonParser parser = new JsonParser();
+        ReflectionHelper.getAllPropertyFields(this.getClass()).forEach(f->{
+            try {
+                Object value = ((ReadOnlyProperty)f.get(this)).getValue();
+                String type = f.getType().toString();
+                String propertyName = CommonUtils.firstLetterLowerCase(f.getName().replace("Property",""));
+                if (type.endsWith("IntegerProperty")){
+                    map.put(propertyName, new JsonPrimitive((Integer)value));
+                } else if (type.endsWith("DoubleProperty")){
+                    map.put(propertyName, new JsonPrimitive((Double)value));
+                } else if (type.endsWith("StringProperty")){
+                    map.put(propertyName, new JsonPrimitive((String) value));
+                } else if (type.endsWith("BooleanProperty")){
+                    map.put(propertyName, new JsonPrimitive((Boolean)value));
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+        return map;
+    }
+
     public void fillOptions(String options){
         JsonParser parser = new JsonParser();
         JsonObject  object = parser.parse(options).getAsJsonObject();
@@ -89,6 +118,32 @@ public abstract class LayerOptions implements Observable {
 
         });
     }
+    public void fillOptions(Map<String, JsonElement> options){
+        JsonParser parser = new JsonParser();
+        //JsonObject  object = parser.parse(options).getAsJsonObject();
+        options.keySet().forEach(k->{
+            //fixme: хардкод
+            if (!k.toLowerCase().equals("name")){
+                Method method = ReflectionHelper.getDeepMethod(this.getClass(), "set"+ CommonUtils.capitalize(k));
+                try {
+                    Class[] types = method.getParameterTypes();
+                    if (types[0].equals(double.class)){
+                        method.invoke(this, options.get(k).getAsDouble());
+                    } else if (types[0].equals(String.class)){
+                        method.invoke(this, options.get(k).getAsString());
+                    } else if (types[0].equals(int.class)){
+                        method.invoke(this, options.get(k).getAsInt());
+                    } else if (types[0].equals(boolean.class)){
+                        method.invoke(this, options.get(k).getAsBoolean());
+                    }
+
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     abstract void init();
 

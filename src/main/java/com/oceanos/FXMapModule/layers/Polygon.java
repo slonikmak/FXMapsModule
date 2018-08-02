@@ -1,12 +1,20 @@
 package com.oceanos.FXMapModule.layers;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.github.filosganga.geogson.gson.GeometryAdapterFactory;
+import com.github.filosganga.geogson.model.Feature;
+import com.github.filosganga.geogson.model.LineString;
+import com.github.filosganga.geogson.model.MultiLineString;
+import com.github.filosganga.geogson.model.Point;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.google.gson.*;
 import com.oceanos.FXMapModule.options.PathOptions;
 import netscape.javascript.JSObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Polygon extends PolyLine {
     public static String jSController = "polygonController";
@@ -42,6 +50,22 @@ public class Polygon extends PolyLine {
         setPoints(getLatLngs().size());
         setLength((Double) jsObject.call("getLength", id));*/
     }
+
+    @Override
+    public String convertToJson() {
+        System.out.println("!!!!Convert");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new GeometryAdapterFactory())
+                .create();
+
+        String result = (String) jsObject.call("toGeoJson", this.getId());
+        Feature feature = gson.fromJson(result, Feature.class);
+        HashMap<String, JsonElement> map = Maps.newHashMap(feature.properties());
+        map.put("name", new JsonPrimitive(getName()));
+        feature.withProperties(ImmutableMap.copyOf(map));
+        return gson.toJson(feature);
+    }
+
     public static Polygon getFromJson(String json){
         Polygon polygone = new Polygon();
         JsonParser parser = new JsonParser();
