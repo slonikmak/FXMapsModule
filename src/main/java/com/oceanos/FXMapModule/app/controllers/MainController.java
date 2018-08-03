@@ -54,6 +54,9 @@ public class MainController {
     private AnchorPane mapPane;
 
     @FXML
+    private AnchorPane mapContainer;
+
+    @FXML
     private AnchorPane layersPane;
 
     @FXML
@@ -293,7 +296,7 @@ public class MainController {
 
     public void initialize() {
         mapView = new MapView();
-        mapPane.getChildren().add(mapView);
+        mapContainer.getChildren().add(mapView);
         initTreeView();
         initContextMenu();
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
@@ -325,7 +328,7 @@ public class MainController {
         AnchorPane.setBottomAnchor(mapView, 0d);
         AnchorPane.setTopAnchor(mapView, 0d);
         AnchorPane.setRightAnchor(mapView, 0d);
-        AnchorPane.setLeftAnchor(mapView, 40.0);
+        AnchorPane.setLeftAnchor(mapView, 0.0);
 
         initHandlers();
 
@@ -348,9 +351,19 @@ public class MainController {
             if (layer instanceof GeoJsonLayer){
                 JsonParser parser = new JsonParser();
                 JsonObject object = parser.parse(((GeoJsonLayer)layer).getString()).getAsJsonObject();
-                PolyLine polyLine = PolyLine.getFromJson(((GeoJsonLayer)layer).getString());
+                if (object.get("type").getAsString().toLowerCase().equals("feature")){
+                    System.out.println(object.get("geometry").getAsJsonObject().get("type").getAsString());
+                    if (object.get("geometry").getAsJsonObject().get("type").getAsString().equals("LineString")){
+                        PolyLine polyLine = PolyLine.getFromJson(((GeoJsonLayer)layer).getString());
+                        mapView.addLayer(polyLine);
+                    } else if (object.get("geometry").getAsJsonObject().get("type").getAsString().equals("Polygon")){
+                        Polygon polygon = Polygon.getFromJson(((GeoJsonLayer)layer).getString());
+                        mapView.addLayer(polygon);
+                    }
+                }
+
                 //System.out.println("ok!");
-                mapView.addLayer(polyLine);
+
             }
         });
 

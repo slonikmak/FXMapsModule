@@ -17,3 +17,45 @@
     -fx-padding: 5 5 5 5;
     -fx-background-color: transparent;
 }
+
+.left-menu {
+    -fx-background-color: #cccccc;
+}
+.center-pane {
+
+}
+.background-grey {
+    -fx-background-color: #cccccc;
+}
+
+.tree-cell:selected {
+    -fx-background-color: grey;
+}
+.tree-cell {
+    -fx-background-color: #cccccc;
+}
+.titled-pane > .title{
+    -fx-background-color: grey;
+
+}
+.titled-pane  {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+.titled-pane > *.content
+{
+    -fx-background-color: #cccccc;
+    -fx-background-insets: 0, 0 1 1 1;
+    -fx-padding: 0.167em;
+    -fx-font-size: 12px;
+}
+.titled-pane > *.anchor-pane {
+    -fx-background-color: #cccccc;
+}
+
+.scroll-pane {
+    -fx-background-color:transparent;
+}
+.anchor-pane {
+    -fx-background-color: #cccccc;
+}

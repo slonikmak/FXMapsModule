@@ -43,7 +43,6 @@ public class MapView extends AnchorPane {
     private Repository repository;
     private Runnable onLoadHandler;
     private Map<MapEventType, List<MapEventListener>> eventListeners;
-    private Gson gson;
 
     private DoubleProperty currentLat = new SimpleDoubleProperty();
     private DoubleProperty currentLng = new SimpleDoubleProperty();
@@ -53,7 +52,6 @@ public class MapView extends AnchorPane {
         super();
         repository = new Repository();
         eventController = new EventController(repository);
-        gson = new Gson();
         eventListeners = new HashMap<>();
 
         addEventListener(MapEventType.mousemove, event -> {
@@ -65,8 +63,8 @@ public class MapView extends AnchorPane {
     public void initWebView(){
         webView = new WebView();
         webEngine = webView.getEngine();
-        webView.setMaxHeight(Integer.MAX_VALUE);
-        webView.setMaxWidth(Integer.MAX_VALUE);
+        /*webView.setMaxHeight(Integer.MAX_VALUE);
+        webView.setMaxWidth(Integer.MAX_VALUE);*/
         AnchorPane.setBottomAnchor(webView, 0d);
         AnchorPane.setTopAnchor(webView, 0d);
         AnchorPane.setRightAnchor(webView, 0d);

@@ -62,23 +62,26 @@ public class Polygon extends PolyLine {
         Feature feature = gson.fromJson(result, Feature.class);
         HashMap<String, JsonElement> map = Maps.newHashMap(feature.properties());
         map.put("name", new JsonPrimitive(getName()));
-        feature.withProperties(ImmutableMap.copyOf(map));
+        feature = feature.withProperties(ImmutableMap.copyOf(map));
+
+        System.out.println(gson.toJson(feature));
         return gson.toJson(feature);
     }
 
     public static Polygon getFromJson(String json){
-        Polygon polygone = new Polygon();
+        Polygon polygon = new Polygon();
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(json).getAsJsonObject();
         JsonObject properties = object.get("properties").getAsJsonObject();
-        JsonArray coords = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
+        JsonArray coords = object.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(0).getAsJsonArray();
         coords.forEach(c->{
-            polygone.addLatLng(c.getAsJsonArray().get(1).getAsDouble(), c.getAsJsonArray().get(0).getAsDouble());
+            System.out.println("coords " +c.getAsJsonArray().get(1).getAsDouble()+" "+ c.getAsJsonArray().get(0).getAsDouble());
+            polygon.addLatLng(c.getAsJsonArray().get(1).getAsDouble(), c.getAsJsonArray().get(0).getAsDouble());
         });
-        PathOptions options = (PathOptions) polygone.getOptions();
+        PathOptions options = (PathOptions) polygon.getOptions();
         options.fillOptions(properties.toString());
-        polygone.setOptions(options);
-        polygone.setName(properties.get("name").getAsString());
-        return polygone;
+        polygon.setOptions(options);
+        polygon.setName(properties.get("name").getAsString());
+        return polygon;
     }
 }

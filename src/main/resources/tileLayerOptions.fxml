@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -12,18 +13,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.TileLayerOptionsController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background-grey" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.TileLayerOptionsController">
    <children>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" minHeight="0.0" text="Настройки">
          <content>
-            <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background-grey">
                <children>
-                  <ScrollPane prefHeight="200.0" prefWidth="300.0">
+                  <ScrollPane prefHeight="200.0" prefWidth="205.0" styleClass="background-grey" stylesheets="@fxml-css/main.css">
                      <padding>
                         <Insets left="5.0" />
                      </padding>
                      <content>
-                        <AnchorPane fx:id="preferencePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane fx:id="preferencePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" styleClass="background-grey">
                            <children>
                               <GridPane>
                                  <columnConstraints>
@@ -70,4 +71,8 @@
          </content>
       </TitledPane>
    </children>
+   <stylesheets>
+      <URL value="@fxml-css/main.css" />
+      <URL value="@fxml-css/jMetro.css" />
+   </stylesheets>
 </VBox>

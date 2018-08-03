@@ -1,5 +1,7 @@
 class PolygonController extends MultilineController{
-    addPolygone(latLngs, options){
+
+    addPolygon(latLngs, options){
+        console.log("add polygon");
         if (options === undefined){
             options = {}
         } else {
@@ -8,11 +10,10 @@ class PolygonController extends MultilineController{
         //options.bubblingMouseEvents = false;
         latLngs = JSON.parse(latLngs);
         const polygon = L.polygon(latLngs, options);
-        console.log(options);
+        polygon.addTo(this.map);
         this.mapGroup.addLayer(polygon);
-        const id = this.getLayerId(polygon);
         this.registerEvents(polygon);
-        return id;
+        return polygon._leaflet_id;
     }
 
     getLength(id){
