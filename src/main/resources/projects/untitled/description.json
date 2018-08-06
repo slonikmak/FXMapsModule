@@ -1,0 +1,3 @@
+{
+  "layers":[["TileLayer", "tileLayer.json"],["WMSTileLayer", "wmsLayer.json"]]
+}

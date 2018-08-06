@@ -78,4 +78,11 @@ public class PropertyManager {
     public String getLayersCacheFolder(){
         return properties.getProperty("layers.cache.folder");
     }
+
+    public String getProjectsFolder(){
+        return properties.getProperty("projects.folder");
+    }
+    public String getDefaultProjectName(){
+        return properties.getProperty("projects.default.project.name");
+    }
 }

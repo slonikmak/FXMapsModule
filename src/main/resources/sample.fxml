@@ -15,6 +15,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -26,11 +27,11 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" styleClass="background" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.MainController">
   <children>
-      <AnchorPane VBox.vgrow="NEVER">
+      <AnchorPane styleClass="background" VBox.vgrow="NEVER">
          <children>
-          <MenuBar styleClass="menu-item">
+          <MenuBar styleClass="menu">
             <menus>
               <Menu mnemonicParsing="false" text="Файл">
                 <items>
@@ -90,13 +91,13 @@
             </MenuBar>
          </children>
       </AnchorPane>
-    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" styleClass="background" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane fx:id="mapPane" prefHeight="551.0" prefWidth="255.0">
+        <AnchorPane fx:id="mapPane" prefHeight="551.0" prefWidth="255.0" styleClass="background">
           <children>
-                  <VBox styleClass="left-menu" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button maxHeight="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button maxHeight="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="LIST" size="24">
                                  <font>
@@ -104,8 +105,11 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Развернуть" />
+                           </tooltip>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addMarker" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button mnemonicParsing="false" onAction="#addMarker" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="LOCATION_ON" size="24">
                                  <font>
@@ -113,8 +117,11 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Маркер" />
+                           </tooltip>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addMission" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button mnemonicParsing="false" onAction="#addMission" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="TIMELINE" size="24">
                                  <font>
@@ -122,8 +129,11 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Миссия" />
+                           </tooltip>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#startPath" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button mnemonicParsing="false" onAction="#startPath" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="GESTURE" size="24">
                                  <font>
@@ -131,8 +141,11 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Линия" />
+                           </tooltip>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="ADJUST" size="24">
                                  <font>
@@ -140,8 +153,11 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Окружность" />
+                           </tooltip>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addRectangle" prefHeight="25.0" prefWidth="25.0" styleClass="map-btn">
+                        <Button mnemonicParsing="false" onAction="#addRectangle" prefHeight="25.0" prefWidth="25.0">
                            <graphic>
                               <MaterialIconView glyphName="CROP_5_4" size="24">
                                  <font>
@@ -149,28 +165,35 @@
                                  </font>
                               </MaterialIconView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Контур" />
+                           </tooltip>
                         </Button>
                      </children>
+                     <styleClass>
+                        <String fx:value="background" />
+                        <String fx:value="left-menu" />
+                     </styleClass>
                   </VBox>
-                  <AnchorPane fx:id="mapContainer" layoutX="229.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #cccccc;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <AnchorPane fx:id="mapContainer" layoutX="229.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
         </AnchorPane>
-            <AnchorPane maxWidth="300.0" minWidth="200.0" prefHeight="200.0" prefWidth="300.0">
+            <AnchorPane maxWidth="300.0" minWidth="200.0" prefHeight="200.0" prefWidth="300.0" styleClass="background">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox prefHeight="200.0" prefWidth="100.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" styleClass="background-grey" text="Слои">
+                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" styleClass="background" text="Слои">
                           <content>
-                            <AnchorPane fx:id="layersPane" minHeight="200.0" styleClass="background-grey">
+                            <AnchorPane fx:id="layersPane" minHeight="200.0" styleClass="background">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
                                  <children>
-                                    <TreeView fx:id="layerTreeView" minHeight="200.0" prefHeight="200.0" prefWidth="200.0" styleClass="background-grey" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <TreeView fx:id="layerTreeView" minHeight="200.0" prefHeight="200.0" prefWidth="200.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children></AnchorPane>
                           </content>
                         </TitledPane>
-                        <AnchorPane fx:id="layerOptionsPane" VBox.vgrow="ALWAYS">
+                        <AnchorPane fx:id="layerOptionsPane" styleClass="background" VBox.vgrow="ALWAYS">
                            <children>
                               <VBox prefHeight="200.0" prefWidth="100.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
@@ -262,10 +285,6 @@
                </children>
             </AnchorPane>
       </items>
-         <styleClass>
-            <String fx:value="center-pane" />
-            <String fx:value="background-grey" />
-         </styleClass>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
@@ -297,7 +316,7 @@
     </HBox>
   </children>
    <stylesheets>
-      <URL value="@fxml-css/jMetro.css" />
       <URL value="@fxml-css/main.css" />
+      <URL value="@fxml-css/jMetro.css" />
    </stylesheets>
 </VBox>

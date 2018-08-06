@@ -3,6 +3,7 @@ package com.oceanos.FXMapModule.app.properties;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
+import com.oceanos.FXMapModule.layers.Layer;
 import com.oceanos.FXMapModule.layers.TileLayer;
 import com.oceanos.FXMapModule.layers.WMSTileLayer;
 
@@ -13,9 +14,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
  */
 public class ResourceManager {
     private static ResourceManager instance;
+
+    private Map<Layer, String> filesInProject = new HashMap<>();
 
     private Path resourceFolder;
     private Path iconsFolder;
@@ -33,6 +35,8 @@ public class ResourceManager {
     private Path layersWmsFile;
     private Path layersTileFile;
     private Path layersCacheFolder;
+    private Path projectsFolder;
+    private Path defaultProject;
 
     private ResourceManager() throws IOException {
 
@@ -49,6 +53,8 @@ public class ResourceManager {
         layersTileFile = layersTileFolder.resolve(PropertyManager.getInstance().getLayersTilesFile());
         layersWmsFile = layersWmsFolder.resolve(PropertyManager.getInstance().getLayersWmsFile());
         layersCacheFolder = resourceFolder.resolve(PropertyManager.getInstance().getLayersCacheFolder());
+        projectsFolder = resourceFolder.resolve(PropertyManager.getInstance().getProjectsFolder());
+        defaultProject = projectsFolder.resolve(PropertyManager.getInstance().getDefaultProjectName());
 
 
         if (!Files.exists(resourceFolder)) {
@@ -72,7 +78,14 @@ public class ResourceManager {
         if (!Files.exists(layersCacheFolder)){
             createLayersCashFolder();
         }
+        if (!Files.exists(projectsFolder)){
+            createProjectsFolder();
+        }
+
+
+
     }
+
 
 
     public static ResourceManager getInstance() {
@@ -98,6 +111,49 @@ public class ResourceManager {
         System.out.println("createDefaultStilesFolder");
         Files.createDirectory(defaultStylesFolder);
         copyStyles();
+    }
+
+    private void createProjectsFolder() throws IOException {
+        Files.createDirectory(projectsFolder);
+        Files.createDirectory(defaultProject);
+        copyDefaultProject();
+
+    }
+
+    private void copyDefaultProject() throws IOException {
+        try {
+            FilesUtills.copyFiles(FilesUtills.getFilenamesForDirnameFromCP(PropertyManager.getInstance().getProjectsFolder()+"/"+PropertyManager.getInstance().getDefaultProjectName()),
+                    defaultProject);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initDefaultProject() throws IOException{
+
+        Path descFile = defaultProject.resolve("description.json");
+        String desc = Files.lines(descFile).reduce((s, s2) -> s+s2).get();
+        JsonParser parser = new JsonParser();
+        JsonArray files = parser.parse(desc).getAsJsonObject().get("layers").getAsJsonArray();
+        files.forEach(f->{
+            JsonArray arr = f.getAsJsonArray();
+            try {
+                String layerFile = Files.lines(defaultProject.resolve(arr.get(1).getAsString())).reduce((s, s2) -> s+s2).get();
+                Layer layer  = null;
+                switch (arr.get(0).getAsString()) {
+                    case "TileLayer":
+                        layer = TileLayer.getFromJson(layerFile);
+                        break;
+                    case "WMSTileLayer":
+                        layer = WMSTileLayer.getFromJson(layerFile);
+                        break;
+                }
+                filesInProject.put(layer, arr.get(1).getAsString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
 
@@ -264,5 +320,16 @@ public class ResourceManager {
         return layersCacheFolder;
     }
 
+    public Path getProjectsFolder(){
+        return projectsFolder;
+    }
+
+    public Path getDefaultProject(){
+        return defaultProject;
+    }
+
+    public Map<Layer, String> getFilesInProject(){
+        return filesInProject;
+    }
 
 }

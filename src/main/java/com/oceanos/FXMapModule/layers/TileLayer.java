@@ -136,6 +136,7 @@ public class TileLayer extends Layer {
     }
 
     private void createCachedUrl(){
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("myapp:///").append(ResourceManager.getInstance().getLayersCacheFolder().resolve(getName()).resolve("{z}").resolve("{x}").resolve("{y}.png"));
         cachedUrl.setValue(stringBuilder.toString().replace("\\", "/"));

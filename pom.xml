@@ -11,6 +11,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
+
     <build>
         <plugins>
            <!-- <plugin>
@@ -110,6 +113,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -166,6 +173,12 @@
             <groupId>com.github.filosganga</groupId>
             <artifactId>geogson-core</artifactId>
             <version>1.2.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jmetro</artifactId>
+            <version>4.0</version>
         </dependency>
 
     </dependencies>
