@@ -1,10 +1,13 @@
 package com.oceanos.FXMapModule.mapControllers;
 
 import com.oceanos.FXMapModule.MapView;
+import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.events.EditableEvent;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
+import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.PathOptions;
 import netscape.javascript.JSObject;
 
 /**
@@ -27,7 +30,13 @@ public class EditableController extends Evented {
     }
 
     public static Mission startMission(){
-        Mission mission = new Mission(mapView);
+
+        PathOptions options = new PathOptions();
+        options.fillOptions(ResourceManager.getInstance().getDefaultMissionOptions());
+        CircleOptions waypointOptions = new CircleOptions();
+        waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
+
+        Mission mission = new Mission(mapView, options, waypointOptions);
         mission.addEventListener(MapEventType.editable_drawing_commit,(e)->{
             //mission.updateOptions();
         });

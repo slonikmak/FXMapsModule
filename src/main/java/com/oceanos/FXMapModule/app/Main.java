@@ -31,8 +31,7 @@ public class Main extends Application {
 
         primaryStage.show();
         //new JMetro(JMetro.Style.LIGHT).applyTheme(root);
-        ResourceManager.getInstance();
-        System.out.println("end init resources");
+
 
         primaryStage.setOnCloseRequest((e)->{
             try {

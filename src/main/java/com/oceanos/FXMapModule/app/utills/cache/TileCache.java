@@ -37,6 +37,8 @@ public class TileCache {
     public TileCache(TileLayer layer){
         this.layer = layer;
 
+        layer.createCachedUrl();
+
         cacheFolder = ResourceManager.getInstance().getLayersCacheFolder().resolve(layer.getName());
         if (!Files.exists(cacheFolder)){
             try {

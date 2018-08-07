@@ -13,6 +13,8 @@ import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
 import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.PathOptions;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
 import com.oceanos.FXMapModule.utils.GpsReader;
 import javafx.collections.ListChangeListener;
@@ -36,6 +38,7 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -119,7 +122,7 @@ public class MainController {
             Parent parent = loader.load();
             ResourceManagerController controller = loader.getController();
             controller.setMapView(mapView);
-            Scene scene = new Scene(parent,600, 400);
+            Scene scene = new Scene(parent,800, 500);
             stage.setScene(scene);
             stage.showAndWait();
         } catch (IOException e) {
@@ -135,7 +138,7 @@ public class MainController {
             Parent parent = loader.load();
             AddCsvController controller = loader.getController();
             controller.setMapView(mapView);
-            Scene scene = new Scene(parent,600, 400);
+            Scene scene = new Scene(parent,780, 270);
             stage.setScene(scene);
             stage.showAndWait();
         } catch (IOException e) {
@@ -245,16 +248,7 @@ public class MainController {
     }
 
     private void loadMarker(String content) {
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(content).getAsJsonObject();
-        JsonObject geometry = jsonObject.getAsJsonObject("geometry");
-        JsonArray coords = geometry.getAsJsonArray("coordinates");
-        Double lng = coords.get(0).getAsDouble();
-        Double lat = coords.get(1).getAsDouble();
-        JsonObject properties = jsonObject.getAsJsonObject("properties");
-        String name = properties.get("name").getAsString();
-        Marker marker = new Marker(lat, lng);
-        marker.setName(name);
+        Marker marker = Marker.getFromJson(content);
         mapView.addLayer(marker);
     }
 
@@ -263,7 +257,11 @@ public class MainController {
     }
 
     private void loadMission(String content) {
-        Mission mission = Mission.getFromJson(content, mapView);
+        PathOptions options = new PathOptions();
+        options.fillOptions(ResourceManager.getInstance().getDefaultMissionOptions());
+        CircleOptions waypointOptions = new CircleOptions();
+        waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
+        Mission mission = Mission.getFromJson(content, mapView, options, waypointOptions);
         mapView.addLayer(mission);
     }
 
@@ -273,7 +271,7 @@ public class MainController {
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файл миссии", "*.mis"));
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         String content = l.convertToMissionJson();
-        FilesUtills.saveFile(file.toPath(), content);
+        FilesUtills.saveFile(file.toPath(), content, false);
     }
 
     private void saveMissionAsGeoJson(Mission mission){
@@ -282,7 +280,7 @@ public class MainController {
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файл JSON", "*.json"));
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         String content = mission.convertToJson();
-        FilesUtills.saveFile(file.toPath(), content);
+        FilesUtills.saveFile(file.toPath(), content, false);
     }
 
     public void addMarkerByClick() {
@@ -296,12 +294,16 @@ public class MainController {
 
     public void initialize() {
         mapView = new MapView();
+        //FIXME: HARDCODE!!
+        ResourceManager.mapView = mapView;
+        ResourceManager.getInstance();
+        //
+        System.out.println("end init resources");
+
         mapContainer.getChildren().add(mapView);
         initTreeView();
         initContextMenu();
-        ResourceManager.getInstance().getFilesInProject().forEach((k,v)->{
-            System.out.println(v);
-        });
+
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
@@ -312,12 +314,38 @@ public class MainController {
         wmsTileLayer.setName("карта глубин");
         tileLayer.setName("osm map");
 
-        TileCache cache = new TileCache(tileLayer);
+        //TileCache cache = new TileCache(tileLayer);
 
         mapView.onLoad(() -> {
             System.out.println("add layers");
-            mapView.addLayer(tileLayer);
-            mapView.addLayer(wmsTileLayer);
+            //Добавляем слои из последнего проекта
+            for (Layer layer:
+                    ResourceManager.getInstance().getFilesInProject().keySet()) {
+                if (layer.getClass().getName().equals("com.oceanos.FXMapModule.layers.TileLayer")){
+                    TileCache cache = new TileCache((TileLayer) layer);
+                }
+                mapView.addLayer(layer);
+            }
+           /* ResourceManager.getInstance().getFilesInProject().forEach((k,v)->{
+                if (k.getClass().getName().equals("com.oceanos.FXMapModule.layers.TileLayer")){
+                    TileCache cache = new TileCache((TileLayer) k);
+                    mapView.addLayer(k);
+                } else {
+                    mapView.addLayer(k);
+                }
+            });*/
+           //Подписываемся на добавление/удаление слоя для сохранения проекта
+            mapView.getLayers().addListener((ListChangeListener<Layer>) c -> {
+                       c.next();
+                       if (c.wasAdded() && !(c.getAddedSubList().get(0) instanceof Waypoint)){
+                           ResourceManager.getInstance().addLayerToProject(c.getAddedSubList().get(0));
+                       } else if (c.wasRemoved() && !(c.getRemoved().get(0) instanceof Waypoint)){
+                           ResourceManager.getInstance().removeLayerFromProject(c.getRemoved().get(0));
+                       }
+            });
+
+            /*mapView.addLayer(tileLayer);
+            mapView.addLayer(wmsTileLayer);*/
             Marker marker = new Marker(60.055142,30.3400618);
             marker.setIcon(FilesUtills.normalizePath(ResourceManager.getInstance().getIconsList().get(0)));
             Marker marker1 = new Marker(60.0555,30.34007);
@@ -583,7 +611,7 @@ public class MainController {
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         String content = layer.convertToJson();
         System.out.println(content);
-        FilesUtills.saveFile(file.toPath(), content);
+        FilesUtills.saveFile(file.toPath(), content, false);
         System.out.println(file);
     }
 
@@ -594,7 +622,7 @@ public class MainController {
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         String content = layer.convertToJson();
         System.out.println(content);
-        FilesUtills.saveFile(file.toPath(), content);
+        FilesUtills.saveFile(file.toPath(), content, false);
         System.out.println(file);
     }
 
@@ -605,7 +633,7 @@ public class MainController {
         File file = chooser.showSaveDialog(layerTreeView.getScene().getWindow());
         if (file!=null){
             String content = marker.convertToJson();
-            FilesUtills.saveFile(file.toPath(), content);
+            FilesUtills.saveFile(file.toPath(), content, false);
         }
     }
 

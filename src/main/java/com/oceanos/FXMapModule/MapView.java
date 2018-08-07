@@ -196,6 +196,10 @@ public class MapView extends AnchorPane {
         fireEvent(mapEvent);
     }
 
+    public Repository getRepository(){
+        return repository;
+    }
+
     public void flyTo(double lat, double lng){
         window.call("flyTo", lat, lng);
     }

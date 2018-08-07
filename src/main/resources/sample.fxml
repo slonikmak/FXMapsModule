@@ -175,7 +175,7 @@
                         <String fx:value="left-menu" />
                      </styleClass>
                   </VBox>
-                  <AnchorPane fx:id="mapContainer" layoutX="229.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <AnchorPane fx:id="mapContainer" layoutX="229.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
         </AnchorPane>
             <AnchorPane maxWidth="300.0" minWidth="200.0" prefHeight="200.0" prefWidth="300.0" styleClass="background">

@@ -27,7 +27,7 @@ public class TileLayer extends Layer {
 
     public TileLayer(String url){
         this.url.setValue(url);
-        createCachedUrl();
+        //createCachedUrl();
 
         loadFromCache.addListener((observable, oldValue, newValue) -> {
             if (newValue){
@@ -88,7 +88,7 @@ public class TileLayer extends Layer {
     @Override
     public void setName(String name){
         super.setName(name);
-        createCachedUrl();
+        //createCachedUrl();
     }
 
     public JsonObject convertToRawJsonObject(){
@@ -135,7 +135,7 @@ public class TileLayer extends Layer {
         return tileLayer;
     }
 
-    private void createCachedUrl(){
+    public void createCachedUrl(){
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("myapp:///").append(ResourceManager.getInstance().getLayersCacheFolder().resolve(getName()).resolve("{z}").resolve("{x}").resolve("{y}.png"));

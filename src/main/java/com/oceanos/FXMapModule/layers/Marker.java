@@ -1,6 +1,7 @@
 package com.oceanos.FXMapModule.layers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.events.LayerEvent;
@@ -33,6 +34,8 @@ public class Marker extends Layer {
         setName("marker");
         initHandlers();
     }
+
+
 
     @Override
     public void setOptions(LayerOptions options) {
@@ -135,12 +138,26 @@ public class Marker extends Layer {
 
     private void update(){
         System.out.println("update marker");
-        //if (!isOnMap()) return;
+        if (!isOnMap()) return;
         jsObject.call("update", id, lat.get(), lng.get(), getOptions().getJsonString());
     }
 
     private boolean isOnMap(){
         return id != 0;
+    }
+
+    public static Marker getFromJson(String content) {
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(content).getAsJsonObject();
+        JsonObject geometry = jsonObject.getAsJsonObject("geometry");
+        JsonArray coords = geometry.getAsJsonArray("coordinates");
+        Double lng = coords.get(0).getAsDouble();
+        Double lat = coords.get(1).getAsDouble();
+        JsonObject properties = jsonObject.getAsJsonObject("properties");
+        String name = properties.get("name").getAsString();
+        Marker marker = new Marker(lat, lng);
+        marker.setName(name);
+        return marker;
     }
 
 }

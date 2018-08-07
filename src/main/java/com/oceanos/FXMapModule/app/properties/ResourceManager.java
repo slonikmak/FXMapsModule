@@ -1,11 +1,15 @@
 package com.oceanos.FXMapModule.app.properties;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.internal.LinkedTreeMap;
+import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
-import com.oceanos.FXMapModule.layers.Layer;
-import com.oceanos.FXMapModule.layers.TileLayer;
-import com.oceanos.FXMapModule.layers.WMSTileLayer;
+import com.oceanos.FXMapModule.layers.*;
+import com.oceanos.FXMapModule.layers.mission.Mission;
+import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.PathOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +27,12 @@ import java.util.stream.Collectors;
  */
 public class ResourceManager {
     private static ResourceManager instance;
+    //FIXME: HARDCODE
+    public static MapView mapView;
 
-    private Map<Layer, String> filesInProject = new HashMap<>();
+    private Map<Layer, String> filesInProject = new LinkedHashMap<>();
+
+
 
     private Path resourceFolder;
     private Path iconsFolder;
@@ -81,7 +89,7 @@ public class ResourceManager {
         if (!Files.exists(projectsFolder)){
             createProjectsFolder();
         }
-
+        initDefaultProject();
 
 
     }
@@ -147,8 +155,31 @@ public class ResourceManager {
                     case "WMSTileLayer":
                         layer = WMSTileLayer.getFromJson(layerFile);
                         break;
+                    case "PolyLine":
+                        layer = PolyLine.getFromJson(layerFile);
+                        break;
+                    case "Circle":
+                        //TODO: добавить круг
+                        break;
+                    case "Polygon":
+                        layer = Polygon.getFromJson(layerFile);
+                        break;
+                    case "Marker":
+                        layer = Marker.getFromJson(layerFile);
+                        break;
+                    case "Mission":
+                        //FIXME: HARDCODE!!!
+                        PathOptions options = new PathOptions();
+                        options.fillOptions(getDefaultMissionOptions());
+                        CircleOptions waypointOptions = new CircleOptions();
+                        waypointOptions.fillOptions(getDefaultWaypointOptions());
+                        layer = Mission.getFromJson(layerFile, mapView, options, waypointOptions);
+                        break;
                 }
-                filesInProject.put(layer, arr.get(1).getAsString());
+                if (layer!=null){
+                    addLayerToProject(layer);
+                    //filesInProject.put(layer, arr.get(1).getAsString());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -245,6 +276,25 @@ public class ResourceManager {
 
     public void close() throws IOException {
         //FilesUtills.deleteDirectory(resourceFolder);
+        JsonObject object = new JsonObject();
+        JsonArray array = new JsonArray();
+        object.add("layers", array);
+        filesInProject.forEach((k,v)->{
+            JsonArray array1 = new JsonArray();
+            String json = null;
+            if (k instanceof Mission){
+                json = ((Mission)k).convertToMissionJson();
+            } else {
+               json = k.convertToJson();
+            }
+            array1.add(k.getClass().getSimpleName());
+
+            array.add(array1);
+            Path dest = FilesUtills.saveFile(defaultProject.resolve(v), json, false);
+            array1.add(dest.getFileName().toString());
+        });
+        FilesUtills.saveFile(defaultProject.resolve("description.json"), object.toString(), false);
+        System.out.println(object.toString());
     }
 
     public String getDefaultMissionOptions() {
@@ -332,4 +382,19 @@ public class ResourceManager {
         return filesInProject;
     }
 
+    public void addLayerToProject(Layer layer){
+        System.out.println("ADD LAYER");
+        String name = layer.getName();
+        String endName = ".json";
+        if (layer instanceof Mission) endName = ".mis";
+        filesInProject.put(layer, name+endName);
+        String finalEndName = endName;
+        layer.nameProperty().addListener((a, b, c)->{
+            filesInProject.put(layer, c+ finalEndName);
+        });
+    }
+
+    public void removeLayerFromProject(Layer layer){
+        filesInProject.remove(layer);
+    }
 }

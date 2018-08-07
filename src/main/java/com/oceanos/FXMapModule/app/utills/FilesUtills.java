@@ -29,19 +29,26 @@ public class FilesUtills {
     }
 
     public static String normalizePath(String path) {
-        if (path.startsWith("file:/")){
-            path = path.replace("file:/","");
+        if (path.startsWith("file:/")) {
+            path = path.replace("file:/", "");
         }
         String result = new File(path).toURI().toString();
         return result;
     }
 
-    public static void saveFile(Path toPath, String content) {
+    public static Path saveFile(Path toPath, String content, boolean rename) {
         try {
+            if (rename && Files.exists(toPath)) {
+                //String fileName = toPath.getFileName().toString().split("\\.")[0];
+                String[] parts = toPath.toString().split("\\.");
+                parts[0] = parts[0]+"1";
+                toPath = Paths.get(parts[0]+"."+parts[1]);
+            }
             Files.write(toPath, content.getBytes(Charset.forName("UTF-8")), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return toPath;
     }
 
     public static String openFile(Path toPath) {
@@ -53,6 +60,7 @@ public class FilesUtills {
         }
         return builder.toString();
     }
+
     public static List<String> getFilenamesForDirnameFromCP(String directoryName) throws URISyntaxException, UnsupportedEncodingException, IOException {
         List<String> filenames = new ArrayList<String>();
 
@@ -63,7 +71,7 @@ public class FilesUtills {
                 if (file != null) {
                     File[] files = file.listFiles();
                     if (files != null) {
-                        for (File filename : files) {
+                        for (File filename: files) {
                             filenames.add(filename.toString());
                         }
                     }
@@ -91,8 +99,8 @@ public class FilesUtills {
     public static List<Path> copyFiles(List<String> files, Path directoryTo) throws IOException {
         List<Path> result = new ArrayList<>();
         if (!Files.exists(directoryTo)) Files.createDirectory(directoryTo);
-        if (files.get(0).startsWith("jar:")){
-            files.forEach(f->{
+        if (files.get(0).startsWith("jar:")) {
+            files.forEach(f -> {
                 String fileName = f.split("!")[1];
                 Path newFile = directoryTo.resolve(Paths.get(fileName).getFileName());
                 try {
@@ -103,11 +111,11 @@ public class FilesUtills {
                 }
             });
         } else {
-            files.forEach(f->{
+            files.forEach(f -> {
                 Path filename = Paths.get(f).getFileName();
                 Path to = directoryTo.resolve(filename);
                 try {
-                    Files.copy(Paths.get(f),to, StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(Paths.get(f), to, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

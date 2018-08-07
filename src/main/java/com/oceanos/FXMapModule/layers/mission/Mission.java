@@ -8,6 +8,7 @@ import com.oceanos.FXMapModule.events.MissionEvent;
 import com.oceanos.FXMapModule.layers.LatLng;
 import com.oceanos.FXMapModule.layers.PolyLine;
 import com.oceanos.FXMapModule.options.CircleOptions;
+import com.oceanos.FXMapModule.options.MissionOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
 import com.oceanos.FXMapModule.utils.GeoJsonUtils;
 import javafx.beans.property.*;
@@ -35,17 +36,26 @@ public class Mission extends PolyLine {
     private StringProperty creationDate = new SimpleStringProperty();
     private IntegerProperty captureRadius = new SimpleIntegerProperty();
 
-    public Mission(MapView mapView){
-        super();
+    /*public Mission(MapView mapView){
         PathOptions options = new PathOptions();
         options.fillOptions(ResourceManager.getInstance().getDefaultMissionOptions());
-        setOptions(options);
+        CircleOptions waypointOptions = new CircleOptions();
+        waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
+        this(mapView, options, waypointOptions);
+    }*/
+
+    public Mission(MapView mapView, PathOptions missionOptions, CircleOptions waypointOptions){
+        super();
+        /*PathOptions options = new PathOptions();
+        options.fillOptions(ResourceManager.getInstance().getDefaultMissionOptions());*/
+        setOptions(missionOptions);
         this.mapView = mapView;
         setName("mission");
         setCreationDate();
         behaviors = new Behaviors();
-        waypointOptions = new CircleOptions();
-        waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());
+       /* waypointOptions = new CircleOptions();
+        waypointOptions.fillOptions(ResourceManager.getInstance().getDefaultWaypointOptions());*/
+       this.waypointOptions = waypointOptions;
         captureRadius.bindBidirectional(waypointOptions.radiusProperty());
         addEventListener(MapEventType.mission_waypoint_new, (e)->{
             System.out.println("new waypoint");
@@ -104,13 +114,16 @@ public class Mission extends PolyLine {
     }
 
     private void updateWaypoints(){
-        System.out.println("update waypoints");
-        jsObject.call("updateWaypoints",getId(), waypointOptions.getJsonString());
-        waypoints.forEach(w->{
-            int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
-            System.out.println("layer "+this.getId()+" waypoint "+w.getId()+"number "+number);
-            w.setIndex(number);
-        });
+        //fixme:hardcode
+        if (waypointOptions != null){
+            System.out.println("update waypoints");
+            jsObject.call("updateWaypoints",getId(), waypointOptions.getJsonString());
+            waypoints.forEach(w->{
+                int number = (int) jsObject.call("getWaypointIndex", this.getId(), w.getId());
+                System.out.println("layer "+this.getId()+" waypoint "+w.getId()+"number "+number);
+                w.setIndex(number);
+            });
+        }
     }
 
     public ObservableList<Waypoint> getWaypoints() {
@@ -241,9 +254,10 @@ public class Mission extends PolyLine {
         return gson.toJson(object).replaceAll("lng", "lon");
     }
 
-    public static Mission getFromJson(String content, MapView mapView) {
+    //todo: hardcode
+    public static Mission getFromJson(String content, MapView mapView, PathOptions missionOptions, CircleOptions waypointOptions) {
         content = content.replaceAll("lon", "lng");
-        Mission mission = new Mission(mapView);
+        Mission mission = new Mission(mapView, missionOptions, waypointOptions);
         JsonObject contentObject = new JsonParser().parse(content).getAsJsonObject();
         mission.setName(contentObject.get("name").getAsString());
         mission.setDescription(contentObject.get("description").getAsString());

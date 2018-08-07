@@ -147,14 +147,14 @@ public class ResourceManagerController {
     void saveWms() {
         JsonArray array = new JsonArray();
         wmsLayers.stream().map(WMSTileLayer::convertToRawJsonObject).forEach(array::add);
-        FilesUtills.saveFile(ResourceManager.getInstance().getLayersWmsFile(), array.toString());
+        FilesUtills.saveFile(ResourceManager.getInstance().getLayersWmsFile(), array.toString(), false);
     }
 
     @FXML
     void saveTile() {
         JsonArray array = new JsonArray();
         tileLayers.stream().map(TileLayer::convertToRawJsonObject).forEach(array::add);
-        FilesUtills.saveFile(ResourceManager.getInstance().getLayersTileFile(), array.toString());
+        FilesUtills.saveFile(ResourceManager.getInstance().getLayersTileFile(), array.toString(), false);
     }
 
     public void initialize() {
