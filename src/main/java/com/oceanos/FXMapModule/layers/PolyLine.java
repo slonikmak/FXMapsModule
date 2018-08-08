@@ -64,7 +64,9 @@ public class PolyLine extends Path {
     private void initHandlers() {
         ((PathOptions)getOptions()).editableProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue!=newValue){
-                jsObject.call("setEditable", getId(), newValue);
+                if (jsObject != null){
+                    jsObject.call("setEditable", getId(), newValue);
+                }
             }
         });
         this.addEventListener(MapEventType.editable_drawing_commit,(e)->{

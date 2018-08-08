@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="609.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.WaypointController">
-   <children>
-      <TitledPane animated="false" text="Информация" VBox.vgrow="ALWAYS">
+
+<Accordion maxHeight="1.7976931348623157E308" prefHeight="223.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oceanos.FXMapModule.app.controllers.WaypointController">
+  <panes>
+      <TitledPane animated="false" text="Информация">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-               <children>
-                  <GridPane prefHeight="179.0" prefWidth="253.0">
+            <ScrollPane>
+               <content>
+                  <GridPane prefHeight="179.0" prefWidth="260.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="169.0" minWidth="10.0" prefWidth="169.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="84.0" />
@@ -32,7 +34,7 @@
                     </rowConstraints>
                      <children>
                         <Label text="Latitude" />
-                        <Label text="Longtitude" GridPane.rowIndex="1" />
+                        <Label text="Longitude" GridPane.rowIndex="1" />
                         <Label text="Азимут" GridPane.rowIndex="2" />
                         <Label text="Дистанция до след." GridPane.rowIndex="3" />
                         <Label text="Индекс" GridPane.rowIndex="4" />
@@ -46,16 +48,19 @@
                         <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label fx:id="radius" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                      </children>
+                     <padding>
+                        <Insets left="15.0" top="5.0" />
+                     </padding>
                   </GridPane>
-               </children>
-            </AnchorPane>
+               </content>
+            </ScrollPane>
         </content>
       </TitledPane>
-      <TitledPane animated="false" text="Настройки">
+      <TitledPane animated="false" expanded="false" text="Настройки">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="298.0">
-               <children>
-                  <GridPane prefHeight="120.0" prefWidth="277.0">
+            <ScrollPane>
+               <content>
+                  <GridPane prefHeight="120.0" prefWidth="260.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="173.0" minWidth="10.0" prefWidth="165.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="112.0" />
@@ -76,16 +81,19 @@
                         <TextField fx:id="targetAltitude" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="depth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
+                     <padding>
+                        <Insets left="15.0" top="5.0" />
+                     </padding>
                   </GridPane>
-               </children>
-            </AnchorPane>
+               </content>
+            </ScrollPane>
         </content>
       </TitledPane>
-      <TitledPane animated="false" text="Стили" VBox.vgrow="ALWAYS">
+      <TitledPane animated="false" expanded="false" text="Стили">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-               <children>
-                  <GridPane prefHeight="120.0" prefWidth="261.0">
+            <ScrollPane prefHeight="194.0" prefWidth="288.0">
+               <content>
+                  <GridPane prefHeight="146.0" prefWidth="260.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="165.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="96.0" />
@@ -109,10 +117,13 @@
                         <Label fx:id="lineOpacyti" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="fillOpacity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
+                     <padding>
+                        <Insets left="15.0" top="5.0" />
+                     </padding>
                   </GridPane>
-               </children>
-            </AnchorPane>
+               </content>
+            </ScrollPane>
         </content>
       </TitledPane>
-   </children>
-</VBox>
+  </panes>
+</Accordion>

@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -46,6 +47,8 @@ import java.util.stream.Stream;
 public class MainController {
     private MapView mapView;
     private ContextMenu layerContextMenu;
+    private ContextMenu missionContextMenu;
+    private ContextMenu geoGsonLayerContextMenu;
 
     @FXML
     private AnchorPane layerOptionsPane;
@@ -148,12 +151,20 @@ public class MainController {
 
     @FXML
     private void addTrackingLayer(){
+        AnchorPane root = new AnchorPane();
         CurrentPositionLayer positionLayer = new CurrentPositionLayer();
         positionLayer.setName("GPS позиция");
         //positionLayer.setIcon(FilesUtills.normalizePath("/icons/icons8-submarine-48.png"));
         Stage stage = new Stage();
         HBox hBox = new HBox();
+        hBox.getStyleClass().add("gps-box");
+        hBox.getStylesheets().addAll(getClass().getResource("/fxml-css/main.css").toExternalForm(), getClass().getResource("/fxml-css/jMetro.css").toExternalForm());
         hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(5);
+        AnchorPane.setTopAnchor(hBox, 0.);
+        AnchorPane.setRightAnchor(hBox, 0.);
+        AnchorPane.setBottomAnchor(hBox, 0.);
+        AnchorPane.setLeftAnchor(hBox, 0.);
         ChoiceBox<String> choicePort = new ChoiceBox<>();
         SerialPort[] ports = positionLayer.getPortNames();
         choicePort.getItems().addAll(Stream.of(ports).map(SerialPort::getDescriptivePortName).collect(Collectors.toList()));
@@ -163,27 +174,34 @@ public class MainController {
         choiceBoudrate.getSelectionModel().select(0);
         Button okBtn = new Button("Добавить");
         Button cancelBtn = new Button("Отмена");
-        ButtonBar buttonBar = new ButtonBar();
-        buttonBar.getButtons().addAll(okBtn, cancelBtn);
-        hBox.getChildren().addAll(choicePort, choiceBoudrate, buttonBar);
-        Scene scene = new Scene(hBox, 400, 50);
+        okBtn.setPrefWidth(100);
+        cancelBtn.setPrefWidth(100);
+
+        root.getChildren().add(hBox);
+
+        hBox.getChildren().addAll(choicePort, choiceBoudrate, okBtn, cancelBtn);
+        Scene scene = new Scene(root, 500, 50);
         stage.setScene(scene);
+
         cancelBtn.setOnAction(e->{
             stage.close();
         });
         okBtn.setOnAction(e->{
-            positionLayer.setBaudrate(choiceBoudrate.getValue());
-            SerialPort port = ports[choicePort.getSelectionModel().getSelectedIndex()];
-            positionLayer.setPort(port);
-            positionLayer.startPort();
-            mapView.addLayer(positionLayer);
+            if (choicePort.getSelectionModel().getSelectedIndex() >= 0){
+                positionLayer.setBaudrate(choiceBoudrate.getValue());
+                SerialPort port = ports[choicePort.getSelectionModel().getSelectedIndex()];
+                positionLayer.setPort(port);
+                positionLayer.startPort();
+                mapView.addLayer(positionLayer);
+                mapPane.getScene().getWindow().setOnCloseRequest(e1->{
+                    positionLayer.closeReader();
+                });
+            }
             stage.close();
         });
         stage.showAndWait();
 
-        mapPane.getScene().getWindow().setOnCloseRequest(e->{
-            positionLayer.closeReader();
-        });
+
 
        /* GpsReader reader = new GpsReader();
         reader.setBaudrate(9600);
@@ -370,11 +388,14 @@ public class MainController {
 
     private void initContextMenu() {
         layerContextMenu = new ContextMenu();
+        missionContextMenu = new ContextMenu();
+        geoGsonLayerContextMenu = new ContextMenu();
+
         MenuItem goToItem = new MenuItem("Переместиться к слою");
         MenuItem deleteItem = new MenuItem("Удалить");
         MenuItem hideItem = new MenuItem("Скрыть/показать");
-        MenuItem saveItem = new MenuItem("Сохранить");
-        MenuItem saveAsLayer = new MenuItem("Сохранить слой");
+        MenuItem saveItem = new MenuItem("Сохранить как GeoJson");
+        MenuItem saveAsMission = new MenuItem("Сохранить Миссию");
         MenuItem convertToLayer = new MenuItem("Преобразовать в слой");
 
         convertToLayer.setOnAction(event -> {
@@ -413,7 +434,7 @@ public class MainController {
             }
         });
 
-        saveAsLayer.setOnAction(event -> {
+        saveAsMission.setOnAction(event -> {
             Layer layer = layerTreeView.getSelectionModel().getSelectedItem().getValue();
             if (layer instanceof Mission){
                 Mission mission = (Mission) layer;
@@ -421,7 +442,9 @@ public class MainController {
             }
         });
 
-        layerContextMenu.getItems().addAll(goToItem, deleteItem, hideItem, saveItem, convertToLayer);
+        layerContextMenu.getItems().addAll(goToItem, deleteItem, saveItem);
+        missionContextMenu.getItems().addAll(goToItem, deleteItem, saveItem, saveAsMission);
+        geoGsonLayerContextMenu.getItems().addAll(deleteItem, convertToLayer);
     }
 
     private void initTreeView() {
@@ -481,9 +504,25 @@ public class MainController {
         });
 
         layerTreeView.setOnContextMenuRequested(event -> {
-            //event.getTarget()
             layerContextMenu.hide();
-            layerContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+            geoGsonLayerContextMenu.hide();
+            missionContextMenu.hide();
+            Layer layer = null;
+            Object o = ((TreeCell<Layer>)((Node)event.getTarget()).getParent()).getTreeItem().getValue();
+            try {
+              layer = (Layer) o;
+            } catch (ClassCastException ex){
+
+            }
+            if (layer != null){
+                if (layer instanceof Mission){
+                    missionContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+                } else if (layer instanceof GeoJsonLayer){
+                    geoGsonLayerContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+                } else {
+                    layerContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
+                }
+            }
 
         });
 
@@ -508,8 +547,10 @@ public class MainController {
     }
 
     private void fillOptionsPane(Layer value) {
+        Node elem = null;
+
         if (value instanceof Marker){
-            VBox elem = null;
+            //VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/markerOptions.fxml"));
             try {
                 elem = loader.load();
@@ -519,10 +560,9 @@ public class MainController {
 
             MarkerOptionsController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.PolyLine") || value.getClass().getName().equals("com.oceanos.FXMapModule.layers.Polygon")){
-            VBox elem = null;
+            //VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/polyLineOptions.fxml"));
             try {
                 elem = loader.load();
@@ -532,10 +572,9 @@ public class MainController {
 
             PolylineOptionsController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.Circle")){
-            VBox elem = null;
+            //VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/circleOptions.fxml"));
             try {
                 elem = loader.load();
@@ -545,10 +584,9 @@ public class MainController {
 
             CircleOptionsController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Mission")) {
-            Accordion elem = null;
+            //Accordion elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/missionOptions.fxml"));
             try {
                 elem = loader.load();
@@ -558,10 +596,9 @@ public class MainController {
 
             MissionOptionsController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.mission.Waypoint")) {
-            VBox elem = null;
+            //Accordion elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/waypointOptions.fxml"));
             try {
                 elem = loader.load();
@@ -571,10 +608,9 @@ public class MainController {
 
             WaypointController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else if (value.getClass().getName().equals("com.oceanos.FXMapModule.layers.TileLayer")) {
-            VBox elem = null;
+            //VBox elem = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/tileLayerOptions.fxml"));
             try {
                 elem = loader.load();
@@ -584,11 +620,20 @@ public class MainController {
 
             TileLayerOptionsController controller = loader.getController();
             controller.setLayer(value);
-            layerOptionsPane.getChildren().clear();
-            layerOptionsPane.getChildren().add(elem);
+
         } else {
             layerOptionsPane.getChildren().clear();
         }
+
+        layerOptionsPane.getChildren().clear();
+        if (elem!=null){
+            AnchorPane.setLeftAnchor(elem,0.);
+            AnchorPane.setBottomAnchor(elem,0.);
+            AnchorPane.setRightAnchor(elem,0.);
+            AnchorPane.setTopAnchor(elem,0.);
+            layerOptionsPane.getChildren().add(elem);
+        }
+
     }
 
     private void saveAsGeoJson(Layer layer){

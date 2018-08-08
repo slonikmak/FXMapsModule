@@ -25,7 +25,7 @@ public class Main extends Application {
         Parent root = loader.load(getClass().getResource("/sample.fxml"));
         MainController controller = loader.getController();
         primaryStage.setTitle("Менеджер мисий");
-        primaryStage.setScene(new Scene(root, 1300, 900));
+        primaryStage.setScene(new Scene(root, 1100, 700));
 
 
 

@@ -91,7 +91,7 @@
  ******************************************************************************/
 
 .tree-view {
-    HOVER_COLOR:  #1550bd;
+    HOVER_COLOR:  #2796c4;
     PRESSED_COLOR: derive(HOVER_COLOR, -30%);
     ACCENT_COLOR: #ccc;
 
@@ -153,3 +153,87 @@
     -fx-scale-y: -1;
     -fx-rotate: 90;
 }
+
+
+/*
+titled pane
+*/
+
+
+.titled-pane > .title{
+    -fx-background-color: white;
+
+}
+.titled-pane > .title:hover{
+    -fx-background-color: #ccc;
+
+}
+.titled-pane  {
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+}
+.titled-pane > *.content
+{
+    -fx-background-color: white;
+    -fx-background-insets: 0, 0 1 1 1;
+    -fx-padding: 0.167em;
+    -fx-font-size: 12px;
+}
+.titled-pane > *.content > .anchor-pane {
+    -fx-background-color: white;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+}
+.titled-pane .scroll-pane > .viewport  { -fx-background-color: white; }
+.titled-pane {
+    -fx-background-color: white;
+}
+
+.accordion {
+    -fx-background-color: white;
+}
+
+/*.titled-pane .anchor-pane {
+    -fx-background-color: white;
+}*/
+
+/*.titled-pane > .content * {
+    -fx-background-color: transparent;
+}*/
+
+/*.titled-pane > .button {
+    -fx-background-color: white;
+}*/
+.white-bkg {
+    -fx-background-color: white;
+}
+
+
+
+
+.label {
+    /*-fx-padding: 5 22 5 22;*/
+
+    /*-fx-border-color: transparent;*/
+    /*-fx-border-width: 2;*/
+
+    /*-fx-background-radius: 0;*/
+
+    /*-fx-background-color: #cccccc;*/
+
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    -fx-text-fill: black;
+}
+
+.gps-box {
+    -fx-background-color: white;
+}
+
+.gps-box .button {
+    -fx-pref-width: 150px;
+}
+
+
