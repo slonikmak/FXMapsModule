@@ -17,6 +17,7 @@ import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
 import com.oceanos.FXMapModule.utils.GpsReader;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -319,8 +320,9 @@ public class MainController {
         System.out.println("end init resources");
 
         mapContainer.getChildren().add(mapView);
+        //initContextMenu();
         initTreeView();
-        initContextMenu();
+
 
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -442,9 +444,72 @@ public class MainController {
             }
         });
 
+
         layerContextMenu.getItems().addAll(goToItem, deleteItem, saveItem);
         missionContextMenu.getItems().addAll(goToItem, deleteItem, saveItem, saveAsMission);
         geoGsonLayerContextMenu.getItems().addAll(deleteItem, convertToLayer);
+    }
+
+    private void showContextMenu(Layer layer, double x, double y){
+        layerContextMenu = new ContextMenu();
+
+        MenuItem goToItem = new MenuItem("Переместиться к слою");
+        MenuItem deleteItem = new MenuItem("Удалить");
+        MenuItem hideItem = new MenuItem("Скрыть/показать");
+        MenuItem saveItem = new MenuItem("Сохранить как GeoJson");
+        MenuItem saveAsMission = new MenuItem("Сохранить Миссию");
+        MenuItem convertToLayer = new MenuItem("Преобразовать в слой");
+
+        convertToLayer.setOnAction(event -> {
+           if (layer instanceof GeoJsonLayer){
+                JsonParser parser = new JsonParser();
+                JsonObject object = parser.parse(((GeoJsonLayer)layer).getString()).getAsJsonObject();
+                if (object.get("type").getAsString().toLowerCase().equals("feature")){
+                    System.out.println(object.get("geometry").getAsJsonObject().get("type").getAsString());
+                    if (object.get("geometry").getAsJsonObject().get("type").getAsString().equals("LineString")){
+                        PolyLine polyLine = PolyLine.getFromJson(((GeoJsonLayer)layer).getString());
+                        mapView.addLayer(polyLine);
+                    } else if (object.get("geometry").getAsJsonObject().get("type").getAsString().equals("Polygon")){
+                        Polygon polygon = Polygon.getFromJson(((GeoJsonLayer)layer).getString());
+                        mapView.addLayer(polygon);
+                    }
+                }
+
+                //System.out.println("ok!");
+
+            }
+        });
+
+        saveItem.setOnAction(event -> {
+            saveAsGeoJson(layer);
+        });
+
+        goToItem.setOnAction(event -> {
+            if (layer instanceof Marker){
+                Marker marker = (Marker) layer;
+                mapView.flyTo(marker.getLat(), marker.getLng());
+            } else if (layer instanceof PolyLine){
+                mapView.flyTo(((PolyLine)layer).getLatLngs().get(0).getLat(), ((PolyLine)layer).getLatLngs().get(0).getLng());
+            }
+        });
+
+        saveAsMission.setOnAction(event -> {
+            if (layer instanceof Mission){
+                Mission mission = (Mission) layer;
+                saveMission(mission);
+            }
+        });
+        layerContextMenu.hide();
+        layerContextMenu.getItems().clear();
+        layerContextMenu.getItems().add(deleteItem);
+        if (layer instanceof Mission){
+            layerContextMenu.getItems().addAll(goToItem, saveItem, saveAsMission);
+        } else if (layer instanceof GeoJsonLayer){
+            layerContextMenu.getItems().addAll(convertToLayer);
+        } else {
+            layerContextMenu.getItems().addAll(goToItem, saveItem);
+        }
+        layerContextMenu.show(layerTreeView, x, y);
     }
 
     private void initTreeView() {
@@ -454,7 +519,17 @@ public class MainController {
         layerTreeView.setRoot(root);
         layerTreeView.setShowRoot(false);
         //layersPane.getChildren().add(layerTreeView);
-        layerTreeView.setCellFactory(param -> new LayerTreeCell());
+        layerTreeView.setCellFactory(param -> {
+            LayerTreeCell cell = new LayerTreeCell();
+
+            cell.setOnContextMenuRequested(event -> {
+                Layer layer = cell.getItem();
+                if (layer != null){
+                    showContextMenu(layer, event.getScreenX(), event.getScreenY());
+                }
+            });
+            return cell;
+        });
         mapView.getLayers().addListener((ListChangeListener<Layer>) c -> {
             c.next();
             if (c.wasAdded()) {
@@ -504,7 +579,7 @@ public class MainController {
         });
 
         layerTreeView.setOnContextMenuRequested(event -> {
-            layerContextMenu.hide();
+           /* layerContextMenu.hide();
             geoGsonLayerContextMenu.hide();
             missionContextMenu.hide();
             Layer layer = null;
@@ -522,12 +597,9 @@ public class MainController {
                 } else {
                     layerContextMenu.show(layerTreeView, event.getScreenX(), event.getScreenY());
                 }
-            }
-
+            }*/
         });
-
-
-    }
+            }
 
     private void initHandlers(){
         mapView.activeLayerProperty().addListener((observable, oldValue, newValue) -> {
