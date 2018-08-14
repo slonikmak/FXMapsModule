@@ -9,6 +9,8 @@ import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.layers.TileLayer;
 import com.oceanos.FXMapModule.layers.WMSTileLayer;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -49,6 +51,8 @@ public class ResourceManagerController {
     JsonObject currentWmsJsonObj;
     JsonObject currentTileJsonObj;
 
+    ObjectProperty<TileLayer> selectedTileLayer = new SimpleObjectProperty<>();
+
 
     @FXML
     private AnchorPane mapPane;
@@ -73,6 +77,9 @@ public class ResourceManagerController {
 
     @FXML
     private TextField wmsLayersField;
+
+    @FXML
+    private TextField domains;
 
     @FXML
     private ChoiceBox<Boolean> wmsTransparancy;
@@ -207,7 +214,10 @@ public class ResourceManagerController {
                             item.nameProperty().addListener((observable, oldValue, newValue) -> {
                                 setText(newValue);
                             });
-                        } else setText("");
+                        } else {
+                            setText("");
+                            setGraphic(null);
+                        }
                     }
                 };
             }

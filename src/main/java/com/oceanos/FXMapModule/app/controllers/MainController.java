@@ -388,7 +388,7 @@ public class MainController {
 
     }
 
-    private void initContextMenu() {
+    /*private void initContextMenu() {
         layerContextMenu = new ContextMenu();
         missionContextMenu = new ContextMenu();
         geoGsonLayerContextMenu = new ContextMenu();
@@ -448,7 +448,7 @@ public class MainController {
         layerContextMenu.getItems().addAll(goToItem, deleteItem, saveItem);
         missionContextMenu.getItems().addAll(goToItem, deleteItem, saveItem, saveAsMission);
         geoGsonLayerContextMenu.getItems().addAll(deleteItem, convertToLayer);
-    }
+    }*/
 
     private void showContextMenu(Layer layer, double x, double y){
         layerContextMenu = new ContextMenu();

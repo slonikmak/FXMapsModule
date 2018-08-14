@@ -23,6 +23,7 @@ public class TileLayer extends Layer {
     private LayerOptions options;
     private BooleanProperty cashed = new SimpleBooleanProperty(false);
     private BooleanProperty loadFromCache = new SimpleBooleanProperty(false);
+    private ObjectProperty<String[]> domains = new SimpleObjectProperty<>();
 
 
     public TileLayer(String url){
@@ -126,6 +127,17 @@ public class TileLayer extends Layer {
         this.loadFromCache.set(loadFromCache);
     }
 
+    public String[] getDomains() {
+        return domains.get();
+    }
+
+    public ObjectProperty<String[]> domainsProperty() {
+        return domains;
+    }
+
+    public void setDomains(String[] domains) {
+        this.domains.set(domains);
+    }
 
     public static TileLayer getFromJson(String toString) {
         JsonParser parser = new JsonParser();

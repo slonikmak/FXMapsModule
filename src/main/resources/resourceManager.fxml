@@ -53,6 +53,8 @@
                                           <Label text="Url" GridPane.rowIndex="1" />
                                           <TextField fx:id="mapNameField" GridPane.columnIndex="1" />
                                           <TextField fx:id="mapUrlField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="Домены" GridPane.rowIndex="2" />
+                                          <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
                                     </GridPane>
                                     <Button layoutX="14.0" layoutY="158.0" mnemonicParsing="false" onAction="#saveTile" text="Сохранить" />
