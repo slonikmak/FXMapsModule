@@ -223,8 +223,8 @@ public class ResourceManagerController {
             }
         });
         mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mapNameField.textProperty().bindBidirectional(newValue.nameProperty());
-            mapUrlField.textProperty().bindBidirectional(newValue.urlProperty());
+            mapNameField.textProperty().setValue(newValue.getName());
+            mapUrlField.textProperty().setValue(newValue.getUrl());
             mapPane.setDisable(false);
         });
     }
