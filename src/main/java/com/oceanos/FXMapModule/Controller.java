@@ -2,7 +2,7 @@ package com.oceanos.FXMapModule;
 
 import com.oceanos.FXMapModule.events.*;
 import com.oceanos.FXMapModule.layers.*;
-import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.JSControllers.EditableController;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

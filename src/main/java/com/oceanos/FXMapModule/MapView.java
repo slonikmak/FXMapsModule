@@ -1,6 +1,5 @@
 package com.oceanos.FXMapModule;
 
-import com.google.gson.Gson;
 import com.oceanos.FXMapModule.JSControllers.EventController;
 import com.oceanos.FXMapModule.events.MapEvent;
 import com.oceanos.FXMapModule.events.MapEventListener;
@@ -8,11 +7,9 @@ import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.MapMouseEvent;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
-import com.oceanos.FXMapModule.layers.mission.Waypoint;
-import com.oceanos.FXMapModule.mapControllers.EditableController;
-import com.oceanos.FXMapModule.mapControllers.GeoJsonController;
+import com.oceanos.FXMapModule.JSControllers.EditableController;
+import com.oceanos.FXMapModule.JSControllers.GeoJsonController;
 import com.oceanos.FXMapModule.repository.Repository;
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,7 +20,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.logging.Logger;
 

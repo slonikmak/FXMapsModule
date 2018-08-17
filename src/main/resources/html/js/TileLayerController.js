@@ -1,5 +1,17 @@
 class TileLayerController extends Controller{
-    addTileLayer(url, options){
+    addTileLayer(url, options, sub){
+        if (options == null || options == undefined){
+            options = {
+                someOpt:"opt"
+            };
+            console.log("qqqqqqq")
+        } else {
+            options = JSON.parse(options);
+        }
+        if (JSON.parse(sub).length != 0) {
+            options.subdomains = JSON.parse(sub);
+        }
+        //options.subdomains = subD;
         const tileLayer = L.tileLayer(url, options);
         this.mapGroup.addLayer(tileLayer);
         const id = this.getLayerId(tileLayer);
@@ -28,12 +40,18 @@ class TileLayerController extends Controller{
     registerEvents(layer){
         //const layer = this.getLayerById(id);
         console.log(this);
-        const events = {tileload:(e)=>{
+        const events = {
+            tileload:(e)=>{
                 //console.log("load");
                 //console.log(e.tile.src);
                 const event = new TileLayerEvent("tileload", layer._leaflet_id, e.tile.src, e.coords.x,e.coords.y, e.coords.z);
                 event.eventClass = "TileEvent";
                 eventController.fireEven(event);
+            },
+            remove: (e)=>{
+                const event = new MapEvent('remove', layer._leaflet_id, L.latLng(0,0));
+                event.eventClass = "LayerEvent";
+                eventController.fireEven(event)
             }
         };
         layer.on(events);

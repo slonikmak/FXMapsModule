@@ -35,22 +35,21 @@
             <menus>
               <Menu mnemonicParsing="false" text="Файл">
                 <items>
-                  <MenuItem mnemonicParsing="false" text="Новый проект" />
-                  <MenuItem mnemonicParsing="false" text="Открыть проект" />
-                  <Menu mnemonicParsing="false" text="Открыть прошлые" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Новый проект" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Открыть проект" />
+                  <Menu disable="true" mnemonicParsing="false" text="Открыть прошлые" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Закрыть" />
-                  <MenuItem mnemonicParsing="false" text="Сохранить" />
-                  <MenuItem mnemonicParsing="false" text="Сохранить как" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Сохранить" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Сохранить как" />
                         <MenuItem mnemonicParsing="false" onAction="#saveSelected" text="Сохранить выбранное" />
                   <MenuItem mnemonicParsing="false" onAction="#loadLayer" text="Загрузить слой" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Настройки" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Настройки" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Выход" />
+                  <MenuItem mnemonicParsing="false" onAction="#exit" text="Выход" />
                 </items>
               </Menu>
-              <Menu mnemonicParsing="false" text="Правка">
+              <Menu disable="true" mnemonicParsing="false" text="Правка">
                 <items>
                   <MenuItem mnemonicParsing="false" text="Undo" />
                   <MenuItem mnemonicParsing="false" text="Redo" />
@@ -66,7 +65,7 @@
               </Menu>
               <Menu mnemonicParsing="false" text="Помощь">
                 <items>
-                  <MenuItem mnemonicParsing="false" text="О программе" />
+                  <MenuItem mnemonicParsing="false" onAction="#showHelp" text="О программе" />
                 </items>
               </Menu>
                   <Menu mnemonicParsing="false" text="Инструменты">
@@ -76,7 +75,7 @@
                   </Menu>
             </menus>
           </MenuBar>
-            <MenuBar layoutX="488.0" layoutY="8.0" styleClass="menu-item" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <MenuBar layoutX="488.0" layoutY="8.0" styleClass="menu" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <menus>
                 <Menu mnemonicParsing="false" text="Загрузить">
                   <items>
@@ -89,6 +88,18 @@
                 </Menu>
               </menus>
             </MenuBar>
+            <HBox layoutX="972.0" layoutY="9.0" prefHeight="36.0" prefWidth="36.0" styleClass="left-menu" AnchorPane.rightAnchor="90.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#addTrackingLayer">
+                     <graphic>
+                        <MaterialIconView glyphName="NAVIGATION" size="20" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Добавить навигацию" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </AnchorPane>
     <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" styleClass="background" VBox.vgrow="ALWAYS">

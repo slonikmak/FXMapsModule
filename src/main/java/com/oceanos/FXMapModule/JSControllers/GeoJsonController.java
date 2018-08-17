@@ -1,4 +1,4 @@
-package com.oceanos.FXMapModule.mapControllers;
+package com.oceanos.FXMapModule.JSControllers;
 
 import netscape.javascript.JSObject;
 

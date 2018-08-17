@@ -125,6 +125,7 @@ public class MissionOptionsController implements LayerOptionsController {
     public void fillOptions() {
         PathOptions pathOptions = (PathOptions) layer.getOptions();
         CircleOptions waypointOptions = layer.getWaypointOptions();
+
         name.textProperty().bindBidirectional(layer.nameProperty());
         description.textProperty().bindBidirectional(layer.descriptionProperty());
         date.textProperty().bindBidirectional(layer.creationDateProperty());

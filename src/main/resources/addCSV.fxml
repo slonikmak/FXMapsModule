@@ -32,7 +32,7 @@
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" onAction="#openFile" text="открыть файл" />
-            <TextField GridPane.columnIndex="1" />
+            <TextField fx:id="fileName" GridPane.columnIndex="1" />
             <Label text="Заголовок" GridPane.rowIndex="1" />
             <TextField fx:id="header" text="Latitude,Longitude,Altitude,Time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Конвертировать как" GridPane.rowIndex="3" />

@@ -1,7 +1,6 @@
 package com.oceanos.FXMapModule.app.controllers;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.MapView;
@@ -12,12 +11,9 @@ import com.oceanos.FXMapModule.app.view.LayerTreeCell;
 import com.oceanos.FXMapModule.layers.*;
 import com.oceanos.FXMapModule.layers.mission.Mission;
 import com.oceanos.FXMapModule.layers.mission.Waypoint;
-import com.oceanos.FXMapModule.mapControllers.EditableController;
+import com.oceanos.FXMapModule.JSControllers.EditableController;
 import com.oceanos.FXMapModule.options.CircleOptions;
 import com.oceanos.FXMapModule.options.PathOptions;
-import com.oceanos.FXMapModule.options.WmsLayerOptions;
-import com.oceanos.FXMapModule.utils.GpsReader;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -40,7 +35,6 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -83,6 +77,25 @@ public class MainController {
 
     @FXML
     private Label lng;
+
+    @FXML
+    void exit(){
+        try {
+            ResourceManager.getInstance().close();
+            //FIXME: hardcode
+            TileCache.run.setValue(false);
+            //controller.close();
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        ((Stage)mapPane.getScene().getWindow()).close();
+    }
+
+    @FXML
+    void showHelp(){
+
+    }
 
     @FXML
     void addCircle(ActionEvent event) {
@@ -217,11 +230,13 @@ public class MainController {
         fileChooser.setTitle("Выберите файл для загрузки");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Файлы миссии", "*.mis"), new FileChooser.ExtensionFilter("Json","*.json"));
         File file = fileChooser.showOpenDialog(layerTreeView.getScene().getWindow());
-        String content = FilesUtills.openFile(file.toPath());
-        if (file.getName().endsWith("mis")) {
-            loadMission(content);
-        } else if (file.getName().endsWith(".json")) {
-            loadMapLayer(content);
+        if (file != null){
+            String content = FilesUtills.openFile(file.toPath());
+            if (file.getName().endsWith("mis")) {
+                loadMission(content);
+            } else if (file.getName().endsWith(".json")) {
+                loadMapLayer(content);
+            }
         }
     }
 
@@ -316,25 +331,20 @@ public class MainController {
         //FIXME: HARDCODE!!
         ResourceManager.mapView = mapView;
         ResourceManager.getInstance();
-        //
+
         System.out.println("end init resources");
 
         mapContainer.getChildren().add(mapView);
-        //initContextMenu();
         initTreeView();
-
-
         //"http://oceanos.nextgis.com/resource/1/display/tiny?base=osm-mapnik&amp;lon=29.9525&amp;lat=60.7220&amp;angle=0&amp;zoom=16&amp;styles=15%2C28%2C32%2C30%2C26%2C7%2C17%2C20%2C22%2C24%2C13%2C38&amp;linkMainMap=true"
         //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         //"http://{s}.tiles.mapbox.com/v3/gvenech.m13knc8e/{z}/{x}/{y}.png"
-        TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png");
+        //TileLayer tileLayer = new TileLayer("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png");
         // http://oceanos.nextgis.com/api/resource/68/wms
         //http://oceanos.nextgis.com/api/resource/65/wms
-        WMSTileLayer wmsTileLayer = new WMSTileLayer("http://oceanos.nextgis.com/api/resource/65/wms", new WmsLayerOptions());
-        wmsTileLayer.setName("карта глубин");
-        tileLayer.setName("osm map");
-
-        //TileCache cache = new TileCache(tileLayer);
+       // WMSTileLayer wmsTileLayer = new WMSTileLayer("http://oceanos.nextgis.com/api/resource/65/wms", new WmsLayerOptions());
+        //wmsTileLayer.setName("карта глубин");
+        //tileLayer.setName("osm map");
 
         mapView.onLoad(() -> {
             System.out.println("add layers");

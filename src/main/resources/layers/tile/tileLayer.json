@@ -3,6 +3,7 @@
     "url": "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
     "name": "opencyclemap",
     "options": {
-    }
+    },
+    "subdomains":[]
   }
 ]

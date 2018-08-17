@@ -1,22 +1,16 @@
 package com.oceanos.FXMapModule.app.utills.cache;
 
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
-import com.oceanos.FXMapModule.app.utills.FilesUtills;
 import com.oceanos.FXMapModule.app.utills.HttpDownloadUtility;
 import com.oceanos.FXMapModule.events.MapEventType;
 import com.oceanos.FXMapModule.events.TileEvent;
 import com.oceanos.FXMapModule.layers.TileLayer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -80,7 +74,7 @@ public class TileCache {
                     service.submit(()-> download(event));
                 } catch (InterruptedException e) {
                     System.out.println("close executor service");
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
 
             }

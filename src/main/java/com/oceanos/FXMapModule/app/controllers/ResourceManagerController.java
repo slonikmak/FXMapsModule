@@ -2,17 +2,15 @@ package com.oceanos.FXMapModule.app.controllers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.oceanos.FXMapModule.MapView;
 import com.oceanos.FXMapModule.app.properties.ResourceManager;
 import com.oceanos.FXMapModule.app.utills.FilesUtills;
+import com.oceanos.FXMapModule.app.utills.cache.TileCache;
 import com.oceanos.FXMapModule.layers.TileLayer;
 import com.oceanos.FXMapModule.layers.WMSTileLayer;
 import com.oceanos.FXMapModule.options.WmsLayerOptions;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,16 +20,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,7 +75,7 @@ public class ResourceManagerController {
     private TextField wmsLayersField;
 
     @FXML
-    private TextField domains;
+    private TextField subdomains;
 
     @FXML
     private ChoiceBox<Boolean> wmsTransparancy;
@@ -97,6 +93,7 @@ public class ResourceManagerController {
 
     @FXML
     void addMapOnMap() {
+        new TileCache(mapList.getSelectionModel().getSelectedItem());
         mapView.addLayer(mapList.getSelectionModel().getSelectedItem());
     }
 
@@ -132,7 +129,7 @@ public class ResourceManagerController {
 
     @FXML
     void close(ActionEvent event) {
-
+        ((Stage)mapList.getScene().getWindow()).close();
     }
 
     @FXML
@@ -159,6 +156,10 @@ public class ResourceManagerController {
 
     @FXML
     void saveTile() {
+        TileLayer selected = mapList.getSelectionModel().getSelectedItem();
+        selected.urlProperty().setValue(mapUrlField.getText());
+        selected.setName(mapNameField.getText());
+        selected.setSubdomains(subdomains.getText().split(","));
         JsonArray array = new JsonArray();
         tileLayers.stream().map(TileLayer::convertToRawJsonObject).forEach(array::add);
         FilesUtills.saveFile(ResourceManager.getInstance().getLayersTileFile(), array.toString(), false);
@@ -225,6 +226,10 @@ public class ResourceManagerController {
         mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             mapNameField.textProperty().setValue(newValue.getName());
             mapUrlField.textProperty().setValue(newValue.getUrl());
+            if (newValue.getSubdomains()!=null){
+                Stream.of(newValue.getSubdomains()).reduce((s1, s2)-> s1+","+s2).ifPresent(s->subdomains.setText(s));
+            }
+
             mapPane.setDisable(false);
         });
     }

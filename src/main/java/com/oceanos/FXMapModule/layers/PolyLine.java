@@ -41,13 +41,13 @@ public class PolyLine extends Path {
         gson = builder.setPrettyPrinting().create();
         //OptionsManager.fillOptions(this);
         setOptions(new PathOptions());
-        initHandlers();
         setName("polyline");
     }
 
     @Override
     public void setOptions(LayerOptions options) {
         this.options = (PathOptions) options;
+        initHandlers();
     }
 
     @Override
@@ -123,6 +123,7 @@ public class PolyLine extends Path {
     @Override
     void redraw() {
         //FIXME: hardcode
+        System.out.println("redraw");
         if (getId() != 0){
             jsObject.call("redraw", getId(), getOptions().getJsonString());
         }

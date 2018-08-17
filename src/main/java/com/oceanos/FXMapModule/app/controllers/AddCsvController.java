@@ -10,12 +10,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +65,9 @@ public class AddCsvController {
 
     @FXML
     private HBox separators;
+
+    @FXML
+    private TextField fileName;
 
     @FXML
     private RadioButton dotSeparator;
@@ -164,7 +169,7 @@ public class AddCsvController {
 
     @FXML
     void cancel(ActionEvent event) {
-
+        ((Stage)header.getScene().getWindow()).close();
     }
 
     @FXML
@@ -174,6 +179,7 @@ public class AddCsvController {
         File file = fileChooser.showOpenDialog(color.getParent().getScene().getWindow());
         if (file != null){
             sourceFile = file.toPath();
+            fileName.setText(sourceFile.toString());
             try {
                 lines = Files.lines(file.toPath()).collect(Collectors.toList());
                 records.setText(String.valueOf(lines.size()-1));
